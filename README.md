@@ -20,14 +20,14 @@ To start using hola video.js, follow these steps:
 
 1. Add these includes to your document's `<head>`:
 
-  ```
+  ```html
   <link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
   <script src="http://vjs.zencdn.net/4.12/video.js"></script>
   ```
 
 2. Add a `data-setup` attribute containing any hola video.js options to a `<video >` tag on your page. These options can include any hola video.js option plus potential plugin options, just make sure they're valid JSON!
 
-  ```
+  ```html
   <video id="really-cool-video" class="hola-video-js vjs-default-skin" controls
    preload="auto" width="640" height="264" poster="really-cool-video-poster.jpg"
    data-setup='{}'>
