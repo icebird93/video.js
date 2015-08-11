@@ -19,22 +19,27 @@ Hola video.js is a web video player based on the popular video.js open source pr
 To start using hola video.js, follow these steps:
 
 1. Add these includes to your document's `<head>`:
-```html
-<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
-<script src="http://vjs.zencdn.net/4.12/video.js"></script>
-```
+
+  ```
+  <link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+  <script src="http://vjs.zencdn.net/4.12/video.js"></script>
+  ```
+
 2. Add a `data-setup` attribute containing any hola video.js options to a `<video >` tag on your page. These options can include any hola video.js option plus potential plugin options, just make sure they're valid JSON!
-```html
-<video id="really-cool-video" class="hola-video-js vjs-default-skin" controls
- preload="auto" width="640" height="264" poster="really-cool-video-poster.jpg"
- data-setup='{}'>
-  <source src="really-cool-video.mp4" type='video/mp4'>
-  <source src="really-cool-video.webm" type='video/webm'>
-  <p class="vjs-no-js">
-    To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</a>
-  </p>
-</video>
-```
+
+  ```
+  <video id="really-cool-video" class="hola-video-js vjs-default-skin" controls
+   preload="auto" width="640" height="264" poster="really-cool-video-poster.jpg"
+   data-setup='{}'>
+    <source src="really-cool-video.mp4" type='video/mp4'>
+    <source src="really-cool-video.webm" type='video/webm'>
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading
+       to a web browser that supports HTML5 video
+    </p>
+  </video>
+  ```
+
 3. Done!
 
 If you're ready to dive in, the documentation is the first place to go for more information.
