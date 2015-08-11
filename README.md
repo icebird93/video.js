@@ -1,5 +1,5 @@
 # hola video.js
-Hola video.js is a web video player based on the popular video.js open source project world. It supports HTML5 and Flash video. It supports video playback on desktops and mobile devices. Hola video.js integrates advanced features from [holacdn.com](http://www.holacdn.com)
+hola video.js is a web video player based on the popular video.js open source project world. It supports HTML5 and Flash video. It supports video playback on desktops and mobile devices. hola video.js integrates advanced features from [holacdn.com](http://www.holacdn.com)
 
 
 ## Features
