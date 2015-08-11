@@ -1,64 +1,64 @@
-## Please Note!
-The master branch is now the development branch for 5.0 and should be considered unstable until the first 5.0 release. If you're looking for the most recent stable release, please refer to the [stable branch](https://github.com/videojs/video.js/tree/stable).
+## hola video.js
+Hola video.js is a web video player based on the popular video.js open source project world. It supports HTML5 and Flash video. It supports video playback on desktops and mobile devices. Hola video.js integrates advanced features from [holacdn.com](http://www.holacdn.com)
 
 
-![Video.js logo](https://i.cloudup.com/C3nAUZ-l4c.png)
+## Features
 
-# [Video.js - HTML5 Video Player](http://videojs.com)  [![Build Status](https://travis-ci.org/videojs/video.js.svg?branch=master)](https://travis-ci.org/videojs/video.js)
-
-> Video.js is a web video player built from the ground up for an HTML5 world. It supports HTML5 and Flash video, as well as YouTube and Vimeo (through [plugins](https://github.com/videojs/video.js/wiki/Plugins)). It supports video playback on desktops and mobile devices. This project was started mid 2010, and the player is now used on over ~~50,000~~ 100,000 websites.
+- Commercial grade HD video player
+- Custom branding (no watermark)
+- HLS/HDS streaming
+- HTML/CSS skin system 
+- Plugin support
+- Multi platform (desktop and mobile devices)
+- Player API
+- Integrated hola analytics module (coming soon)
+- Integrated bandwidth saver module (coming soon)
 
 ## Quick start
-Thanks to the awesome folks over at [Fastly](http://www.fastly.com/), there's a free, CDN hosted version of Video.js that anyone can use. Simply add these includes to your document's
-`<head>`:
 
+To start using hola video.js, follow these steps:
+
+1. Add these includes to your document's `<head>`:
 ```html
 <link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
 <script src="http://vjs.zencdn.net/4.12/video.js"></script>
 ```
-
-Then, whenever you want to use Video.js you can simply use the `<video>` element as your normally would, but with an additional `data-setup` attribute containing any Video.js options. These options
-can include any Video.js option plus potential [plugin](https://github.com/videojs/video.js/wiki/Plugins) options, just make sure they're valid JSON!
-
+2. Add a `data-setup` attribute containing any hola video.js options to a `<video >` tag on your page. These options can include any hola video.js option plus potential plugin options, just make sure they're valid JSON!
 ```html
-<video id="really-cool-video" class="video-js vjs-default-skin" controls
+<video id="really-cool-video" class="hola-video-js vjs-default-skin" controls
  preload="auto" width="640" height="264" poster="really-cool-video-poster.jpg"
  data-setup='{}'>
   <source src="really-cool-video.mp4" type='video/mp4'>
   <source src="really-cool-video.webm" type='video/webm'>
   <p class="vjs-no-js">
-    To view this video please enable JavaScript, and consider upgrading to a web browser
-    that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+    To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video</a>
   </p>
 </video>
 ```
+3. Done!
 
-If you don't want to use auto-setup, you can leave off the `data-setup` attribute and initialize a video element manually.
+If you're ready to dive in, the documentation is the first place to go for more information.
 
-```javascript
-var player = videojs('really-cool-video', { /* Options */ }, function() {
-  console.log('Good to go!');
+## Integrated video analytics (coming soon) 
 
-  this.play(); // if you don't trust autoplay for some reason
+hola video.js comes integrated with the free hola video analytics module. To open your free account and have access to the analytics dashboard, check out holacdn. 
+Hola analytics module provides the following information using the free dashboard:
+- Start buffering times
+- Total views
+- Total minutes viewed
+- Seek events
+- Bandwidth saved using Bandwidth Saver
+- And more..
 
-  // How about an event listener?
-  this.on('ended', function() {
-    console.log('awww...over so soon?');
-  });
-});
-```
+The use of this feature requires a free hola account. To learn more about the hola analytics dashboard and to create your free account, visit [www.holacdn.com](www.holacdn.com). 
 
-If you're ready to dive in, the [documentation](docs/index.md) is the first place to go for more information. Generally the
-[player API docs](docs/api/vjs.Player.md) are the most pertinent.
 
-## Contributing
-Video.js is a free and open source library, and we appreciate any help you're willing to give. Check out the [contributing guide](CONTRIBUTING.md).
+## Integrated bandwidth saver (coming soon) 
 
-## Building your own Video.js from source
-To build your own custom version read the section on [contributing code](CONTRIBUTING.md#contributing-code) and ["Building your own copy"](CONTRIBUTING.md#building-your-own-copy-of-videojs) in the contributing guide.
+hola video.js comes integrated with the free hola bandwidth saver module. The bandwidth saver module uses progressive download methods to reduce buffer overhead while keeping the video loading time to a minimum and the player responsive.
+Bandwidth saver works with MP4/FLV streams. 
 
 ## License
 
-Video.js is licensed under the Apache License, Version 2.0. [View the license file](LICENSE)
-
-Copyright 2014-2015 Brightcove, Inc.
+hola video.js is licensed under the Apache License, Version 2.0. [View the license file](LICENSE)
+Copyright 2015 Hola Networks ltd
