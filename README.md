@@ -5,14 +5,15 @@ hola video.js is a web video player based on the popular video.js open source pr
 ## Features
 
 - Commercial grade HD video player
-- Custom branding (no watermark)
-- HLS/HDS streaming
-- HTML/CSS skin system 
-- Plugin support
-- Multi platform (desktop and mobile devices)
-- Player API
 - Integrated hola analytics module (coming soon)
 - Integrated bandwidth saver module (coming soon)
+- All the features of the original video.js
+  - Custom branding (no watermark)
+  - HLS/HDS streaming
+  - HTML/CSS skin system 
+  - Plugin support
+  - Multi platform (desktop and mobile devices)
+  - Player API
 
 ## Quick start
 
