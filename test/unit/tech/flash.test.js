@@ -93,6 +93,7 @@ test('dispose removes the object element even before ready fires', function() {
   mockFlash.off = noop;
   mockFlash.trigger = noop;
   mockFlash.el_ = {};
+  mockFlash.textTracks = () => ([]);
 
   dispose.call(mockFlash);
   strictEqual(mockFlash.el_, null, 'swf el is nulled');
@@ -163,6 +164,28 @@ test('seekable', function() {
   mockFlash.duration_ = 0;
   result = seekable.call(mockFlash);
   equal(result.length, mockFlash.duration_, 'seekable is empty with a zero duration');
+});
+
+test('play after ended seeks to the beginning', function() {
+  let plays = 0, seeks = [];
+
+  Flash.prototype.play.call({
+    el_: {
+      vjs_play() {
+        plays++;
+      }
+    },
+    ended() {
+      return true;
+    },
+    setCurrentTime(time) {
+      seeks.push(time);
+    }
+  });
+
+  equal(plays, 1, 'called play on the SWF');
+  equal(seeks.length, 1, 'seeked on play');
+  equal(seeks[0], 0, 'seeked to the beginning');
 });
 
 // fake out the <object> interaction but leave all the other logic intact
