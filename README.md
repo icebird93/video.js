@@ -22,14 +22,14 @@ To start using hola video.js, follow these steps:
 1. Add these includes to your document's `<head>`:
 
   ```html
-  <link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
-  <script src="http://vjs.zencdn.net/4.12/video.js"></script>
+  <link href="https://cdn.rawgit.com/hola/video.js/8a878ac7ef44b3fdc55552417e468d45c139e772/dist/video-js.min.css" rel="stylesheet">
+  <script src="https://cdn.rawgit.com/hola/video.js/8a878ac7ef44b3fdc55552417e468d45c139e772/dist/video.min.js"></script>
   ```
 
 2. Add a `data-setup` attribute containing any hola video.js options to a `<video >` tag on your page. These options can include any hola video.js option plus potential plugin options, just make sure they're valid JSON!
 
   ```html
-  <video id="really-cool-video" class="hola-video-js vjs-default-skin" controls
+  <video id="really-cool-video" class="video-js vjs-default-skin" controls
    preload="auto" width="640" height="264" poster="really-cool-video-poster.jpg"
    data-setup='{}'>
     <source src="really-cool-video.mp4" type='video/mp4'>
@@ -44,6 +44,15 @@ To start using hola video.js, follow these steps:
 3. Done!
 
 If you're ready to dive in, the documentation is the first place to go for more information.
+
+## Hola Skin
+
+A custom skin for VideoJS 5 with animated play/pause buttons.
+[VideoJS Hola Skin](https://github.com/hola/videojs5-hola-skin)
+
+## Examples
+
+[Basic example with Hola Skin](http://jsbin.com/zekaduwase/8)
 
 ## Integrated video analytics
 
