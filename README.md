@@ -52,7 +52,8 @@ A custom skin for VideoJS 5 with animated play/pause buttons.
 
 ## Examples
 
-[Basic example with Hola Skin](http://jsbin.com/zekaduwase/8)
+[Basic example with Hola Skin](http://output.jsbin.com/nuyixofude/1)
+[Basic HLS example](http://output.jsbin.com/kovugokafu/2)
 
 ## Integrated video analytics
 
