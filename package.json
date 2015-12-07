@@ -34,7 +34,8 @@
     "vtt.js": "git+https://github.com/gkatsev/vtt.js.git#vjs-v0.12.1",
     "xhr": "2.1.0",
     "videojs-hola-skin": "git+https://github.com/hola/videojs5-hola-skin.git#vjs-5.0.2",
-    "videojs-settings": "git+https://github.com/hola/videojs5-settings.git#vjs-5.0.2"
+    "videojs-settings": "git+https://github.com/hola/videojs5-settings.git#vjs-5.0.2",
+    "videojs-contrib-hls": "git+https://github.com/hola/videojs-contrib-hls.git#hola_5.0.2-1"
   },
   "devDependencies": {
     "babel": "^5.2.2",

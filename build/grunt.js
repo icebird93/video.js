@@ -326,6 +326,7 @@ module.exports = function(grunt) {
         },
         src: [
           'build/temp/video.js',
+          'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
           'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
           'node_modules/videojs-settings/dist/videojs-settings.js',
         ],
@@ -339,6 +340,7 @@ module.exports = function(grunt) {
         src: [
           'build/temp/video.js',
           'node_modules/vtt.js/dist/vtt.js',
+          'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
           'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
           'node_modules/videojs-settings/dist/videojs-settings.js',
         ],
@@ -391,7 +393,7 @@ module.exports = function(grunt) {
           src: ['build/temp/video.js']
         }
       }
-    }
+    },
   });
 
   // load all the npm grunt tasks
