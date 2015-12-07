@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/videojs/video.js.git"
+    "url": "https://github.com/hola/video.js.git"
   },
   "main": "./dist/video.js",
   "style": "./dist/video-js.css",
@@ -32,7 +32,9 @@
     "videojs-ie8": "1.1.0",
     "videojs-swf": "5.0.0-rc1",
     "vtt.js": "git+https://github.com/gkatsev/vtt.js.git#vjs-v0.12.1",
-    "xhr": "2.1.0"
+    "xhr": "2.1.0",
+    "videojs-hola-skin": "git+https://github.com/hola/videojs5-hola-skin.git#vjs-5.0.2",
+    "videojs-settings": "git+https://github.com/hola/videojs5-settings.git#vjs-5.0.2"
   },
   "devDependencies": {
     "babel": "^5.2.2",

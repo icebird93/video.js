@@ -44,7 +44,7 @@
       vjs.plugin('progressed', progressed);
 
       // initialize it
-      vid1 = vjs('vid1');
+      vid1 = vjs('vid1', {plugins: {hola_skin: {css: false}, settings_button: {info: true}}});
       vid1.progressed();
     })();
   </script>

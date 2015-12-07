@@ -1786,8 +1786,14 @@ module.exports = function hasSymbols() {
 	var obj = {};
 	var sym = Symbol('test');
 	if (typeof sym === 'string') { return false; }
-	if (sym instanceof Symbol) { return false; }
-	obj[sym] = 42;
+
+	// temp disabled per https://github.com/ljharb/object.assign/issues/17
+	// if (sym instanceof Symbol) { return false; }
+	// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
+	// if (!(Object(sym) instanceof Symbol)) { return false; }
+
+	var symVal = 42;
+	obj[sym] = symVal;
 	for (sym in obj) { return false; }
 	if (keys(obj).length !== 0) { return false; }
 	if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
@@ -1801,7 +1807,7 @@ module.exports = function hasSymbols() {
 
 	if (typeof Object.getOwnPropertyDescriptor === 'function') {
 		var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
-		if (descriptor.value !== 42 || descriptor.enumerable !== true) { return false; }
+		if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
 	}
 
 	return true;
@@ -1824,20 +1830,25 @@ var propIsEnumerable = bind.call(Function.call, Object.prototype.propertyIsEnume
 module.exports = function assign(target, source1) {
 	if (!canBeObject(target)) { throw new TypeError('target must be an object'); }
 	var objTarget = toObject(target);
-	var s, source, i, props, syms;
+	var s, source, i, props, syms, value, key;
 	for (s = 1; s < arguments.length; ++s) {
 		source = toObject(arguments[s]);
 		props = keys(source);
 		if (hasSymbols && Object.getOwnPropertySymbols) {
 			syms = Object.getOwnPropertySymbols(source);
 			for (i = 0; i < syms.length; ++i) {
-				if (propIsEnumerable(source, syms[i])) {
-					push(props, syms[i]);
+				key = syms[i];
+				if (propIsEnumerable(source, key)) {
+					push(props, key);
 				}
 			}
 		}
 		for (i = 0; i < props.length; ++i) {
-			objTarget[props[i]] = source[props[i]];
+			key = props[i];
+			value = source[key];
+			if (propIsEnumerable(source, key)) {
+				objTarget[key] = value;
+			}
 		}
 	}
 	return objTarget;
@@ -2146,6 +2157,26 @@ module.exports = function isArguments(value) {
 
 var implementation = _dereq_('./implementation');
 
+var lacksProperEnumerationOrder = function () {
+	if (!Object.assign) {
+		return false;
+	}
+	// v8, specifically in node 4.x, has a bug with incorrect property enumeration order
+	// note: this does not detect the bug unless there's 20 characters
+	var str = 'abcdefghijklmnopqrst';
+	var letters = str.split('');
+	var map = {};
+	for (var i = 0; i < letters.length; ++i) {
+		map[letters[i]] = letters[i];
+	}
+	var obj = Object.assign({}, map);
+	var actual = '';
+	for (var k in obj) {
+		actual += k;
+	}
+	return str !== actual;
+};
+
 var assignHasPendingExceptions = function () {
 	if (!Object.assign || !Object.preventExtensions) {
 		return false;
@@ -2161,7 +2192,16 @@ var assignHasPendingExceptions = function () {
 };
 
 module.exports = function getPolyfill() {
-	return !Object.assign || assignHasPendingExceptions() ? implementation : Object.assign;
+	if (!Object.assign) {
+		return implementation;
+	}
+	if (lacksProperEnumerationOrder()) {
+		return implementation;
+	}
+	if (assignHasPendingExceptions()) {
+		return implementation;
+	}
+	return Object.assign;
 };
 
 },{"./implementation":44}],52:[function(_dereq_,module,exports){
@@ -2172,9 +2212,11 @@ var getPolyfill = _dereq_('./polyfill');
 
 module.exports = function shimAssign() {
 	var polyfill = getPolyfill();
-	if (Object.assign !== polyfill) {
-		define(Object, { assign: polyfill });
-	}
+	define(
+		Object,
+		{ assign: polyfill },
+		{ assign: function () { return Object.assign !== polyfill; } }
+	);
 	return polyfill;
 };
 
@@ -19769,3 +19811,508 @@ module.exports = exports['default'];
   global.WebVTT = WebVTT;
 
 }(this, (this.vttjs || {})));
+
+(function(window, vjs){
+'use strict';
+
+// helpers
+
+function add_css(url, ver){
+    var link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('href', url+(ver ? '?'+ver : ''));
+    document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+function get_class_name(element){
+    return element.className.split(/\s+/g);
+}
+
+// main skin code
+
+var HolaSkin = function(video, opt){
+    var _this = this;
+    this.vjs = video;
+    this.el = video.el();
+    this.opt = opt;
+    this.intv = 0;
+    this.stagger = 3;
+    this.steptotal = 5;
+    this.vjs.on('dispose', function(){ _this.dispose(); });
+    this.vjs.on('ready', function(){ _this.init(); });
+    this.apply();
+};
+
+HolaSkin.prototype.apply = function(){
+    var classes = get_class_name(this.el);
+    if (classes.indexOf(this.opt.className)==-1)
+    {
+        classes.push(this.opt.className);
+        this.class_added = this.opt.className;
+        this.el.className = classes.join(' ');
+    }
+};
+
+// XXX michaelg: taken from mp_video.js but play mode adjusted 2px right
+// play/pause curves and transform
+var play1 = 'M 21.5,18 32,25 21.5,32 21.5,32 Z';
+var play2 = 'M 19.5,18 22.5,18 22.5,32 19.5,32 Z';
+var pause1 = 'M 21.5,18 24.5,25 24.5,25 21.5,32 Z';
+var pause2 = 'M 27.5,18 30.5,18 30.5,32 27.5,32 Z';
+var morph_html = [
+    '<svg height="3em" width="3em" viewBox="10 10 30 30">',
+        '<g id="morph">',
+            '<path d="M 19.5,18 22.5,18 22.5,32 19.5,32 Z"/>',
+            '<path d="M 27.5,18 30.5,18 30.5,32 27.5,32 Z"/>',
+        '</g>',
+    '</svg>'].join('');
+var umorph_html = [
+    '<svg width="100%" height="100%" viewBox="5 5 40 40">',
+        '<use id="umorph" xlink:href="#morph" x="0" y="0"/>',
+    '</svg>'].join('');
+
+HolaSkin.prototype.set_play_button_state = function(btn_svg, paused){
+    var intv = this.intv;
+    var steptotal = this.steptotal;
+    var stagger = this.stagger;
+    function mk_transition(from, to, steps){
+        return (function(){
+            var start = parseFloat(from);
+            var delta = (parseFloat(to)-start)/parseFloat(steps);
+            return (function(){ return start += delta; });
+        }());
+    }
+    function mk_transform(from_path, to_path, steps){
+        var path1pts = from_path.split(' ').slice(1, -1);
+        var path2pts = to_path.split(' ').slice(1, -1);
+        return (function(){
+            var pathgen = path1pts.map(function(coord, index){
+                return coord.split(',').map(function(fld, idx){
+                    return mk_transition(fld,
+                        path2pts[index].split(',')[idx], steps);
+                });
+            });
+            return (function(){
+                return pathgen.reduce(function(prev, curr){
+                    return prev+' '+curr.reduce(function(prv, crr){
+                        return prv()+','+crr();
+                    });
+                }, 'M')+' Z';
+            });
+        }());
+    }
+    var bars = btn_svg.getElementsByTagName('path');
+    var stepcnt = 0, stepcnt1 = 0;
+    if (intv)
+        clearInterval(intv);
+    if (paused)
+    {
+        var mk_path3 = mk_transform(play2, play1, steptotal);
+        var mk_path4 = mk_transform(pause2, pause1, steptotal);
+        intv = setInterval(function(){
+            if (stepcnt < steptotal)
+                bars[1].setAttribute('d', mk_path4());
+            if (stepcnt >= stagger)
+                bars[0].setAttribute('d', mk_path3());
+            stepcnt++;
+            if (stepcnt >= steptotal+stagger)
+            {
+                clearInterval(intv);
+                intv = 0;
+            }
+        }, 20);
+    }
+    else
+    {
+        var mk_path1 = mk_transform(play1, play2, steptotal);
+        var mk_path2 = mk_transform(pause1, pause2, steptotal);
+        intv = setInterval(function(){
+            if (stepcnt < steptotal)
+                bars[0].setAttribute('d', mk_path1());
+            if (stepcnt >= stagger)
+                bars[1].setAttribute('d', mk_path2());
+            stepcnt++;
+            if (stepcnt >= steptotal+stagger)
+            {
+                clearInterval(intv);
+                intv = 0;
+            }
+        }, 20);
+    }
+};
+
+HolaSkin.prototype.init = function(){
+    var _this = this;
+    var player = this.vjs;
+    // play button special treatment: both buttons share a single shape
+    // that's how it is morphed simultaneously
+    if (!!this.opt.no_play_transform)
+    {
+        this.steptotal = 1;
+        this.stagger = 0;
+    }
+    var play_button = player.controlBar.playToggle.el();
+    play_button.insertAdjacentHTML('beforeend', morph_html);
+    player.bigPlayButton.el().insertAdjacentHTML('beforeend', umorph_html);
+    var morph = document.getElementById('morph');
+    player.on('play', function(){
+        _this.set_play_button_state(morph, false);
+    })
+    .on('pause', function(){
+        _this.set_play_button_state(morph, true);
+    });
+    _this.set_play_button_state(morph, player.paused());
+};
+
+HolaSkin.prototype.dispose = function(){
+    if (!this.class_added)
+        return;
+    var classes = get_class_name(this.el);
+    var class_index = classes.indexOf(this.class_added);
+    if (class_index>=0)
+    {
+        classes.splice(class_index, 1);
+        this.el.className = classes.join(' ');
+    }
+};
+
+var defaults = {
+    className: 'vjs5-hola-skin',
+    css: '/css/videojs-hola-skin.css',
+    ver: 'ver=0.0.1'
+};
+
+// VideoJS plugin register
+
+vjs.plugin('hola_skin', function(options){
+    var opt = vjs.mergeOptions(defaults, options);
+    if (opt.css && (!options.className || options.css))
+        add_css(opt.css, opt.ver);
+    new HolaSkin(this, opt);
+});
+
+}(window, window.videojs));
+
+(function(window, vjs){
+'use strict';
+// XXX michaelg remove when vjs5.1 exposes this interface
+var vjs_merge = function(obj1, obj2){
+    if (!obj2) { return obj1; }
+    for (var key in obj2){
+        if (Object.prototype.hasOwnProperty.call(obj2, key)) {
+            obj1[key] = obj2[key];
+        }
+    }
+    return obj1;
+};
+var info_overlay, notify_overlay;
+var MenuButton = vjs.getComponent('MenuButton');
+vjs.registerComponent('SettingsButton', vjs.extend(MenuButton, {
+    buttonText: 'Settings',
+    className: 'vjs-settings-button',
+    createItems: function(){
+        this.addClass(this.className);
+        var items = [];
+        var player = this.player_;
+        var opt = this.options();
+        if (opt.info)
+        {
+            opt.info = vjs.mergeOptions({label: 'Technical info'}, opt.info);
+            items.push(new InfoButton(player, opt.info));
+        }
+        if (opt.report)
+        {
+            opt.report = vjs.mergeOptions({label: 'Report playback issue'},
+                opt.report);
+            items.push(new ReportButton(player, opt.report));
+        }
+        var quality = opt.quality;
+        var sources = quality && quality.sources ? quality.sources : null;
+        if (sources && sources.length>1)
+        {
+            items.push(new MenuLabel(player, {label: 'Quality'}));
+            var item;
+            for (var i=0; i<sources.length; i+=1)
+            {
+                if (!sources[i].src)
+                    continue;
+                if (!sources[i].label)
+                    sources[i].label = sources[i].type;
+                item = new QualityButton(player, sources[i]);
+                item.addClass('vjs-menu-indent');
+                items.push(item);
+            }
+        }
+        return items;
+    }
+}));
+var Component = vjs.getComponent('Component');
+vjs.registerComponent('Overlay', vjs.extend(Component, {
+    createEl: function(type, props){
+        var custom_class = this.options_['class'];
+        custom_class = custom_class ? ' '+custom_class : '';
+        var proto_component = Component.prototype;
+        var container = proto_component.createEl.call(this, 'div', vjs_merge({
+            className: 'vjs-info-overlay'+custom_class,
+        }, props));
+        this.createContent(container);
+        return container;
+    },
+    createContent: function(container){},
+}));
+function round(val){
+    if (typeof val!='number')
+        return val;
+    return Math.round(val*1000)/1000;
+}
+var Overlay = vjs.getComponent('Overlay');
+vjs.registerComponent('InfoOverlay', vjs.extend(Overlay, {
+    info_data: {
+        duration: {
+            units: 'sec',
+            title: 'Duration',
+            get: function(p){ return round(p.duration()); },
+        },
+        position: {
+            units: 'sec',
+            title: 'Position',
+            get: function(p){
+                return round(p.currentTime());
+            },
+        },
+        buffered: {
+            units: 'sec',
+            title: 'Current buffer',
+            get: function(p){
+                var range = p.buffered();
+                var pos = p.currentTime();
+                if (range && range.length)
+                {
+                    for (var i=0; i<range.length; i+=1)
+                    {
+                        if (range.start(i)<=pos && range.end(i)>=pos)
+                            return round(range.end(i)-pos);
+                    }
+                }
+                return '--';
+            },
+        },
+        downloaded: {
+            units: 'sec',
+            title: 'Downloaded',
+            get: function(p){
+                var range = p.buffered();
+                var buf_sec = 0;
+                if (range && range.length)
+                {
+                    for (var i=0; i<range.length; i+=1)
+                        buf_sec += range.end(i)-range.start(i);
+                }
+                return round(buf_sec);
+            },
+        },
+    },
+    createContent: function(container){
+        var _this = this;
+        var player = this.player_;
+        function create_el(el, opt){
+            opt = opt ? vjs_merge(opt) : opt;
+            var proto_component = Component.prototype;
+            return proto_component.createEl.call(_this, el, opt);
+        }
+        var title = create_el('div', {
+            className: 'vjs-info-overlay-title',
+            innerHTML: 'Technical info',
+        });
+        var close_btn = create_el('div', {
+            className: 'vjs-info-overlay-x',
+            innerHTML: '\u274c',
+        });
+        close_btn.addEventListener('click', function(evt){
+            if (!info_overlay)
+                return;
+            info_overlay.toggle();
+        });
+        var content = create_el('div', {
+            className: 'vjs-info-overlay-content'});
+        var list = create_el('ul', {className: 'vjs-info-overlay-list'});
+        var item;
+        var title_text;
+        for (var i in this.info_data)
+        {
+            item = create_el('li', {className: 'vjs-info-overlay-list-item'});
+            title_text = this.info_data[i].title;
+            if (this.info_data[i].units)
+                title_text += ' ['+this.info_data[i].units+']';
+            title_text += ': ';
+            item.appendChild(create_el('strong', {
+                innerHTML: title_text}));
+            this.info_data[i].el = create_el('span');
+            item.appendChild(this.info_data[i].el);
+            list.appendChild(item);
+        }
+        content.appendChild(list);
+        container.appendChild(title);
+        container.appendChild(close_btn);
+        container.appendChild(content);
+        this.update();
+        player.on('timeupdate', function(){ _this.update(); });
+        // force updates when player is paused
+        setInterval(function(){ _this.update(); }, 1000);
+    },
+    update: function(){
+        var player = this.player_;
+        var info = this.info_data;
+        for (var i in info)
+            info[i].el.innerHTML = info[i].get(player);
+    },
+    toggle: function(caller){
+        if (caller)
+            this.last_caller = caller;
+        if (this.visible)
+        {
+            this.visible = false;
+            if (this.last_caller)
+                this.last_caller.selected(false);
+            this.addClass('vjs-hidden');
+            return;
+        }
+        this.update();
+        this.visible = true;
+        this.removeClass('vjs-hidden');
+    },
+}));
+vjs.registerComponent('NotifyOverlay', vjs.extend(Overlay, {
+    createContent: function(container){
+        var _this = this;
+        function create_el(el, opt){
+            opt = opt ? vjs_merge(opt) : opt;
+            var proto_component = Component.prototype;
+            return proto_component.createEl.call(_this, el, opt);
+        }
+        var title = create_el('div', {
+            className: 'vjs-notify-overlay-title',
+            innerHTML: 'Issue report sent.',
+        });
+        var content = create_el('div', {
+            className: 'vjs-notify-overlay-content',
+            innerHTML: 'Thank you!',
+        });
+        container.appendChild(title);
+        container.appendChild(content);
+    },
+    flash: function(){
+        if (this.visible)
+            return;
+        this.visible = true;
+        this.removeClass('vjs-hidden');
+        var _this = this;
+        setTimeout(function(){
+            _this.addClass('vjs-notify-flash');
+        }, 50);
+        setTimeout(function(){
+            _this.visible = false;
+            _this.removeClass('vjs-notify-flash');
+            _this.addClass('vjs-hidden');
+        }, 3500);
+    },
+}));
+var MenuItem = vjs.getComponent('MenuItem');
+var ReportButton = vjs.registerComponent('ReportButton', vjs.extend(MenuItem, {
+    init: function(player, options){
+        MenuItem.call(this, player, options);
+        var player_ = player;
+        this.on('click', function(){
+            // XXX alexeym: make it work without cdn
+            player_.trigger({type: 'problem_report'});
+            if (!notify_overlay)
+                return;
+            notify_overlay.flash();
+            this.selected(false);
+        });
+    }
+}));
+var InfoButton = vjs.registerComponent('InfoButton', vjs.extend(MenuItem, {
+    init: function(player, options){
+        MenuItem.call(this, player, options);
+        this.on('click', function(){
+            // XXX alexeym/michaelg: use vjs api to get overlay object
+            if (!info_overlay)
+                return;
+            info_overlay.toggle(this);
+        });
+    }
+}));
+var MenuLabel = vjs.registerComponent('MenuLabel', vjs.extend(Component, {
+    createEl: function(type, props){
+        var prot = Component.prototype;
+        return prot.createEl.call(this, 'li', vjs_merge({
+            className: 'vjs-menu-item vjs-menu-label',
+            innerHTML: this.options_.label,
+        }, props));
+    },
+}));
+var QualityButton = vjs.registerComponent('QualityButton',
+    vjs.extend(MenuItem, {
+    init: function(player, options){
+        MenuItem.call(this, player, options);
+        this.player_.one('play', vjs.bind(this, this.update));
+        this.player_.on('resolutionchange', vjs.bind(this, this.update));
+    },
+    handleClick: function(){
+        var player = this.player_;
+        var quality = this.options_;
+        // XXX volodymyr: implemented for html5 only, flash requires extra
+        // additions, check https://github.com/vidcaster/video-js-resolutions
+        if (player.techName_!=='Html5')
+            return;
+        if (player.cache_.src===quality.src)
+        {
+            player.trigger('resolutionchange');
+            return this; // basically a no-op
+        }
+        var current_time = player.currentTime();
+        var remain_paused = player.paused();
+        player.pause();
+        player.src(quality.src);
+        player.ready(function(){
+            player.one('loadeddata', vjs.bind(this, function(){
+                this.currentTime(current_time);
+            }));
+            player.trigger('resolutionchange');
+            if (!remain_paused)
+            {
+                player.load();
+                player.play();
+            }
+        });
+    },
+    update: function(){
+        this.selected(this.player_.cache_.src === this.options_.src);
+    },
+}));
+
+vjs.plugin('settings_button', function(opt){
+    var video = this;
+    video.on('ready', function(){
+        if (opt.info||opt.report||
+            (opt.quality&&opt.quality.sources&&opt.quality.sources.length))
+        {
+            video.controlBar.addChild('SettingsButton',
+                vjs.mergeOptions({}, opt));
+        }
+        if (opt.info)
+        {
+            info_overlay = video.addChild('InfoOverlay', {});
+            info_overlay.addClass('vjs-hidden');
+        }
+        if (opt.report)
+        {
+            notify_overlay = video.addChild('NotifyOverlay',
+                {'class': 'vjs-notify-overlay'});
+            notify_overlay.addClass('vjs-hidden');
+        }
+    });
+});
+
+}(window, window.videojs));

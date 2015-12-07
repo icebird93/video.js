@@ -324,15 +324,37 @@ module.exports = function(grunt) {
         options: {
           separator: '\n'
         },
-        src: ['build/temp/video.js'],
-        dest: 'build/temp/alt/video.novtt.js'
+        src: [
+          'build/temp/video.js',
+          'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
+          'node_modules/videojs-settings/dist/videojs-settings.js',
+        ],
+        dest: 'build/temp/alt/video.novtt.js',
+        nonull: true,
       },
       vtt: {
         options: {
           separator: '\n',
         },
-        src: ['build/temp/video.js', 'node_modules/vtt.js/dist/vtt.js'],
+        src: [
+          'build/temp/video.js',
+          'node_modules/vtt.js/dist/vtt.js',
+          'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
+          'node_modules/videojs-settings/dist/videojs-settings.js',
+        ],
         dest: 'build/temp/video.js',
+        nonull: true,
+      },
+      css: {
+          options: {
+            separator: '\n',
+          },
+          src: [
+            'build/temp/video-js.css',
+            'node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css'
+          ],
+          dest: 'build/temp/video-js.css',
+          nonull: true,
       },
     },
     concurrent: {
@@ -391,6 +413,7 @@ module.exports = function(grunt) {
 
     'sass',
     'version:css',
+    'concat:css',
     'cssmin',
 
     'copy:fonts',
