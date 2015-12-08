@@ -68,7 +68,9 @@ module.exports = function(grunt) {
       build: {
         files: {
           'build/temp/alt/video.novtt.min.js': 'build/temp/alt/video.novtt.js',
-          'build/temp/video.min.js': 'build/temp/video.js'
+          'build/temp/alt/video.novtt.hls.min.js': 'build/temp/alt/video.novtt.hls.js',
+          'build/temp/video.min.js': 'build/temp/video.js',
+          'build/temp/video.hls.min.js': 'build/temp/video.hls.js',
         }
       }
     },
@@ -324,12 +326,7 @@ module.exports = function(grunt) {
         options: {
           separator: '\n'
         },
-        src: [
-          'build/temp/video.js',
-          'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
-          'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
-          'node_modules/videojs-settings/dist/videojs-settings.js',
-        ],
+        src: ['build/temp/video.js'],
         dest: 'build/temp/alt/video.novtt.js',
         nonull: true,
       },
@@ -337,26 +334,56 @@ module.exports = function(grunt) {
         options: {
           separator: '\n',
         },
-        src: [
-          'build/temp/video.js',
-          'node_modules/vtt.js/dist/vtt.js',
-          'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
-          'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
-          'node_modules/videojs-settings/dist/videojs-settings.js',
-        ],
+        src: ['build/temp/video.js', 'node_modules/vtt.js/dist/vtt.js'],
         dest: 'build/temp/video.js',
         nonull: true,
       },
-      css: {
-          options: {
-            separator: '\n',
-          },
-          src: [
-            'build/temp/video-js.css',
-            'node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css'
+      hola: {
+        options: {
+          separator: '\n',
+        },
+        files: {
+          'build/temp/video.js': [
+            'build/temp/video.js',
+            'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
+            'node_modules/videojs-settings/dist/videojs-settings.js',
           ],
-          dest: 'build/temp/video-js.css',
-          nonull: true,
+          'build/temp/alt/video.novtt.js': [
+            'build/temp/alt/video.novtt.js',
+            'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
+            'node_modules/videojs-settings/dist/videojs-settings.js',
+          ],
+        },
+        nonull: true,
+      },
+      hls: {
+        options: {
+          separator: '\n',
+        },
+        files: {
+          'build/temp/video.js': ['build/temp/video.js'],
+          'build/temp/video.hls.js': [
+            'build/temp/video.js',
+            'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
+          ],
+          'build/temp/alt/video.novtt.js': ['build/temp/alt/video.novtt.js'],
+          'build/temp/alt/video.novtt.hls.js': [
+            'build/temp/alt/video.novtt.js',
+            'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
+          ],
+        },
+        nonull: true,
+      },
+      css: {
+        options: {
+          separator: '\n',
+        },
+        files: {
+          'build/temp/video-js.css': [
+            'build/temp/video-js.css',
+            'node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css',
+          ],
+        },
       },
     },
     concurrent: {
@@ -411,6 +438,8 @@ module.exports = function(grunt) {
     'concat:vtt',
     'usebanner:novtt',
     'usebanner:vtt',
+    'concat:hola',
+    'concat:hls',
     'uglify',
 
     'sass',
