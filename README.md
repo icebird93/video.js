@@ -51,6 +51,8 @@ If you're ready to dive in, the documentation is the first place to go for more 
 
 [Basic HLS example](http://output.jsbin.com/kovugokafu/2)
 
+[Basic OSMF example](http://output.jsbin.com/napusasenu/1)
+
 ## Integrated video analytics
 
 hola video.js comes integrated with the free hola video analytics module. To open your free account and have access to the analytics dashboard, check out holacdn.
