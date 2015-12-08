@@ -69,8 +69,10 @@ module.exports = function(grunt) {
         files: {
           'build/temp/alt/video.novtt.min.js': 'build/temp/alt/video.novtt.js',
           'build/temp/alt/video.novtt.hls.min.js': 'build/temp/alt/video.novtt.hls.js',
+          'build/temp/alt/video.novtt.osmf.min.js': 'build/temp/alt/video.novtt.osmf.js',
           'build/temp/video.min.js': 'build/temp/video.js',
           'build/temp/video.hls.min.js': 'build/temp/video.hls.js',
+          'build/temp/video.osmf.min.js': 'build/temp/video.osmf.js',
         }
       }
     },
@@ -107,6 +109,7 @@ module.exports = function(grunt) {
       },
       fonts: { cwd: 'node_modules/videojs-font/fonts/', src: ['*'], dest: 'build/temp/font/', expand: true, filter: 'isFile' },
       swf:   { cwd: 'node_modules/videojs-swf/dist/', src: 'video-js.swf', dest: 'build/temp/', expand: true, filter: 'isFile' },
+      osmf:   { cwd: 'node_modules/videojs-osmf/dist/', src: 'videojs-osmf.swf', dest: 'build/temp/', expand: true, filter: 'isFile' },
       ie8:   { cwd: 'node_modules/videojs-ie8/dist/', src: ['**/**'], dest: 'build/temp/ie8/', expand: true, filter: 'isFile' },
       dist:  { cwd: 'build/temp/', src: ['**/**', '!test*'], dest: 'dist/', expand: true, filter: 'isFile' },
       examples: { cwd: 'docs/examples/', src: ['**/**'], dest: 'dist/examples/', expand: true, filter: 'isFile' }
@@ -356,20 +359,30 @@ module.exports = function(grunt) {
         },
         nonull: true,
       },
-      hls: {
+      hola_plugins: {
         options: {
           separator: '\n',
         },
         files: {
+          // default versions
           'build/temp/video.js': ['build/temp/video.js'],
           'build/temp/video.hls.js': [
             'build/temp/video.js',
             'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
           ],
+          'build/temp/video.osmf.js': [
+            'build/temp/video.js',
+            'node_modules/videojs-osmf/dist/videojs-osmf.js',
+          ],
+          // novtt versions
           'build/temp/alt/video.novtt.js': ['build/temp/alt/video.novtt.js'],
           'build/temp/alt/video.novtt.hls.js': [
             'build/temp/alt/video.novtt.js',
             'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
+          ],
+          'build/temp/alt/video.novtt.osmf.js': [
+            'build/temp/alt/video.novtt.js',
+            'node_modules/videojs-osmf/dist/videojs-osmf.js',
           ],
         },
         nonull: true,
@@ -439,7 +452,7 @@ module.exports = function(grunt) {
     'usebanner:novtt',
     'usebanner:vtt',
     'concat:hola',
-    'concat:hls',
+    'concat:hola_plugins',
     'uglify',
 
     'sass',
@@ -449,6 +462,7 @@ module.exports = function(grunt) {
 
     'copy:fonts',
     'copy:swf',
+    'copy:osmf',
     'copy:ie8',
     'vjslanguages'
   ]);
