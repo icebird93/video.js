@@ -45,14 +45,9 @@ To start using hola video.js, follow these steps:
 
 If you're ready to dive in, the documentation is the first place to go for more information.
 
-## Hola Skin
-
-A custom skin for VideoJS 5 with animated play/pause buttons.
-[VideoJS Hola Skin](https://github.com/hola/videojs5-hola-skin)
-
 ## Examples
 
-[Basic example with Hola Skin](http://output.jsbin.com/nuyixofude/1)
+[Basic example](http://output.jsbin.com/nuyixofude/1)
 [Basic HLS example](http://output.jsbin.com/kovugokafu/2)
 
 ## Integrated video analytics
@@ -68,11 +63,56 @@ Hola analytics module provides the following information using the free dashboar
 
 The use of this feature requires a free hola account. To learn more about the hola analytics dashboard and to create your free account, visit [www.holacdn.com](www.holacdn.com).
 
-
 ## Integrated bandwidth saver for progressive http
 
 hola video.js comes integrated with the free hola bandwidth saver module. The bandwidth saver module uses progressive download methods to reduce buffer overhead while keeping the video loading time to a minimum and the player responsive.
 Bandwidth saver works with MP4/FLV streams.
+
+## Building your own copy of Video.js
+
+First, [fork](http://help.github.com/fork-a-repo/) the hola/video.js git repository. At the top of every github page, there is a Fork button. Click it, and the forking process will copy Hola Video.js into your own GitHub account.
+
+Clone your fork of the repo into your code directory
+
+```bash
+git clone https://github.com/<your-username>/video.js.git
+```
+
+Navigate to the newly cloned directory
+
+```bash
+cd video.js
+```
+
+Assign the original repo to a remote called "upstream"
+
+```
+git remote add upstream https://github.com/hola/video.js.git
+```
+
+>In the future, if you want to pull in updates to video.js that happened after you cloned the main repo, you can run:
+>
+> ```bash
+> git checkout master
+> git pull upstream master
+> ```
+
+Install the required node.js modules using node package manager
+
+```bash
+npm install
+```
+
+> A note to Windows developers: If you run npm commands, and you find that your command prompt colors have suddenly reversed, you can configure npm to set color to false to prevent this from happening.
+> `npm config set color false`
+> Note that this change takes effect when a new command prompt window is opened; the current window will not be affected.
+
+Build a local copy of video.js
+
+```bash
+grunt dist
+```
+Look at the [CONTRIBUTING.md file](CONTRIBUTING.md#building-your-own-copy-of-videojs) for the details.
 
 ## License
 
