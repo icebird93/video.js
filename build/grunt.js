@@ -188,7 +188,7 @@ module.exports = function(grunt) {
         },
         // compression: 'DEFLATE',
         src: ['dist/**/*'],
-        dest: 'dist/video-js-full-' + version.full + '.zip'
+        dest: 'dist/videojs-full-' + version.full + '.zip'
       },
       basic: {
         router: function (filepath) {
@@ -203,7 +203,7 @@ module.exports = function(grunt) {
           'dist/video-js.min.css',
           'dist/video-js.swf',
         ],
-        dest: 'dist/video-js-' + version.full + '.zip'
+        dest: 'dist/videojs-' + version.full + '.zip'
       },
       hls: {
         router: function (filepath) {
@@ -213,12 +213,12 @@ module.exports = function(grunt) {
         src: [
           'dist/videojs.hls.js',
           'dist/videojs.hls.min.js',
-          'dist/videojs.hls.js.map',
+          'dist/videojs.hls.min.js.map',
           'dist/video-js.css',
           'dist/video-js.min.css',
           'dist/video-js.swf',
         ],
-        dest: 'dist/video-js-hls-' + version.full + '.zip'
+        dest: 'dist/videojs-hls-' + version.full + '.zip'
       },
       osmf: {
         router: function (filepath) {
@@ -228,13 +228,13 @@ module.exports = function(grunt) {
         src: [
           'dist/videojs.osmf.js',
           'dist/videojs.osmf.min.js',
-          'dist/videojs.osmf.js.map',
+          'dist/videojs.osmf.min.js.map',
           'dist/video-js.css',
           'dist/video-js.min.css',
           'dist/video-js.swf',
-          'dist/video-js-osmf.swf',
+          'dist/videojs-osmf.swf',
         ],
-        dest: 'dist/video-js-osmf-' + version.full + '.zip'
+        dest: 'dist/videojs-osmf-' + version.full + '.zip'
       },
     },
     version: {
@@ -287,10 +287,10 @@ module.exports = function(grunt) {
       },
       files: {
         src: [ // Files that you want to attach to Release
-          `dist/video-js-full-${version.full}.zip`,
-          `dist/video-js-${version.full}.zip`,
-          `dist/video-js-hls-${version.full}.zip`,
-          `dist/video-js-osmf-${version.full}.zip`,
+          `dist/videojs-full-${version.full}.zip`,
+          `dist/videojs-${version.full}.zip`,
+          `dist/videojs-hls-${version.full}.zip`,
+          `dist/videojs-osmf-${version.full}.zip`,
         ]
       }
     },
@@ -523,7 +523,10 @@ module.exports = function(grunt) {
     'build',
     'copy:dist',
     'copy:examples',
-    'zip:dist'
+    'zip:dist',
+    'zip:basic',
+    'zip:hls',
+    'zip:osmf',
   ]);
 
   // Default task - build and test
