@@ -77,9 +77,9 @@ You can also find styles and SWF files [here](dist/)
 
 ## Examples
 
-[Basic example](http://output.jsbin.com/nuyixofude/1)
+[Basic example](http://output.jsbin.com/pefiyoyuma/1)
 
-[Basic HLS example](http://output.jsbin.com/kovugokafu/2)
+[Basic HLS example](http://output.jsbin.com/logazoxaci/1)
 
 [Basic OSMF example](http://output.jsbin.com/napusasenu/1)
 
