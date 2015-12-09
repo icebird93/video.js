@@ -68,11 +68,11 @@ module.exports = function(grunt) {
       build: {
         files: {
           'build/temp/alt/video.novtt.min.js': 'build/temp/alt/video.novtt.js',
-          'build/temp/alt/video.novtt.hls.min.js': 'build/temp/alt/video.novtt.hls.js',
-          'build/temp/alt/video.novtt.osmf.min.js': 'build/temp/alt/video.novtt.osmf.js',
+          'build/temp/alt/videojs.novtt.hls.min.js': 'build/temp/alt/videojs.novtt.hls.js',
+          'build/temp/alt/videojs.novtt.osmf.min.js': 'build/temp/alt/videojs.novtt.osmf.js',
           'build/temp/video.min.js': 'build/temp/video.js',
-          'build/temp/video.hls.min.js': 'build/temp/video.hls.js',
-          'build/temp/video.osmf.min.js': 'build/temp/video.osmf.js',
+          'build/temp/videojs.hls.min.js': 'build/temp/videojs.hls.js',
+          'build/temp/videojs.osmf.min.js': 'build/temp/videojs.osmf.js',
         }
       }
     },
@@ -188,8 +188,54 @@ module.exports = function(grunt) {
         },
         // compression: 'DEFLATE',
         src: ['dist/**/*'],
+        dest: 'dist/video-js-full-' + version.full + '.zip'
+      },
+      basic: {
+        router: function (filepath) {
+          var path = require('path');
+          return path.relative('dist', filepath);
+        },
+        src: [
+          'dist/video.js',
+          'dist/video.min.js',
+          'dist/video.js.map',
+          'dist/video-js.css',
+          'dist/video-js.min.css',
+          'dist/video-js.swf',
+        ],
         dest: 'dist/video-js-' + version.full + '.zip'
-      }
+      },
+      hls: {
+        router: function (filepath) {
+          var path = require('path');
+          return path.relative('dist', filepath);
+        },
+        src: [
+          'dist/videojs.hls.js',
+          'dist/videojs.hls.min.js',
+          'dist/videojs.hls.js.map',
+          'dist/video-js.css',
+          'dist/video-js.min.css',
+          'dist/video-js.swf',
+        ],
+        dest: 'dist/video-js-hls-' + version.full + '.zip'
+      },
+      osmf: {
+        router: function (filepath) {
+          var path = require('path');
+          return path.relative('dist', filepath);
+        },
+        src: [
+          'dist/videojs.osmf.js',
+          'dist/videojs.osmf.min.js',
+          'dist/videojs.osmf.js.map',
+          'dist/video-js.css',
+          'dist/video-js.min.css',
+          'dist/video-js.swf',
+          'dist/video-js-osmf.swf',
+        ],
+        dest: 'dist/video-js-osmf-' + version.full + '.zip'
+      },
     },
     version: {
       options: {
@@ -240,7 +286,12 @@ module.exports = function(grunt) {
         }
       },
       files: {
-        src: [`dist/video-js-${version.full}.zip`] // Files that you want to attach to Release
+        src: [ // Files that you want to attach to Release
+          `dist/video-js-full-${version.full}.zip`,
+          `dist/video-js-${version.full}.zip`,
+          `dist/video-js-hls-${version.full}.zip`,
+          `dist/video-js-osmf-${version.full}.zip`,
+        ]
       }
     },
     browserify: {
@@ -366,21 +417,21 @@ module.exports = function(grunt) {
         files: {
           // default versions
           'build/temp/video.js': ['build/temp/video.js'],
-          'build/temp/video.hls.js': [
+          'build/temp/videojs.hls.js': [
             'build/temp/video.js',
             'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
           ],
-          'build/temp/video.osmf.js': [
+          'build/temp/videojs.osmf.js': [
             'build/temp/video.js',
             'node_modules/videojs-osmf/dist/videojs-osmf.js',
           ],
           // novtt versions
           'build/temp/alt/video.novtt.js': ['build/temp/alt/video.novtt.js'],
-          'build/temp/alt/video.novtt.hls.js': [
+          'build/temp/alt/videojs.novtt.hls.js': [
             'build/temp/alt/video.novtt.js',
             'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
           ],
-          'build/temp/alt/video.novtt.osmf.js': [
+          'build/temp/alt/videojs.novtt.osmf.js': [
             'build/temp/alt/video.novtt.js',
             'node_modules/videojs-osmf/dist/videojs-osmf.js',
           ],
