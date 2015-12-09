@@ -65,15 +65,13 @@ Bandwidth saver works with MP4/FLV streams.
 
 ## Prebuilt Hola video.js packages
 
-[Hola Video.js](dist/video.js) – basic Hola Video.js.
+[Hola Video.js, zip (1.59MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-2/videojs-5.0.2.zip) – basic Hola Video.js.
 
-[Hola Video.js + HLS](dist/video.hls.js) – Hola Video.js + HLS plugin.
+[Hola Video.js + HLS, zip (2.01MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-2/videojs-hls-5.0.2.zip) – Hola Video.js + HLS plugin.
 
-[Hola Video.js + OSMF](dist/video.osmf.js) – Hola Video.js + OSMF plugin.
+[Hola Video.js + OSMF, zip (1.89MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-2/videojs-osmf-5.0.2.zip) – Hola Video.js + OSMF plugin.
 
-You can also find styles and SWF files [here](dist/)
-
-[Release v5.0.2-1 (zip, 10.9 MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-1/video-js-5.0.2-1.zip) – all Hola Video.js prebuilt files, including examples.
+[All files, zip (10.9MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-2/videojs-full-5.0.2.zip) – all Hola Video.js prebuilt files, including examples.
 
 ## Examples
 
