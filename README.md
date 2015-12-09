@@ -45,14 +45,6 @@ To start using hola video.js, follow these steps:
 
 If you're ready to dive in, the documentation is the first place to go for more information.
 
-## Examples
-
-[Basic example](http://output.jsbin.com/nuyixofude/1)
-
-[Basic HLS example](http://output.jsbin.com/kovugokafu/2)
-
-[Basic OSMF example](http://output.jsbin.com/napusasenu/1)
-
 ## Integrated video analytics
 
 hola video.js comes integrated with the free hola video analytics module. To open your free account and have access to the analytics dashboard, check out holacdn.
@@ -71,7 +63,29 @@ The use of this feature requires a free hola account. To learn more about the ho
 hola video.js comes integrated with the free hola bandwidth saver module. The bandwidth saver module uses progressive download methods to reduce buffer overhead while keeping the video loading time to a minimum and the player responsive.
 Bandwidth saver works with MP4/FLV streams.
 
-## Building your own copy of Video.js
+## Prebuilt Hola video.js packages
+
+[Hola Video.js](dist/video.js) – basic Hola Video.js.
+
+[Hola Video.js + HLS](dist/video.hls.js) – Hola Video.js + HLS plugin.
+
+[Hola Video.js + OSMF](dist/video.osmf.js) – Hola Video.js + OSMF plugin.
+
+You can also find styles and SWF files [here](dist/)
+
+[Release v5.0.2-1 (zip, 10.9 MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-1/video-js-5.0.2-1.zip) – all Hola Video.js prebuilt files, including examples.
+
+## Examples
+
+[Basic example](http://output.jsbin.com/nuyixofude/1)
+
+[Basic HLS example](http://output.jsbin.com/kovugokafu/2)
+
+[Basic OSMF example](http://output.jsbin.com/napusasenu/1)
+
+## Building your own copy of Hola Video.js
+
+If you want to build your own copy of Hola Video.js and receive the latest updates follow these instructions:
 
 First, [fork](http://help.github.com/fork-a-repo/) the hola/video.js git repository. At the top of every github page, there is a Fork button. Click it, and the forking process will copy Hola Video.js into your own GitHub account.
 
