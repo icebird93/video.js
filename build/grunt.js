@@ -70,6 +70,7 @@ module.exports = function(grunt) {
           'build/temp/alt/video.novtt.min.js': 'build/temp/alt/video.novtt.js',
           'build/temp/alt/videojs.novtt.hls.min.js': 'build/temp/alt/videojs.novtt.hls.js',
           'build/temp/alt/videojs.novtt.osmf.min.js': 'build/temp/alt/videojs.novtt.osmf.js',
+          'build/temp/origin/video.min.js': 'build/temp/origin/video.js',
           'build/temp/video.min.js': 'build/temp/video.js',
           'build/temp/videojs.hls.min.js': 'build/temp/videojs.hls.js',
           'build/temp/videojs.osmf.min.js': 'build/temp/videojs.osmf.js',
@@ -397,6 +398,9 @@ module.exports = function(grunt) {
           separator: '\n',
         },
         files: {
+          'build/temp/origin/video.js': ['build/temp/video.js'],
+          'build/temp/origin/videojs-hola-skin.js': ['node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js'],
+          'build/temp/origin/videojs-settings.js': ['node_modules/videojs-settings/dist/videojs-settings.js'],
           'build/temp/video.js': [
             'build/temp/video.js',
             'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
@@ -417,6 +421,8 @@ module.exports = function(grunt) {
         files: {
           // default versions
           'build/temp/video.js': ['build/temp/video.js'],
+          'build/temp/origin/videojs.hls.js': ['node_modules/videojs-contrib-hls/dist/videojs.hls.js'],
+          'build/temp/origin/videojs-osmf.js': ['node_modules/videojs-osmf/dist/videojs-osmf.js'],
           'build/temp/videojs.hls.js': [
             'build/temp/video.js',
             'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
@@ -443,6 +449,9 @@ module.exports = function(grunt) {
           separator: '\n',
         },
         files: {
+          'build/temp/origin/video-js.css': ['build/temp/video-js.css'],
+          'build/temp/origin/video-js.min.css': ['build/temp/video-js.min.css'],
+          'build/temp/origin/videojs-hola-skin.css': ['node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css'],
           'build/temp/video-js.css': [
             'build/temp/video-js.css',
             'node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css',
@@ -530,7 +539,7 @@ module.exports = function(grunt) {
   ]);
 
   // Default task - build and test
-  grunt.registerTask('default', ['test']);
+  grunt.registerTask('default', ['dist']);
 
   grunt.registerTask('test', ['build', 'karma:defaults']);
 
