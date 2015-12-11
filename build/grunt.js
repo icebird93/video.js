@@ -122,7 +122,14 @@ module.exports = function(grunt) {
         src: ['video-js.css'],
         dest: 'build/temp/',
         ext: '.min.css'
-      }
+      },
+      origin: {
+        expand: true,
+        cwd: 'build/temp/origin/',
+        src: ['video-js.css'],
+        dest: 'build/temp/origin/',
+        ext: '.min.css'
+      },
     },
     sass: {
       build: {
@@ -450,7 +457,6 @@ module.exports = function(grunt) {
         },
         files: {
           'build/temp/origin/video-js.css': ['build/temp/video-js.css'],
-          'build/temp/origin/video-js.min.css': ['build/temp/video-js.min.css'],
           'build/temp/origin/videojs-hola-skin.css': ['node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css'],
           'build/temp/video-js.css': [
             'build/temp/video-js.css',
