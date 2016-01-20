@@ -1184,7 +1184,8 @@ and the native poster can take over */
   width: 40px;
   height: 40px; }
 
-.vjs5-hola-skin .vjs-control-bar * {
+.vjs5-hola-skin .vjs-control-bar *,
+.vjs5-hola-skin .vjs-rightclick-popup * {
   color: #fff;
 }
 .vjs5-hola-skin .vjs-big-play-button,
@@ -1239,12 +1240,12 @@ and the native poster can take over */
 }
 .vjs5-hola-skin.vjs-playing .vjs-big-play-button {
   opacity: 0;
-  transition: opacity 400ms ease, background-color 0;
-  transition-delay: 100ms, 0;
+  transition: opacity 400ms ease, background-color 0ms;
+  transition-delay: 100ms, 0ms;
 }
 .vjs5-hola-skin.vjs-paused.vjs-has-started .vjs-big-play-button {
   opacity: 1;
-  transition: opacity 0 linear, background-color 400ms ease;
+  transition: opacity 0ms linear, background-color 400ms ease;
   transition-delay: 0ms, 100ms;
   background-color: #2D2D2D;
   background-color: rgba(45, 45, 45, 0);
@@ -1301,6 +1302,10 @@ and the native poster can take over */
 }
 .vjs5-hola-skin .vjs-live-control {
   order: 4;
+}
+.vjs5-hola-skin .vjs-ads-label {
+  order: 0;
+  line-height: 3em;
 }
 .vjs5-hola-skin .vjs-volume-bar.vjs-slider-horizontal .vjs-volume-level {
   background-color: #00b7f1;
@@ -1401,6 +1406,14 @@ and the native poster can take over */
   flex-grow: 1;
   order: 5;
 }
+.vjs5-hola-skin.vjs-show-controls-before-start .vjs-control-bar {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+}
 .vjs5-hola-skin.vjs-fullscreen {
   overflow: hidden;
   z-index: 1000;
@@ -1415,6 +1428,8 @@ and the native poster can take over */
   left: -6em;
   z-index: 2;
   visibility: hidden;
+}
+.vjs5-hola-skin .vjs-menu-button-popup .vjs-menu:not(.vjs-menu-popup-on-click) {
   transition: visibility 300ms step-end;
 }
 .vjs5-hola-skin .vjs-menu-button-popup .vjs-menu ul {
@@ -1430,7 +1445,8 @@ and the native poster can take over */
 .vjs5-hola-skin .vjs-menu-button-popup .vjs-menu ul li.vjs-menu-indent {
   padding-left: 1.5em;
 }
-.vjs5-hola-skin .vjs-menu-button-popup:hover .vjs-menu {
+.vjs5-hola-skin .vjs-menu-button-popup:hover .vjs-menu:not(.vjs-menu-popup-on-click),
+.vjs5-hola-skin .vjs-menu-button-popup .vjs-menu.vjs-menu-popup-on-click.vjs-lock-showing {
   visibility: visible;
   transition: visibility 1ms;
 }
@@ -1502,4 +1518,58 @@ and the native poster can take over */
   margin: 0;
   height: 16px;
   line-height: 16px;
+}
+.vjs5-hola-skin .vjs-rightclick-popup {
+  position: absolute;
+  width: 15em;
+  background-color: #2D2D2D;
+  background-color: rgba(45, 45, 45, 0.7);
+  -webkit-box-shadow: -0.2em -0.2em 0.3em rgba(255, 255, 255, 0.2);
+  -moz-box-shadow: -0.2em -0.2em 0.3em rgba(255, 255, 255, 0.2);
+  box-shadow: -0.2em -0.2em 0.3em rgba(255, 255, 255, 0.2);
+}
+.vjs5-hola-skin .vjs-rightclick-popup .vjs-menu-item {
+  cursor: pointer;
+}
+.vjs5-hola-skin .vjs-rightclick-popup li {
+  text-align: left;
+  padding-left: 0.5em;
+}
+.vjs5-hola-skin .vjs-rightclick-popup li.vjs-menu-label {
+  pointer-events: none;
+}
+.vjs5-hola-skin .vjs-rightclick-popup li.vjs-menu-indent {
+  padding-left: 1.5em;
+}
+
+/* a wrapper element that tracks the mouse vertically */
+.vjs-thumbnail-holder {
+  position: absolute;
+  left: -1000px;
+}
+
+/* the thumbnail image itself */
+.vjs-thumbnail {
+  position: absolute;
+  left: 0;
+  bottom: 1.3em;
+  opacity: 0;
+  transition: opacity .2s ease;
+  -webkit-transition: opacity .2s ease;
+  -moz-transition: opacity .2s ease;
+  -mz-transition: opacity .2s ease;
+}
+
+/* fade in the thumbnail when hovering over the progress bar */
+/* .fake-active is needed for Android only. It's removed on touchend/touchecancel */
+.vjs-progress-control:hover .vjs-thumbnail,
+.vjs-progress-control.fake-active .vjs-thumbnail,
+.vjs-progress-control:active .vjs-thumbnail {
+  opacity: 1;
+}
+
+/* ... but hide the thumbnail when hovering directly over it */
+.vjs-progress-control:hover .vjs-thumbnail:hover,
+.vjs-progress-control:active .vjs-thumbnail:active {
+  opacity: 0;
 }

@@ -408,15 +408,21 @@ module.exports = function(grunt) {
           'build/temp/origin/video.js': ['build/temp/video.js'],
           'build/temp/origin/videojs-hola-skin.js': ['node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js'],
           'build/temp/origin/videojs-settings.js': ['node_modules/videojs-settings/dist/videojs-settings.js'],
+          'build/temp/origin/videojs.thumbnails.js': ['node_modules/videojs-thumbnails/videojs.thumbnails.js'],
+          'build/temp/origin/videojs-utils.js': ['node_modules/videojs-utils/dist/videojs-utils.js'],
           'build/temp/video.js': [
             'build/temp/video.js',
             'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
             'node_modules/videojs-settings/dist/videojs-settings.js',
+            'node_modules/videojs-thumbnails/videojs.thumbnails.js',
+            'node_modules/videojs-utils/dist/videojs-utils.js',
           ],
           'build/temp/alt/video.novtt.js': [
             'build/temp/alt/video.novtt.js',
             'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
             'node_modules/videojs-settings/dist/videojs-settings.js',
+            'node_modules/videojs-thumbnails/videojs.thumbnails.js',
+            'node_modules/videojs-utils/dist/videojs-utils.js',
           ],
         },
         nonull: true,
@@ -458,9 +464,11 @@ module.exports = function(grunt) {
         files: {
           'build/temp/origin/video-js.css': ['build/temp/video-js.css'],
           'build/temp/origin/videojs-hola-skin.css': ['node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css'],
+          'build/temp/origin/videojs.thumbnails.css': ['node_modules/videojs-thumbnails/videojs.thumbnails.css'],
           'build/temp/video-js.css': [
             'build/temp/video-js.css',
             'node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css',
+            'node_modules/videojs-thumbnails/videojs.thumbnails.css',
           ],
         },
       },

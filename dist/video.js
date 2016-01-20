@@ -19828,6 +19828,27 @@ function get_class_name(element){
     return element.className.split(/\s+/g);
 }
 
+function add_class_name(element, class_name){
+    var classes = get_class_name(element);
+    if (classes.indexOf(class_name)==-1)
+    {
+        classes.push(class_name);
+        element.className = classes.join(' ');
+        return true;
+    }
+    return false;
+}
+
+function remove_class_name(element, class_name){
+    var classes = get_class_name(element);
+    var class_index = classes.indexOf(class_name);
+    if (class_index>=0)
+    {
+        classes.splice(class_index, 1);
+        element.className = classes.join(' ');
+    }
+}
+
 // main skin code
 
 var HolaSkin = function(video, opt){
@@ -19838,18 +19859,20 @@ var HolaSkin = function(video, opt){
     this.intv = 0;
     this.stagger = 3;
     this.steptotal = 5;
+    this.classes_added = [];
     this.vjs.on('dispose', function(){ _this.dispose(); });
     this.vjs.on('ready', function(){ _this.init(); });
     this.apply();
 };
 
 HolaSkin.prototype.apply = function(){
-    var classes = get_class_name(this.el);
-    if (classes.indexOf(this.opt.className)==-1)
+    var c, classes = [this.opt.className];
+    if (this.opt.show_controls_before_start)
+        classes.push('vjs-show-controls-before-start');
+    while ((c = classes.shift()))
     {
-        classes.push(this.opt.className);
-        this.class_added = this.opt.className;
-        this.el.className = classes.join(' ');
+        if (add_class_name(this.el, c))
+            this.classes_added.push(c);
     }
 };
 
@@ -19965,21 +19988,14 @@ HolaSkin.prototype.init = function(){
 };
 
 HolaSkin.prototype.dispose = function(){
-    if (!this.class_added)
-        return;
-    var classes = get_class_name(this.el);
-    var class_index = classes.indexOf(this.class_added);
-    if (class_index>=0)
-    {
-        classes.splice(class_index, 1);
-        this.el.className = classes.join(' ');
-    }
+    while (this.classes_added.length)
+        remove_class_name(this.el, this.classes_added.pop());
 };
 
 var defaults = {
     className: 'vjs5-hola-skin',
     css: '/css/videojs-hola-skin.css',
-    ver: 'ver=0.0.2'
+    ver: 'ver=0.0.1-5'
 };
 
 // VideoJS plugin register
@@ -20005,7 +20021,67 @@ var vjs_merge = function(obj1, obj2){
     }
     return obj1;
 };
-var info_overlay, notify_overlay;
+var info_overlay, notify_overlay, popup_menu;
+var Menu = vjs.getComponent('Menu');
+vjs.registerComponent('PopupMenu', vjs.extend(Menu, {
+    className: 'vjs-rightclick-popup',
+    popped: false,
+    constructor: function(player, options){
+        Menu.call(this, player, options);
+        var player_ = player;
+        this.addClass(this.className);
+        this.hide();
+        var _this = this;
+        var opt = this.options_;
+        var opt_report = vjs.mergeOptions({label: 'Report playback issue'},
+            opt.report);
+        this.addChild(new ReportButton(player, opt_report));
+        var opt_savelog = vjs.mergeOptions({label: 'Save logs to disk'});
+        this.addChild(new LogButton(player,opt_savelog));
+        if (opt.info)
+        {
+            opt.info = vjs.mergeOptions({label: 'Technical info'}, opt.info);
+            this.addChild(new InfoButton(player, opt.info));
+        }
+        player_.on('contextmenu', function(evt){
+            evt.preventDefault();
+            if(_this.popped)
+            {
+                _this.hide();
+                _this.popped = false;
+            }
+            else
+            {
+                _this.show();
+                var oX = evt.offsetX;
+                var oY = evt.offsetY;
+                if (_this.el_.offsetWidth+oX>player_.el_.offsetWidth)
+                    oX = oX-_this.el_.offsetWidth;
+                if (_this.el_.offsetHeight+oY>player_.el_.offsetHeight)
+                    oY = oY-_this.el_.offsetHeight;
+                _this.el_.style.top=oY+'px';
+                _this.el_.style.left=oX+'px';
+                _this.popped = true;
+            }
+        });
+        player_.on('click', function(evt){
+            if (_this.popped)
+            {
+                _this.hide();
+                _this.popped = false;
+                evt.stopPropagation();
+                evt.preventDefault();
+                return false;
+            }
+        });
+        this.children().forEach(function(item){
+            item.on('click', function(evt){
+                _this.hide();
+                _this.popped = false;
+            });
+        });
+    }
+}));
 var MenuButton = vjs.getComponent('MenuButton');
 vjs.registerComponent('SettingsButton', vjs.extend(MenuButton, {
     buttonText: 'Settings',
@@ -20014,7 +20090,7 @@ vjs.registerComponent('SettingsButton', vjs.extend(MenuButton, {
         this.addClass(this.className);
         var items = [];
         var player = this.player_;
-        var opt = this.options();
+        var opt = this.options_;
         if (opt.info)
         {
             opt.info = vjs.mergeOptions({label: 'Technical info'}, opt.info);
@@ -20031,20 +20107,36 @@ vjs.registerComponent('SettingsButton', vjs.extend(MenuButton, {
         if (sources && sources.length>1)
         {
             items.push(new MenuLabel(player, {label: 'Quality'}));
-            var item;
             for (var i=0; i<sources.length; i+=1)
             {
-                if (!sources[i].src)
-                    continue;
-                if (!sources[i].label)
-                    sources[i].label = sources[i].type;
-                item = new QualityButton(player, sources[i]);
+                var item = new QualityButton(player, sources[i]);
                 item.addClass('vjs-menu-indent');
                 items.push(item);
             }
         }
         return items;
-    }
+    },
+    createMenu: function(){
+        var _this = this;
+        var opt = this.options_;
+        var menu = MenuButton.prototype.createMenu.call(this);
+        if (opt.show_settings_popup_on_click)
+        {
+            menu.addClass('vjs-menu-popup-on-click');
+            // videojs removes the locking state on menu item click that causes
+            // settings button to hide without updating buttonPressed state
+            menu.children().forEach(function(component){
+                component.on('click', function(){ _this.handleClick(); });
+            });
+        }
+        return menu;
+    },
+    handleClick: function(){
+        if (this.buttonPressed_)
+            this.unpressButton();
+        else
+            this.pressButton();
+    },
 }));
 var Component = vjs.getComponent('Component');
 vjs.registerComponent('Overlay', vjs.extend(Component, {
@@ -20219,7 +20311,7 @@ vjs.registerComponent('NotifyOverlay', vjs.extend(Overlay, {
 }));
 var MenuItem = vjs.getComponent('MenuItem');
 var ReportButton = vjs.registerComponent('ReportButton', vjs.extend(MenuItem, {
-    init: function(player, options){
+    constructor: function(player, options){
         MenuItem.call(this, player, options);
         var player_ = player;
         this.on('click', function(){
@@ -20232,8 +20324,19 @@ var ReportButton = vjs.registerComponent('ReportButton', vjs.extend(MenuItem, {
         });
     }
 }));
+var LogButton = vjs.registerComponent('LogButton', vjs.extend(MenuItem, {
+    constructor: function(player, options){
+        MenuItem.call(this, player, options);
+        var player_ = player;
+        this.on('click', function(){
+            // XXX alexeym: make it work without cdn
+            player_.trigger({type: 'save_logs'});
+            this.selected(false);
+        });
+    }
+}));
 var InfoButton = vjs.registerComponent('InfoButton', vjs.extend(MenuItem, {
-    init: function(player, options){
+    constructor: function(player, options){
         MenuItem.call(this, player, options);
         this.on('click', function(){
             // XXX alexeym/michaelg: use vjs api to get overlay object
@@ -20254,10 +20357,15 @@ var MenuLabel = vjs.registerComponent('MenuLabel', vjs.extend(Component, {
 }));
 var QualityButton = vjs.registerComponent('QualityButton',
     vjs.extend(MenuItem, {
-    init: function(player, options){
+    constructor: function(player, options){
         MenuItem.call(this, player, options);
         this.player_.one('play', vjs.bind(this, this.update));
         this.player_.on('resolutionchange', vjs.bind(this, this.update));
+        if (options['default'])
+        {
+            this.player_.src(options.src);
+            this.update();
+        }
     },
     handleClick: function(){
         var player = this.player_;
@@ -20271,6 +20379,8 @@ var QualityButton = vjs.registerComponent('QualityButton',
             player.trigger('resolutionchange');
             return this; // basically a no-op
         }
+        if (quality.onclick && !quality.onclick(quality))
+            return;
         var current_time = player.currentTime();
         var remain_paused = player.paused();
         player.pause();
@@ -20292,9 +20402,58 @@ var QualityButton = vjs.registerComponent('QualityButton',
     },
 }));
 
-vjs.plugin('settings_button', function(opt){
+vjs.plugin('settings', function(opt){
     var video = this;
+    opt = vjs.mergeOptions({}, opt);
     video.on('ready', function(){
+        function local_storage_set(key, value){
+            try { vjs.utils.localStorage.setItem(key, value); } catch(e){}
+        }
+        function local_storage_get(key){
+            try { return vjs.utils.localStorage.getItem(key); }
+            catch(e){ return null; }
+        }
+        function sources_normalize(sources, label_sav){
+            var i, source_def, source_sav;
+            sources = sources.filter(function(e){ return e.src; });
+            for (i=0; i<sources.length; i+=1)
+            {
+                if (!sources[i].label)
+                    sources[i].label = sources[i].type;
+                if (!source_def && sources[i]['default'])
+                    source_def = sources[i];
+                // XXX volodymyr: ignore cached quality user choice if it has
+                // an onclick hook
+                if (label_sav && label_sav==sources[i].label &&
+                    !sources[i].onclick)
+                {
+                    source_sav = sources[i];
+                }
+            }
+            for (i=0; i<sources.length; i+=1)
+            {
+                sources[i]['default'] =
+                    source_sav ? sources[i]===source_sav :
+                    source_def ? sources[i]===source_def : !i;
+            }
+            return sources;
+        }
+        if (opt.quality&&opt.quality.sources&&opt.quality.sources.length>1)
+        {
+            var quality_key = 'vjs5_quality';
+            opt.quality.sources = sources_normalize(opt.quality.sources,
+                local_storage_get(quality_key));
+            video.on('resolutionchange', function(){
+                var sources = opt.quality.sources;
+                for (var i=0; i<sources.length; i++)
+                {
+                    if (video.currentSrc()!=sources[i].src)
+                        continue;
+                    local_storage_set(quality_key, sources[i].label);
+                    break;
+                }
+            });
+        }
         if (opt.info||opt.report||
             (opt.quality&&opt.quality.sources&&opt.quality.sources.length))
         {
@@ -20312,7 +20471,283 @@ vjs.plugin('settings_button', function(opt){
                 {'class': 'vjs-notify-overlay'});
             notify_overlay.addClass('vjs-hidden');
         }
+        if (opt.volume||opt.volume===undefined)
+        {
+            var volume_key = 'vjs5_volume', mute_key = 'vjs5_mute';
+            // quality configuration above might have reset the source
+            // thus make sure video is ready before changing the volume
+            video.ready(function(){
+                var volume = local_storage_get(volume_key);
+                var mute = local_storage_get(mute_key);
+                var defaults = vjs.mergeOptions({level: 1, mute: false},
+                    opt.volume);
+                video.volume(volume!=null ? volume : defaults.level);
+                video.muted(mute!=null ? mute==='true' : defaults.mute);
+            });
+            video.on('volumechange', function() {
+                local_storage_set(volume_key, video.volume());
+                local_storage_set(mute_key, video.muted());
+            });
+        }
+        popup_menu = video.addChild('PopupMenu',
+            vjs.mergeOptions({}, opt));
     });
 });
 
 }(window, window.videojs));
+
+(function() {
+  var defaults = {
+      0: {
+        src: 'example-thumbnail.png'
+      }
+    },
+    extend = function() {
+      var args, target, i, object, property;
+      args = Array.prototype.slice.call(arguments);
+      target = args.shift() || {};
+      for (i in args) {
+        object = args[i];
+        for (property in object) {
+          if (object.hasOwnProperty(property)) {
+            if (typeof object[property] === 'object') {
+              target[property] = extend(target[property], object[property]);
+            } else {
+              target[property] = object[property];
+            }
+          }
+        }
+      }
+      return target;
+    },
+    getComputedStyle = function(el, pseudo) {
+      return function(prop) {
+        if (window.getComputedStyle) {
+          return window.getComputedStyle(el, pseudo)[prop];
+        } else {
+          return el.currentStyle[prop];
+        }
+      };
+    },
+    offsetParent = function(el) {
+      if (el.nodeName !== 'HTML' && getComputedStyle(el)('position') === 'static') {
+        return offsetParent(el.offsetParent);
+      }
+      return el;
+    },
+    getVisibleWidth = function(el, width) {
+      var clip;
+
+      if (width) {
+        return parseFloat(width);
+      }
+
+      clip = getComputedStyle(el)('clip');
+      if (clip !== 'auto' && clip !== 'inherit') {
+        clip = clip.split(/(?:\(|\))/)[1].split(/(?:,| )/);
+        if (clip.length === 4) {
+          return (parseFloat(clip[1]) - parseFloat(clip[3]));
+        }
+      }
+      return 0;
+    },
+    getScrollOffset = function() {
+      if (window.pageXOffset) {
+        return {
+          x: window.pageXOffset,
+          y: window.pageYOffset
+        };
+      }
+      return {
+        x: document.documentElement.scrollLeft,
+        y: document.documentElement.scrollTop
+      };
+    };
+
+  /**
+   * register the thubmnails plugin
+   */
+  videojs.plugin('thumbnails', function(options) {
+    var div, settings, img, player, progressControl, duration, moveListener, moveCancel;
+    settings = extend({}, defaults, options);
+    player = this;
+
+    (function() {
+      var progressControl, addFakeActive, removeFakeActive;
+      // Android doesn't support :active and :hover on non-anchor and non-button elements
+      // so, we need to fake the :active selector for thumbnails to show up.
+      if (navigator.userAgent.toLowerCase().indexOf("android") !== -1) {
+        progressControl = player.controlBar.progressControl;
+
+        addFakeActive = function() {
+          progressControl.addClass('fake-active');
+        };
+        removeFakeActive = function() {
+          progressControl.removeClass('fake-active');
+        };
+
+        progressControl.on('touchstart', addFakeActive);
+        progressControl.on('touchend', removeFakeActive);
+        progressControl.on('touchcancel', removeFakeActive);
+      }
+    })();
+
+    // create the thumbnail
+    div = document.createElement('div');
+    div.className = 'vjs-thumbnail-holder';
+    img = document.createElement('img');
+    div.appendChild(img);
+    img.src = settings['0'].src;
+    img.className = 'vjs-thumbnail';
+    extend(img.style, settings['0'].style);
+
+    // center the thumbnail over the cursor if an offset wasn't provided
+    if (!img.style.left && !img.style.right) {
+      img.onload = function() {
+        img.style.left = -(img.naturalWidth / 2) + 'px';
+      };
+    }
+
+    // keep track of the duration to calculate correct thumbnail to display
+    duration = player.duration();
+    
+    // when the container is MP4
+    player.on('durationchange', function(event) {
+      duration = player.duration();
+    });
+
+    // when the container is HLS
+    player.on('loadedmetadata', function(event) {
+      duration = player.duration();
+    });
+
+    // add the thumbnail to the player
+    progressControl = player.controlBar.progressControl;
+    progressControl.el().appendChild(div);
+
+    moveListener = function(event) {
+      var mouseTime, time, active, left, setting, pageX, right, width, halfWidth, pageXOffset, clientRect;
+      active = 0;
+      pageXOffset = getScrollOffset().x;
+      clientRect = offsetParent(progressControl.el()).getBoundingClientRect();
+      right = (clientRect.width || clientRect.right) + pageXOffset;
+
+      pageX = event.pageX;
+      if (event.changedTouches) {
+        pageX = event.changedTouches[0].pageX;
+      }
+
+      // find the page offset of the mouse
+      left = pageX || (event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft);
+      // subtract the page offset of the positioned offset parent
+      left -= offsetParent(progressControl.el()).getBoundingClientRect().left + pageXOffset;
+
+      // apply updated styles to the thumbnail if necessary
+      // mouseTime is the position of the mouse along the progress control bar
+      // `left` applies to the mouse position relative to the player so we need
+      // to remove the progress control's left offset to know the mouse position
+      // relative to the progress control
+      mouseTime = Math.floor((left - progressControl.el().offsetLeft) / progressControl.width() * duration);
+      for (time in settings) {
+        if (mouseTime > time) {
+          active = Math.max(active, time);
+        }
+      }
+      setting = settings[active];
+      if (setting.src && img.src != setting.src) {
+        img.src = setting.src;
+      }
+      if (setting.style && img.style != setting.style) {
+        extend(img.style, setting.style);
+      }
+
+      width = getVisibleWidth(img, setting.width || settings[0].width);
+      halfWidth = width / 2;
+
+      // make sure that the thumbnail doesn't fall off the right side of the left side of the player
+      if ( (left + halfWidth) > right ) {
+        left -= (left + halfWidth) - right;
+      } else if (left < halfWidth) {
+        left = halfWidth;
+      }
+
+      div.style.left = left + 'px';
+    };
+
+    // update the thumbnail while hovering
+    progressControl.on('mousemove', moveListener);
+    progressControl.on('touchmove', moveListener);
+
+    moveCancel = function(event) {
+      div.style.left = '-1000px';
+    };
+
+    // move the placeholder out of the way when not hovering
+    progressControl.on('mouseout', moveCancel);
+    progressControl.on('touchcancel', moveCancel);
+    progressControl.on('touchend', moveCancel);
+    player.on('userinactive', moveCancel);
+  });
+})();
+
+(function(window, vjs){
+'use strict';
+vjs.utils = vjs.utils||{};
+
+function local_storage_init(){
+    // Cookie functions from
+    // https://developer.mozilla.org/en-US/docs/DOM/document.cookie
+    function get_cookie_item(key){
+        if (!key || !has_cookie_item(key))
+            return null;
+        var reg_ex = new RegExp('(?:^|.*;\\s*)'
+        +window.escape(key).replace(/[\-\.\+\*]/g, '\\$&')
+        +'\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*');
+        return window.unescape(document.cookie.replace(reg_ex,'$1'));
+    }
+    function set_cookie_item(key, value, end, path, domain, secure){
+        if (!key || /^(?:expires|max\-age|path|domain|secure)$/i.test(key))
+            return;
+        var expires = '';
+        if (end){
+            switch (end.constructor){
+            case Number:
+                expires = end===Infinity
+                    ? '; expires=Tue, 19 Jan 2038 03:14:07 GMT'
+                    : '; max-age=' + end;
+                break;
+            case String:
+                expires = '; expires=' + end;
+                break;
+            case Date:
+                expires = '; expires=' + end.toGMTString();
+                break;
+            }
+        }
+        document.cookie = window.escape(key)+'='+window.escape(value)+
+            expires+(domain ? '; domain='+domain : '')+
+            (path ? '; path=' + path : '')+
+            (secure ? '; secure' : '');
+    }
+    function has_cookie_item(key){
+        return (new RegExp('(?:^|;\\s*)'
+            +window.escape(key).replace(/[\-\.\+\*]/g, '\\$&')+'\\s*\\=')
+        ).test(document.cookie);
+    }
+    function has_local_storage(){
+        try {
+            window.localStorage.setItem('vjs-storage-test', 'value');
+            window.localStorage.removeItem('vjs-storage-test');
+            return true;
+        } catch(e){ return false; }
+    }
+    vjs.utils.localStorage = has_local_storage() ? window.localStorage : {
+        getItem: get_cookie_item,
+        setItem: function(key, value){
+            set_cookie_item(key, value, Infinity, '/');
+        }
+    };
+}
+local_storage_init();
+
+})(window, window.videojs);

@@ -41,9 +41,9 @@ var api = Osmf.prototype;
 var readWrite = ['preload', 'defaultPlaybackRate', 'playbackRate', 'autoplay',
     'loop', 'mediaGroup', 'controller', 'controls', 'volume', 'muted',
     'defaultMuted'];
-var readOnly = ['error', 'networkState', 'readyState', 'seeking', 'duration',
-    'initialTime', 'startOffsetTime', 'paused', 'played', 'ended',
-    'videoTracks', 'audioTracks', 'videoWidth', 'videoHeight', 'textTracks'];
+var readOnly = ['error', 'networkState', 'readyState', 'seeking', 'textTracks',
+    'videoWidth', 'startOffsetTime', 'paused', 'played', 'ended', 'streamType',
+    'videoTracks', 'audioTracks', 'initialTime', 'videoHeight'];
 
 var createSetter = function(attr){
     var attrUpper = attr.charAt(0).toUpperCase()+attr.slice(1);
@@ -72,6 +72,11 @@ var createGetter = function(attr){
         createGetter(readOnly[i]);
 })();
 
+Osmf.prototype.duration = function(){
+    return this.el_ ? (this.streamType() == 'live' ? Infinity :
+        this.el_.vjs_getProperty('duration')) : 0;
+};
+
 Osmf.prototype.play = function(){ this.el_.vjs_play(); };
 
 Osmf.prototype.load = function(){ this.el_.vjs_load(); };
@@ -94,7 +99,7 @@ Osmf.onLoadedData = function(){
     var player = this;
     if (player.options_.autoplay)
         player.play();
-    else if (player.options_.preload)
+    else if (player.options_.preload && player.options_.preload!=='none')
     {
         if (player.currentTime())
             player.currentTime(0);
@@ -140,23 +145,30 @@ Osmf.onError = function(currentSwf, err){
     player.error({code: 4, msg: ""});
 };
 
-Osmf.onEvent = function(currentSwf, event){
+Osmf.onEvent = function(currentSwf, event, data){
     var player = document.getElementById(currentSwf).player;
-    if (event==='playing' && player.tech.firstplay===false)
+    switch (event)
     {
-        if (Osmf.log_enabled)
-            videojs.log('OSMF', 'Event', currentSwf, 'loadstart');
-        player.trigger('loadstart');
-        player.tech.loadstart = true;
-        if (Osmf.log_enabled)
-            videojs.log('OSMF', 'Event', currentSwf, 'firstplay');
-        player.trigger('firstplay');
-        player.tech.firstplay = true;
-    }
-    if (event=='buffering')
+    case 'playing':
+        if (player.tech.firstplay===false)
+        {
+            if (Osmf.log_enabled)
+                videojs.log('OSMF', 'Event', currentSwf, 'loadstart');
+            player.trigger('loadstart');
+            player.tech.loadstart = true;
+            if (Osmf.log_enabled)
+                videojs.log('OSMF', 'Event', currentSwf, 'firstplay');
+            player.trigger('firstplay');
+            player.tech.firstplay = true;
+        }
+        break;
+    case 'buffering':
         event = 'waiting';
-    else if (event=='ready')
+        break;
+    case 'ready':
         event = 'loadeddata';
+        break;
+    }
     Flash.onEvent(currentSwf, event);
     if (event!=='timeupdate' && Osmf.log_enabled)
         videojs.log('OSMF', 'Event', currentSwf, event);
