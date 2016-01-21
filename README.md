@@ -22,8 +22,8 @@ To start using hola video.js, follow these steps:
 1. Add these includes to your document's `<head>`:
 
   ```html
-  <link href="https://cdn.rawgit.com/hola/video.js/f32d495dcf04a6d3b4398e481aaab4b4869840da/dist/video-js.min.css" rel="stylesheet">
-  <script src="https://cdn.rawgit.com/hola/video.js/f32d495dcf04a6d3b4398e481aaab4b4869840da/dist/video.min.js"></script>
+  <link href="https://cdn.rawgit.com/hola/video.js/a32e5c06940a6b06639a820b0f98012c12444ff5/dist/video-js.min.css" rel="stylesheet">
+  <script src="https://cdn.rawgit.com/hola/video.js/a32e5c06940a6b06639a820b0f98012c12444ff5/dist/video.min.js"></script>
   ```
 
 2. Add a `data-setup` attribute containing any hola video.js options to a `<video >` tag on your page. These options can include any hola video.js option plus potential plugin options, just make sure they're valid JSON!
