@@ -1,7 +1,7 @@
 {
   "name": "video.js",
   "description": "An HTML5 and Flash video player with a common API and skin for both.",
-  "version": "5.0.2-9",
+  "version": "5.0.2-10",
   "copyright": "Copyright Brightcove, Inc. <https://www.brightcove.com/>",
   "license": "Apache-2.0",
   "keywords": [
@@ -38,6 +38,7 @@
     "videojs-thumbnails": "git+https://github.com/hola/videojs-thumbnails.git#v0.1.1-2",
     "videojs-utils": "git+https://github.com/hola/videojs-utils.git#v0.0.1-1",
     "videojs-contrib-hls": "git+https://github.com/hola/videojs-contrib-hls.git#hola_5.0.2-1",
+    "videojs-contrib-media-sources": "hola/videojs-contrib-media-sources#hola_5.0.2-1",
     "videojs-osmf": "git+https://github.com/hola/videojs5-osmf"
   },
   "devDependencies": {

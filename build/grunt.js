@@ -112,7 +112,7 @@ module.exports = function(grunt) {
       swf:   { cwd: 'node_modules/videojs-swf/dist/', src: 'video-js.swf', dest: 'build/temp/', expand: true, filter: 'isFile' },
       osmf:   { cwd: 'node_modules/videojs-osmf/dist/', src: 'videojs-osmf.swf', dest: 'build/temp/', expand: true, filter: 'isFile' },
       ie8:   { cwd: 'node_modules/videojs-ie8/dist/', src: ['**/**'], dest: 'build/temp/ie8/', expand: true, filter: 'isFile' },
-      dist:  { cwd: 'build/temp/', src: ['**/**', '!test*'], dest: 'dist/', expand: true, filter: 'isFile' },
+      dist:  { cwd: 'build/temp/', src: ['**/**', '!test*', '!video.basic.js'], dest: 'dist/', expand: true, filter: 'isFile' },
       examples: { cwd: 'docs/examples/', src: ['**/**'], dest: 'dist/examples/', expand: true, filter: 'isFile' }
     },
     cssmin: {
@@ -332,7 +332,7 @@ module.exports = function(grunt) {
       },
       build: {
         files: {
-          'build/temp/video.js': ['src/js/video.js']
+          'build/temp/video.basic.js': ['src/js/video.js']
         }
       },
       watch: {
@@ -341,7 +341,7 @@ module.exports = function(grunt) {
           keepAlive: true
         },
         files: {
-          'build/temp/video.js': ['src/js/video.js']
+          'build/temp/video.basic.js': ['src/js/video.js']
         }
       },
       tests: {
@@ -369,7 +369,7 @@ module.exports = function(grunt) {
       build: {
         options: {},
         files: {
-          'build/temp/video.js.map': ['build/temp/video.js'],
+          'build/temp/video.js.map': ['build/temp/video.basic.js'],
         }
       }
     },
@@ -388,7 +388,7 @@ module.exports = function(grunt) {
         options: {
           separator: '\n'
         },
-        src: ['build/temp/video.js'],
+        src: ['build/temp/video.basic.js'],
         dest: 'build/temp/alt/video.novtt.js',
         nonull: true,
       },
@@ -396,8 +396,8 @@ module.exports = function(grunt) {
         options: {
           separator: '\n',
         },
-        src: ['build/temp/video.js', 'node_modules/vtt.js/dist/vtt.js'],
-        dest: 'build/temp/video.js',
+        src: ['build/temp/video.basic.js', 'node_modules/vtt.js/dist/vtt.js'],
+        dest: 'build/temp/video.basic.js',
         nonull: true,
       },
       hola: {
@@ -405,13 +405,13 @@ module.exports = function(grunt) {
           separator: '\n',
         },
         files: {
-          'build/temp/origin/video.js': ['build/temp/video.js'],
+          'build/temp/origin/video.js': ['build/temp/video.basic.js'],
           'build/temp/origin/videojs-hola-skin.js': ['node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js'],
           'build/temp/origin/videojs-settings.js': ['node_modules/videojs-settings/dist/videojs-settings.js'],
           'build/temp/origin/videojs.thumbnails.js': ['node_modules/videojs-thumbnails/videojs.thumbnails.js'],
           'build/temp/origin/videojs-utils.js': ['node_modules/videojs-utils/dist/videojs-utils.js'],
-          'build/temp/video.js': [
-            'build/temp/video.js',
+          'build/temp/video.basic.js': [
+            'build/temp/video.basic.js',
             'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
             'node_modules/videojs-settings/dist/videojs-settings.js',
             'node_modules/videojs-thumbnails/videojs.thumbnails.js',
@@ -433,25 +433,33 @@ module.exports = function(grunt) {
         },
         files: {
           // default versions
-          'build/temp/video.js': ['build/temp/video.js'],
+          'build/temp/video.js': [
+            'build/temp/video.basic.js',
+            'node_modules/videojs-contrib-media-sources/dist/videojs-media-sources.js',
+          ],
           'build/temp/origin/videojs.hls.js': ['node_modules/videojs-contrib-hls/dist/videojs.hls.js'],
           'build/temp/origin/videojs-osmf.js': ['node_modules/videojs-osmf/dist/videojs-osmf.js'],
           'build/temp/videojs.hls.js': [
-            'build/temp/video.js',
+            'build/temp/video.basic.js',
             'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
           ],
           'build/temp/videojs.osmf.js': [
-            'build/temp/video.js',
+            'build/temp/video.basic.js',
+            'node_modules/videojs-contrib-media-sources/dist/videojs-media-sources.js',
             'node_modules/videojs-osmf/dist/videojs-osmf.js',
           ],
           // novtt versions
-          'build/temp/alt/video.novtt.js': ['build/temp/alt/video.novtt.js'],
+          'build/temp/alt/video.novtt.js': [
+            'build/temp/alt/video.novtt.js',
+            'node_modules/videojs-contrib-media-sources/dist/videojs-media-sources.js',
+          ],
           'build/temp/alt/videojs.novtt.hls.js': [
             'build/temp/alt/video.novtt.js',
             'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
           ],
           'build/temp/alt/videojs.novtt.osmf.js': [
             'build/temp/alt/video.novtt.js',
+            'node_modules/videojs-contrib-media-sources/dist/videojs-media-sources.js',
             'node_modules/videojs-osmf/dist/videojs-osmf.js',
           ],
         },
@@ -504,7 +512,7 @@ module.exports = function(grunt) {
           process: createLicenseProcessor({includesVtt: true})
         },
         files: {
-          src: ['build/temp/video.js']
+          src: ['build/temp/video.basic.js']
         }
       }
     },
