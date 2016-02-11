@@ -22,8 +22,8 @@ To start using hola video.js, follow these steps:
 1. Add these includes to your document's `<head>`:
 
   ```html
-  <link href="https://cdn.rawgit.com/hola/video.js/a32e5c06940a6b06639a820b0f98012c12444ff5/dist/video-js.min.css" rel="stylesheet">
-  <script src="https://cdn.rawgit.com/hola/video.js/a32e5c06940a6b06639a820b0f98012c12444ff5/dist/video.min.js"></script>
+  <link href="https://cdn.rawgit.com/hola/video.js/4366bc45683330fe24d44a0ef9693b75b7d5ed13/dist/video-js.min.css" rel="stylesheet">
+  <script src="https://cdn.rawgit.com/hola/video.js/4366bc45683330fe24d44a0ef9693b75b7d5ed13/dist/video.min.js"></script>
   ```
 
 2. Add a `data-setup` attribute containing any hola video.js options to a `<video >` tag on your page. These options can include any hola video.js option plus potential plugin options, just make sure they're valid JSON!
@@ -65,13 +65,13 @@ Bandwidth saver works with MP4/FLV streams.
 
 ## Prebuilt Hola video.js packages
 
-[Hola Video.js, zip (1.59MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-7/videojs-5.0.2-7.zip) – basic Hola Video.js.
+[Hola Video.js, zip (1.8MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-10/videojs-5.0.2-10.zip) – basic Hola Video.js.
 
-[Hola Video.js + HLS, zip (2.01MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-7/videojs-hls-5.0.2-7.zip) – Hola Video.js + HLS plugin.
+[Hola Video.js + HLS, zip (2.04MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-10/videojs-hls-5.0.2-10.zip) – Hola Video.js + HLS plugin.
 
-[Hola Video.js + OSMF, zip (1.89MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-7/videojs-osmf-5.0.2-7.zip) – Hola Video.js + OSMF plugin.
+[Hola Video.js + OSMF, zip (2.09MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-10/videojs-osmf-5.0.2-10.zip) – Hola Video.js + OSMF plugin.
 
-[All files, zip (10.9MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-7/videojs-full-5.0.2-7.zip) – all Hola Video.js prebuilt files, including examples.
+[All files, zip (14.1MB)](https://github.com/hola/video.js/releases/download/hola_5.0.2-10/videojs-full-5.0.2-10.zip) – all Hola Video.js prebuilt files, including examples.
 
 ## Examples
 
