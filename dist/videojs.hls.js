@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-23 <http://videojs.com/>
+ * Video.js 5.0.2-24 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -11384,7 +11384,7 @@ var autoSetup = function autoSetup() {
 
 // Pause to let the DOM keep processing
 var autoSetupTimeout = function autoSetupTimeout(wait, vjs) {
-  videojs = vjs;
+  if (vjs) videojs = vjs;
   setTimeout(autoSetup, wait);
 };
 
@@ -17440,7 +17440,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-23';
+videojs.VERSION = '5.0.2-24';
 
 /**
  * The global options object. These are the settings that take effect
