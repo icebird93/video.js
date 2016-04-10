@@ -503,6 +503,7 @@ class Player extends Component {
       'techId': `${this.id()}_${techName}_api`,
       'textTracks': this.textTracks_,
       'autoplay': this.options_.autoplay,
+      'controls': this.options_.controls,
       'preload': this.options_.preload,
       'loop': this.options_.loop,
       'muted': this.options_.muted,
