@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-26 <http://videojs.com/>
+ * Video.js 5.0.2-27 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -11908,6 +11908,14 @@ var Flash = (function (_Tech) {
     // Generate ID for swf object
     var objId = options.techId;
 
+    if (options.accelerated) {
+      // setup params needed for hardware acceleration
+      options.params = _objectAssign2['default'](options.params || {}, {
+        allowfullscreen: true,
+        wmode: 'direct'
+      });
+    }
+
     // Merge default flashvars with ones passed in to init
     var flashVars = _objectAssign2['default']({
 
@@ -11917,6 +11925,7 @@ var Flash = (function (_Tech) {
       'errorEventProxyFunction': 'videojs.Flash.onError',
 
       // Player Settings
+      'accelerated': options.accelerated,
       'autoplay': options.autoplay,
       'controls': options.controls,
       'poster': options.poster,
@@ -11928,6 +11937,7 @@ var Flash = (function (_Tech) {
 
     // Merge default parames with ones passed in
     var params = _objectAssign2['default']({
+      'allowfullscreen': true,
       'wmode': 'opaque', // Opaque is needed to overlay controls, but can affect playback performance
       'bgcolor': '#000000' // Using bgcolor prevents a white flash when the object is loading
     }, options.params);
@@ -17426,7 +17436,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-26';
+videojs.VERSION = '5.0.2-27';
 
 /**
  * The global options object. These are the settings that take effect
@@ -18818,7 +18828,7 @@ local_storage_init();
 
 })(window, window.videojs);
 
-/*! videojs-contrib-media-sources - v2.0.1 - 2016-03-24
+/*! videojs-contrib-media-sources - v2.0.1 - 2016-04-13
 * Copyright (c) 2016 Brightcove; Licensed  */
 /**
  * mux.js
