@@ -327,7 +327,7 @@ module.exports = function(grunt) {
           ['browserify-versionify', {
             placeholder: '__SWF_VERSION__',
             version: pkg.dependencies['videojs-swf'].match(
-                /git\+https:\/\/github\.com\/hola\/video-js-swf-sv#v(.*)-\d+$/)[1]
+                /git\+https:\/\/github\.com\/hola\/video-js-swf-sv#(.+)$/)[1]
           }]
         ]
       },
