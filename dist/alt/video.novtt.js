@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-32 <http://videojs.com/>
+ * Video.js 5.0.2-33 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -17438,7 +17438,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-32';
+videojs.VERSION = '5.0.2-33';
 
 /**
  * The global options object. These are the settings that take effect
@@ -18830,7 +18830,7 @@ local_storage_init();
 
 })(window, window.videojs);
 
-/*! videojs-contrib-media-sources - v2.0.1 - 2016-04-13
+/*! videojs-contrib-media-sources - v2.0.1 - 2016-04-25
 * Copyright (c) 2016 Brightcove; Licensed  */
 /**
  * mux.js
