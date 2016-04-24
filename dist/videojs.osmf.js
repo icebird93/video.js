@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-31 <http://videojs.com/>
+ * Video.js 5.0.2-32 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -11906,7 +11906,7 @@ var Flash = (function (_Tech) {
     // Otherwise this adds a CDN url.
     // The CDN also auto-adds a swf URL for that specific version.
     if (!options.swf) {
-      options.swf = '//cdn.rawgit.com/hola/video-js-swf-sv/v5.0.1-8/dist/video-js.swf';
+      options.swf = '//cdn.rawgit.com/hola/video-js-swf-sv/v5.0.1-9/dist/video-js.swf';
     }
 
     // Generate ID for swf object
@@ -17442,7 +17442,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-31';
+videojs.VERSION = '5.0.2-32';
 
 /**
  * The global options object. These are the settings that take effect
