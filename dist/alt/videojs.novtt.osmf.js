@@ -5214,7 +5214,9 @@ var MouseTimeDisplay = (function (_Component) {
   MouseTimeDisplay.prototype.handleMouseMove = function handleMouseMove(event) {
     var duration = this.player_.duration();
     var newTime = this.calculateDistance(event) * duration;
+    var maxLeft = this.player().controlBar.progressControl.seekBar.width() - this.width();
     var position = event.pageX - Dom.findElPosition(this.el().parentNode).left;
+    position = Math.min(Math.max(0, position), maxLeft);
 
     this.update(newTime, position);
   };
