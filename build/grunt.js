@@ -407,7 +407,7 @@ module.exports = function(grunt) {
           ]
         }),
         files: {
-          'build/temp/video.js': ['src/js/video.js']
+          'build/temp/video.basic.js': ['src/js/video.js']
         }
       },
       watch: {
