@@ -11,7 +11,7 @@ Text Tracks are a function of HTML5 video for providing time triggered text to t
 
 Creating the Text File
 ----------------------
-Timed text requires a text file in [WebVTT](http://dev.w3.org/html5/webvtt/) format. This format defines a list of "cues" that have a start time, and end time, and text to display.
+Timed text requires a text file in [WebVTT](http://dev.w3.org/html5/webvtt/) format. This format defines a list of "cues" that have a start time, and end time, and text to display. [Microsoft has a builder](https://dev.modern.ie/testdrive/demos/captionmaker/) that can help you get started on the file.
 
 When creating captions, there's also additional [caption formatting techniques] (http://www.theneitherworld.com/mcpoodle/SCC_TOOLS/DOCS/SCC_FORMAT.HTML#style) that would be good to use, like brackets around sound effects: [ sound effect ]. If you'd like a more in depth style guide for captioning, you can reference the [Captioning Key](http://www.dcmp.org/captioningkey/), but keep in mind not all features are supported by WebVTT or (more likely) the Video.js WebVTT implementation.
 
@@ -20,12 +20,12 @@ Adding to Video.js
 Once you have your WebVTT file created, you can add it to Video.js using the track tag. Put your track tag after all the source elements, and before any fallback content.
 
 ```html
-<video id="example_video_1" class="video-js vjs-default-skin"  
-  controls preload="auto" width="640" height="264"  
-  data-setup='{"example_option":true}'>  
- <source src="http://video-js.zencoder.com/oceans-clip.mp4" type='video/mp4' />  
- <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />  
- <source src="http://video-js.zencoder.com/oceans-clip.ogv" type='video/ogg' />  
+<video id="example_video_1" class="video-js vjs-default-skin"
+  controls preload="auto" width="640" height="264"
+  data-setup='{"example_option":true}'>
+ <source src="http://video-js.zencoder.com/oceans-clip.mp4" type="video/mp4" />
+ <source src="http://video-js.zencoder.com/oceans-clip.webm" type="video/webm" />
+ <source src="http://video-js.zencoder.com/oceans-clip.ogv" type="video/ogg" />
 
  <track kind="captions" src="http://example.com/path/to/captions.vtt" srclang="en" label="English" default>
 
@@ -56,8 +56,6 @@ The two-letter code (valid BCP 47 language tag) for the language of the text tra
 
 <table border="0" cellspacing="5" cellpadding="5">
   <tr>
-    <td>
-
       <table>
         <tr><th>ab<th><td>Abkhazian</td></tr>
         <tr><th>aa<th><td>Afar</td></tr>
@@ -96,12 +94,6 @@ The two-letter code (valid BCP 47 language tag) for the language of the text tra
         <tr><th>fa<th><td>Farsi</td></tr>
         <tr><th>fj<th><td>Fiji</td></tr>
         <tr><th>fi<th><td>Finnish</td></tr>
-      </table>
-
-    </td>
-    <td>
-
-      <table>
         <tr><th>fr<th><td>French</td></tr>
         <tr><th>fy<th><td>Frisian</td></tr>
         <tr><th>gl<th><td>Galician</td></tr>
@@ -139,12 +131,6 @@ The two-letter code (valid BCP 47 language tag) for the language of the text tra
         <tr><th>ku<th><td>Kurdish</td></tr>
         <tr><th>lo<th><td>Laothian</td></tr>
         <tr><th>la<th><td>Latin</td></tr>
-      </table>
-
-    </td>
-    <td>
-
-      <table>
         <tr><th>lv<th><td>Latvian (Lettish)</td></tr>
         <tr><th>li<th><td>Limburgish ( Limburger)</td></tr>
         <tr><th>ln<th><td>Lingala</td></tr>
@@ -182,12 +168,6 @@ The two-letter code (valid BCP 47 language tag) for the language of the text tra
         <tr><th>sn<th><td>Shona</td></tr>
         <tr><th>ii<th><td>Sichuan Yi</td></tr>
         <tr><th>sd<th><td>Sindhi</td></tr>
-      </table>
-
-    </td>
-    <td>
-
-      <table>
         <tr><th>si<th><td>Sinhalese</td></tr>
         <tr><th>ss<th><td>Siswati</td></tr>
         <tr><th>sk<th><td>Slovak</td></tr>
@@ -224,7 +204,5 @@ The two-letter code (valid BCP 47 language tag) for the language of the text tra
         <tr><th>yo<th><td>Yoruba</td></tr>
         <tr><th>zu<th><td>Zulu</td></tr>
       </table>
-
-    </td>
   </tr>
 </table>
