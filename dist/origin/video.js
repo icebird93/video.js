@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-39 <http://videojs.com/>
+ * Video.js 5.0.2-40 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -6929,7 +6929,7 @@ var TimeDivider = (function (_Component) {
   TimeDivider.prototype.createEl = function createEl() {
     return _Component.prototype.createEl.call(this, 'div', {
       className: 'vjs-time-control vjs-time-divider',
-      innerHTML: '<div><span>&nbsp;/&nbsp;</span></div>'
+      innerHTML: '<div><span>/</span></div>'
     });
   };
 
@@ -17619,7 +17619,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-39';
+videojs.VERSION = '5.0.2-40';
 
 /**
  * The global options object. These are the settings that take effect
