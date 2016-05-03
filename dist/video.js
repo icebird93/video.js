@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-38 <http://videojs.com/>
+ * Video.js 5.0.2-39 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -5198,7 +5198,9 @@ var MouseTimeDisplay = (function (_Component) {
     this.update(0, 0);
 
     player.on('ready', function () {
-      _this.on(player.controlBar.progressControl.el(), 'mousemove', _lodashCompatFunctionThrottle2['default'](Fn.bind(_this, _this.handleMouseMove), 25));
+      var progressEl = _this.player_.controlBar.progressControl.el();
+      progressEl.appendChild(_this.tooltip);
+      _this.on(progressEl, 'mousemove', _lodashCompatFunctionThrottle2['default'](Fn.bind(_this, _this.handleMouseMove), 25));
     });
   }
 
@@ -5210,26 +5212,48 @@ var MouseTimeDisplay = (function (_Component) {
    */
 
   MouseTimeDisplay.prototype.createEl = function createEl() {
-    return _Component.prototype.createEl.call(this, 'div', {
+    this.tooltip = Dom.createEl('div', {
+      className: 'vjs-mouse-display-tooltip'
+    });
+    var el = _Component.prototype.createEl.call(this, 'div', {
       className: 'vjs-mouse-display'
     });
+    return el;
+  };
+
+  MouseTimeDisplay.prototype.dispose = function dispose() {
+    if (this.tooltip.parentNode) {
+      this.tooltip.parentNode.removeChild(this.tooltip);
+    }
+
+    Dom.removeElData(this.tooltip);
+    this.tooltip = null;
+
+    _Component.prototype.dispose.call(this);
   };
 
   MouseTimeDisplay.prototype.handleMouseMove = function handleMouseMove(event) {
     var duration = this.player_.duration();
     var newTime = this.calculateDistance(event) * duration;
+
     var maxLeft = this.player().controlBar.progressControl.seekBar.width() - this.width();
     var position = event.pageX - Dom.findElPosition(this.el().parentNode).left;
     position = Math.min(Math.max(0, position), maxLeft);
 
-    this.update(newTime, position);
+    var tooltipWidth = this.tooltip.offsetWidth;
+    var maxTooltipLeft = this.tooltip.parentNode.offsetWidth - tooltipWidth;
+    var tooltipPosition = event.pageX - Dom.findElPosition(this.tooltip.parentNode).left - tooltipWidth / 2;
+    tooltipPosition = Math.min(Math.max(0, tooltipPosition), maxTooltipLeft);
+
+    this.update(newTime, position, tooltipPosition);
   };
 
-  MouseTimeDisplay.prototype.update = function update(newTime, position) {
+  MouseTimeDisplay.prototype.update = function update(newTime, position, tooltipPosition) {
     var time = _utilsFormatTimeJs2['default'](newTime, this.player_.duration());
 
     this.el().style.left = position + 'px';
-    this.el().setAttribute('data-current-time', time);
+    this.tooltip.innerHTML = time;
+    this.tooltip.style.left = tooltipPosition + 'px';
   };
 
   MouseTimeDisplay.prototype.calculateDistance = function calculateDistance(event) {
@@ -6905,7 +6929,7 @@ var TimeDivider = (function (_Component) {
   TimeDivider.prototype.createEl = function createEl() {
     return _Component.prototype.createEl.call(this, 'div', {
       className: 'vjs-time-control vjs-time-divider',
-      innerHTML: '<div><span>/</span></div>'
+      innerHTML: '<div><span>&nbsp;/&nbsp;</span></div>'
     });
   };
 
@@ -7198,8 +7222,7 @@ var VolumeDisplay = (function (_Component) {
     this.update(0, 0, 0);
 
     player.on('ready', function () {
-      _this.tooltipParent = player.controlBar.progressControl;
-      _this.tooltipParent.el().appendChild(_this.tooltip);
+      player.controlBar.progressControl.el().appendChild(_this.tooltip);
 
       _this.parent = player.controlBar.volumeMenuButton.volumeBar;
       _this.on(_this.parent.el(), 'mousemove', _lodashCompatFunctionThrottle2['default'](Fn.bind(_this, _this.handleMouseMove), 25));
@@ -7252,9 +7275,12 @@ var VolumeDisplay = (function (_Component) {
     var position = event.pageX - Dom.findElPosition(this.el().parentNode).left;
     position = Math.min(Math.max(0, position), maxLeft);
 
-    var minTooltipLeft = Dom.findElPosition(this.parent.el()).left - Dom.findElPosition(this.tooltipParent.el()).left;
+    var tooltipWidth = this.tooltip.offsetWidth;
+    var tooltipParentLeft = Dom.findElPosition(this.tooltip.parentNode).left;
+    var minTooltipLeft = Dom.findElPosition(this.parent.el()).left - tooltipParentLeft - tooltipWidth / 2;
     var maxTooltipLeft = minTooltipLeft + this.parent.width();
-    var tooltipPosition = event.pageX - Dom.findElPosition(this.tooltipParent.el()).left;
+
+    var tooltipPosition = event.pageX - tooltipParentLeft - tooltipWidth / 2;
     tooltipPosition = Math.min(Math.max(minTooltipLeft, tooltipPosition), maxTooltipLeft);
 
     this.update(newValue, position, tooltipPosition);
@@ -17593,7 +17619,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-38';
+videojs.VERSION = '5.0.2-39';
 
 /**
  * The global options object. These are the settings that take effect
@@ -20169,6 +20195,10 @@ HolaSkin.prototype.init = function(){
         _this.set_play_button_state(morph, true, true);
     });
     _this.set_play_button_state(morph, player.paused());
+    var volume_button = player.controlBar.volumeMenuButton.el();
+    var volume_icon = document.createElement('div');
+    volume_icon.setAttribute('class', 'vjs-volume-icon');
+    volume_button.insertBefore(volume_icon, volume_button.firstChild);
 };
 
 HolaSkin.prototype.dispose = function(){
@@ -20179,7 +20209,7 @@ HolaSkin.prototype.dispose = function(){
 var defaults = {
     className: 'vjs5-hola-skin',
     css: '/css/videojs-hola-skin.css',
-    ver: 'ver=0.0.2-7'
+    ver: 'ver=0.0.2-10'
 };
 
 // VideoJS plugin register

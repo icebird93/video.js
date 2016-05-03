@@ -637,13 +637,16 @@ fonts to show/hide properly.
   font-size: 1.666666666666666666em; }
 
 /* Also show the current time tooltip */
-.video-js .vjs-progress-control:hover .vjs-mouse-display:after,
-.video-js .vjs-progress-control:hover .vjs-play-progress:after {
+.video-js .vjs-progress-control:hover .vjs-play-progress:after,
+.video-js .vjs-progress-control:hover .vjs-mouse-display-tooltip {
   display: block;
   /* If we let the font size grow as much as everything else, the current time tooltip ends up
      ginormous. If you'd like to enable the current time tooltip all the time, this should be disabled
      to avoid a weird hitch when you roll off the hover. */
   font-size: 0.6em; }
+
+.video-js .vjs-progress-control:hover .vjs-mouse-display-tooltip {
+  font-size: 1em; }
 
 /* Progress Bars */
 .video-js .vjs-progress-holder .vjs-play-progress,
@@ -671,13 +674,13 @@ fonts to show/hide properly.
     right: -0.5em;
     font-size: 0.9em; }
 
-.video-js .vjs-mouse-display:after,
-.video-js .vjs-play-progress:after {
+.video-js .vjs-play-progress:after,
+.video-js .vjs-mouse-display-tooltip {
   /* By default this is hidden and only shown when hovering over the progress control */
   display: none;
   position: absolute;
-  top: -2.4em;
-  right: -1.5em;
+  top: -1em;
+  left: 0;
   font-size: 0.9em;
   color: #000;
   content: attr(data-current-time);
@@ -724,7 +727,7 @@ specific time ranges that have been buffered */
   display: block; }
 
 .video-js.vjs-user-inactive .vjs-progress-control .vjs-mouse-display,
-.video-js.vjs-user-inactive .vjs-progress-control .vjs-mouse-display:after {
+.video-js.vjs-user-inactive .vjs-progress-control .vjs-mouse-display-tooltip {
   visibility: hidden;
   opacity: 0;
   -webkit-transition: visibility 1s, opacity 1s;
@@ -733,10 +736,10 @@ specific time ranges that have been buffered */
   transition: visibility 1s, opacity 1s; }
 
 .video-js.vjs-user-inactive.vjs-no-flex .vjs-progress-control .vjs-mouse-display,
-.video-js.vjs-user-inactive.vjs-no-flex .vjs-progress-control .vjs-mouse-display:after {
+.video-js.vjs-user-inactive.vjs-no-flex .vjs-progress-control .vjs-mouse-display-tooltip {
   display: none; }
 
-.video-js .vjs-progress-control .vjs-mouse-display:after {
+.video-js .vjs-progress-control .vjs-mouse-display-tooltip {
   color: #fff;
   background-color: #000;
   background-color: rgba(0, 0, 0, 0.8); }
@@ -866,7 +869,6 @@ width and height to zero. */
   display: none;
   position: absolute;
   top: -1em;
-  margin-left: -1em;
   font-size: 1em;
   color: #000;
   padding: 0.5em;
