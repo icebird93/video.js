@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-40 <http://videojs.com/>
+ * Video.js 5.0.2-41 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -5233,7 +5233,12 @@ var MouseTimeDisplay = (function (_Component) {
   };
 
   MouseTimeDisplay.prototype.handleMouseMove = function handleMouseMove(event) {
+    var isPercent = false;
     var duration = this.player_.duration();
+    if (!duration) {
+      isPercent = true;
+      duration = 100;
+    }
     var newTime = this.calculateDistance(event) * duration;
 
     var maxLeft = this.player().controlBar.progressControl.seekBar.width() - this.width();
@@ -5245,11 +5250,11 @@ var MouseTimeDisplay = (function (_Component) {
     var tooltipPosition = event.pageX - Dom.findElPosition(this.tooltip.parentNode).left - tooltipWidth / 2;
     tooltipPosition = Math.min(Math.max(0, tooltipPosition), maxTooltipLeft);
 
-    this.update(newTime, position, tooltipPosition);
+    this.update(newTime, position, tooltipPosition, isPercent);
   };
 
-  MouseTimeDisplay.prototype.update = function update(newTime, position, tooltipPosition) {
-    var time = _utilsFormatTimeJs2['default'](newTime, this.player_.duration());
+  MouseTimeDisplay.prototype.update = function update(newTime, position, tooltipPosition, isPercent) {
+    var time = isPercent ? Math.round(newTime) + '%' : _utilsFormatTimeJs2['default'](newTime, this.player_.duration());
 
     this.el().style.left = position + 'px';
     this.tooltip.innerHTML = time;
@@ -17619,7 +17624,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-40';
+videojs.VERSION = '5.0.2-41';
 
 /**
  * The global options object. These are the settings that take effect
@@ -20209,7 +20214,7 @@ HolaSkin.prototype.dispose = function(){
 var defaults = {
     className: 'vjs5-hola-skin',
     css: '/css/videojs-hola-skin.css',
-    ver: 'ver=0.0.2-11'
+    ver: 'ver=0.0.2-13'
 };
 
 // VideoJS plugin register
