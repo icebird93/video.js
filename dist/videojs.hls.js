@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-41 <http://videojs.com/>
+ * Video.js 5.0.2-42 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -17624,7 +17624,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-41';
+videojs.VERSION = '5.0.2-42';
 
 /**
  * The global options object. These are the settings that take effect
@@ -20214,7 +20214,7 @@ HolaSkin.prototype.dispose = function(){
 var defaults = {
     className: 'vjs5-hola-skin',
     css: '/css/videojs-hola-skin.css',
-    ver: 'ver=0.0.2-13'
+    ver: 'ver=0.0.2-14'
 };
 
 // VideoJS plugin register
