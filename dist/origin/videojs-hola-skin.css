@@ -48,7 +48,11 @@
   margin: 0;
   padding: 0;
 }
+.vjs5-hola-skin .vjs-control:focus .vjs-menu {
+  text-shadow: none;
+}
 .vjs5-hola-skin .vjs-play-control {
+  width: 3.3em;
   cursor: pointer;
   order: 0;
 }
@@ -284,8 +288,9 @@
   overflow: visible;
 }
 .vjs5-hola-skin .vjs-volume-menu-button,
-.vjs5-hola-skin .vjs-volume-menu-button .vjs-volume-icon {
-  width: 4em;
+.vjs5-hola-skin .vjs-volume-menu-button .vjs-volume-icon,
+.vjs5-hola-skin .vjs-volume-menu-button.vjs-button > .vjs-control-text {
+  width: 4.5em;
 }
 .vjs5-hola-skin .vjs-volume-menu-button .vjs-menu-content {
   width: 0;
@@ -293,6 +298,7 @@
 }
 .vjs5-hola-skin .vjs-volume-menu-button .vjs-volume-icon {
   cursor: pointer;
+  opacity: 0.7;
 }
 .vjs5-hola-skin .vjs-volume-menu-button .vjs-volume-icon > svg {
   position: absolute;
@@ -300,14 +306,10 @@
   top: 0;
   fill: white;
   stroke: white;
-  opacity: 0.7;
   transition: opacity 200ms ease;
 }
-.vjs5-hola-skin .vjs-volume-menu-button .vjs-volume-icon:hover > svg {
+.vjs5-hola-skin .vjs-volume-menu-button .vjs-volume-icon:hover {
   opacity: 1;
-}
-.vjs5-hola-skin .vjs-volume-menu-button.vjs-button > .vjs-control-text {
-  min-width: 4em;
 }
 .vjs5-hola-skin .vjs-volume-menu-button.vjs-button:hover > .vjs-control-text {
   display: none;
@@ -327,16 +329,12 @@
   background-size: 55%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.7;
   transition: opacity 200ms ease;
 }
 .vjs5-hola-skin .vjs-volume-menu-button.vjs-volume-menu-button-horizontal > .vjs-volume-icon path,
 .vjs5-hola-skin .vjs-volume-menu-button.vjs-volume-menu-button-horizontal > .vjs-volume-icon .volume-level-0 {
   opacity: 0;
   transition: opacity 400ms ease;
-}
-.vjs5-hola-skin .vjs-volume-menu-button.vjs-volume-menu-button-horizontal:hover > .vjs-volume-icon {
-  opacity: 1;
 }
 .vjs5-hola-skin .vjs-volume-menu-button.vjs-volume-menu-button-horizontal.vjs-vol-0 > .vjs-volume-icon .volume-level-0 {
   opacity: 1;
@@ -379,7 +377,7 @@
 .vjs5-hola-skin.vjs-no-flex .vjs-menu-button-inline:focus,
 .vjs5-hola-skin.vjs-no-flex .vjs-menu-button-inline.vjs-slider-active,
 .vjs5-hola-skin.vjs-fullscreen .vjs-menu-button-inline {
-  width: 11em;
+  width: 12em;
 }
 .vjs5-hola-skin .vjs-settings-button {
   order: 6;
@@ -387,7 +385,7 @@
 .vjs5-hola-skin .vjs-settings-button:before {
   content: '';
   background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI0NXB4Ig0KCSBoZWlnaHQ9IjQ1cHgiIHZpZXdCb3g9IjAgMCA0NSA0NSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNDUgNDUiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KCTxwYXRoIGZpbGw9IiNGRkZGRkYiIGQ9Ik00Mi44LDI0Ljd2LTQuNWgtNS4yYy0wLjQtMi41LTEuNC00LjgtMi44LTYuOGwzLjctMy43bC0zLjItMy4ybC0zLjcsMy43Yy0yLTEuNS00LjMtMi40LTYuOC0yLjhWMi4yaC00LjUNCgkJdjUuMmMtMi41LDAuNC00LjgsMS40LTYuOCwyLjhMOS44LDYuNkw2LjYsOS44bDMuNywzLjdjLTEuNSwyLTIuNCw0LjMtMi44LDYuOEgyLjJ2NC41aDUuMmMwLjQsMi41LDEuNCw0LjgsMi44LDYuOGwtMy43LDMuNw0KCQlsMy4yLDMuMmwzLjctMy43YzIsMS41LDQuMywyLjQsNi44LDIuOHY1LjJoNC41di01LjJjMi41LTAuNCw0LjgtMS40LDYuOC0yLjhsMy43LDMuN2wzLjItMy4ybC0zLjctMy43YzEuNS0yLDIuNC00LjMsMi44LTYuOA0KCQlINDIuOHogTTMyLDIyLjVjMCw1LjItNC4yLDkuNS05LjUsOS41UzEzLDI3LjcsMTMsMjIuNXM0LjItOS41LDkuNS05LjVTMzIsMTcuMywzMiwyMi41eiIvPg0KPC9zdmc+) no-repeat;
-  background-size: 50%;
+  background-size: 60%;
   background-position: center;
   opacity: 0.7;
   transition: opacity 200ms ease;
@@ -431,7 +429,7 @@
   color: #bbb;
 }
 .vjs5-hola-skin .vjs-time-control.vjs-current-time {
-  padding-left: 5px;
+  padding-left: 0;
   color: #fff;
   font-weight: bold;
   order: 2;
@@ -511,14 +509,10 @@
   left: 1em;
   z-index: 3;
   display: inline-block;
-  margin-bottom: 3em;
-  padding-bottom: 10px;
-  border-left: 2em solid transparent;
-  border-right: 2em solid transparent;
-  border-top: 1.55em solid #000000;
-  /* Same width top as ul bottom */
-  border-top-color: rgba(7, 40, 50, 0.5);
-  /* Same as ul background */
+  padding: 10px;
+  border: 1px solid #072832;
+  border-color: rgba(7, 40, 50, 0.5);
+  font-size: 1.2em;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -531,6 +525,7 @@
 .vjs5-hola-skin .vjs-info-overlay.vjs-notify-overlay {
   bottom: 50%;
   top: auto;
+  z-index: 4;
   margin-bottom: -3em;
   left: 50%;
   margin-left: -8.5em;
@@ -543,12 +538,12 @@
 }
 .vjs5-hola-skin .vjs-info-overlay-title {
   margin-bottom: 10px;
-  font-size: 1.5em;
+  font-size: 1.2em;
 }
 .vjs5-hola-skin .vjs-info-overlay-x {
   position: absolute;
-  top: -1em;
-  right: 0;
+  top: 10px;
+  right: 10px;
   transition: color 200ms ease;
   cursor: pointer;
 }
@@ -562,20 +557,28 @@
 .vjs5-hola-skin .vjs-notify-overlay-content {
   text-align: center;
 }
-.vjs5-hola-skin .vjs-info-overlay ul {
+.vjs5-hola-skin .vjs-info-overlay-list {
   list-style: none;
   position: relative;
   margin: 0;
   padding: 0;
 }
-.vjs5-hola-skin .vjs-info-overlay ul li {
+.vjs5-hola-skin .vjs-info-overlay-list-item {
   padding: 0;
   margin: 0;
   height: 16px;
   line-height: 16px;
 }
+.vjs5-hola-skin .vjs-info-overlay-list-item strong {
+  font-weight: 500;
+  color: #fff;
+}
+.vjs5-hola-skin .vjs-info-overlay-list-item span {
+  color: #bbb;
+}
 .vjs5-hola-skin .vjs-rightclick-popup {
   position: absolute;
+  z-index: 5;
   width: 15em;
   background-color: #2D2D2D;
   background-color: rgba(45, 45, 45, 0.7);

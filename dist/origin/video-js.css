@@ -407,6 +407,9 @@ about what's required to play video. */
   font-weight: bold;
   cursor: default; }
 
+.vjs-control .vjs-menu {
+  text-shadow: none; }
+
 .vjs-menu-button-popup .vjs-menu {
   display: none;
   position: absolute;

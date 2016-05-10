@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-44 <http://videojs.com/>
+ * Video.js 5.0.2-45 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -17624,7 +17624,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-44';
+videojs.VERSION = '5.0.2-45';
 
 /**
  * The global options object. These are the settings that take effect
@@ -20230,7 +20230,7 @@ HolaSkin.prototype.dispose = function(){
 var defaults = {
     className: 'vjs5-hola-skin',
     css: '/css/videojs-hola-skin.css',
-    ver: 'ver=0.0.2-21'
+    ver: 'ver=0.0.2-26'
 };
 
 // VideoJS plugin register
@@ -20355,15 +20355,12 @@ vjs.registerComponent('SettingsButton', vjs.extend(MenuButton, {
         var _this = this;
         var opt = this.options_;
         var menu = MenuButton.prototype.createMenu.call(this);
-        if (opt.show_settings_popup_on_click)
-        {
-            menu.addClass('vjs-menu-popup-on-click');
-            // videojs removes the locking state on menu item click that causes
-            // settings button to hide without updating buttonPressed state
-            menu.children().forEach(function(component){
-                component.on('click', function(){ _this.handleClick(); });
-            });
-        }
+        menu.addClass('vjs-menu-popup-on-click');
+        // videojs removes the locking state on menu item click that causes
+        // settings button to hide without updating buttonPressed state
+        menu.children().forEach(function(component){
+            component.on('click', function(){ _this.handleClick(); });
+        });
         return menu;
     },
     handleClick: function(){
@@ -20390,7 +20387,7 @@ vjs.registerComponent('Overlay', vjs.extend(Component, {
 function round(val){
     if (typeof val!='number')
         return val;
-    return Math.round(val*1000)/1000;
+    return val.toFixed(3);
 }
 var Overlay = vjs.getComponent('Overlay');
 vjs.registerComponent('InfoOverlay', vjs.extend(Overlay, {
@@ -20646,6 +20643,8 @@ var QualityButton = vjs.getComponent('QualityButton');
 
 vjs.plugin('settings', function(opt){
     var video = this;
+    if (opt===undefined||opt===true)
+        opt = {info: true, report: true, quality: false};
     opt = vjs.mergeOptions({}, opt);
     video.on('ready', function(){
         function local_storage_set(key, value){
