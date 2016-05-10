@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-43 <http://videojs.com/>
+ * Video.js 5.0.2-44 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -12088,7 +12088,7 @@ var Flash = (function (_Tech) {
     // Otherwise this adds a CDN url.
     // The CDN also auto-adds a swf URL for that specific version.
     if (!options.swf) {
-      options.swf = '//cdn.rawgit.com/hola/video-js-swf-sv/v5.0.1-10/dist/video-js.swf';
+      options.swf = '//cdn.rawgit.com/hola/video-js-swf-sv/v5.0.2-1/dist/video-js.swf';
     }
 
     // Generate ID for swf object
@@ -17624,7 +17624,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-43';
+videojs.VERSION = '5.0.2-44';
 
 /**
  * The global options object. These are the settings that take effect
@@ -20091,7 +20091,20 @@ var umorph_html = [
         '<use id="umorph" xlink:href="#morph" x="0" y="0"/>',
     '</svg>'].join('');
 
-HolaSkin.prototype.set_play_button_state = function(btn_svg, paused, ended){
+var volume_icon_svg = '<svg height="3em" width="3em" viewBox="-6 -6 30 30">'
+    +'<polygon points="10,0 10,18 4.5,13 0,13 0,5 4.5,5"/>'
+    +'<polygon class="volume-level-0" points="20.5,6.2 19.1,4.8 16.2,7.6 13.4,4.8 12,6.2 14.8,9 12,11.8 13.4,13.2 16.2,10.4 19.1,13.2 20.5,11.8 17.7,9"/>'
+    +'<g>'
+        +'<path class="volume-level-1" d="M 13.6,6.3 L 12,7.7 C 12.3,8,12.5,8.5,12.5,9 s -0.2,1 -0.5,1.3 l 1.6,1.3 c 0.6 -0.7,1 -1.6,1 -2.7  C 14.6,8,14.2,7.1,13.6,6.3 z"/>'
+        +'<path class="volume-level-2" d="M 16.8,3.7 L 15.2,5 c 0.9,1.1,1.5,2.5,1.5,4 s -0.6,2.9 -1.5,4 l 1.6,1.3 c 1.3 -1.4,2 -3.3,2 -5.3 S 18,5.1,16.8,3.7 z"/>'
+        +'<path class="volume-level-3" d="M 20,1 l -1.6,1.3 c 1.6,1.8,2.5,4.1,2.5,6.7 s -1,4.9 -2.5,6.7 L 20,17 c 1.9 -2.2,3 -4.9,3 -8 C 23,5.9,21.9,3.2,20,1 z"/>'
+    +'</g>'
++'</svg>';
+
+HolaSkin.prototype.set_play_button_state = function(btn_svg, state){
+    if (this.play_state==state)
+        return;
+    this.play_state = state;
     var intv = this.intv;
     var _this = this;
     var steptotal = this.steptotal;
@@ -20126,7 +20139,7 @@ HolaSkin.prototype.set_play_button_state = function(btn_svg, paused, ended){
     var stepcnt = 0, stepcnt1 = 0;
     if (intv)
         clearInterval(intv);
-    if (ended)
+    if (state=='ended')
     {
         bars[0].setAttribute('transform', 'translate(16.3, 16.5)');
         bars[0].setAttribute('d', replay);
@@ -20140,7 +20153,7 @@ HolaSkin.prototype.set_play_button_state = function(btn_svg, paused, ended){
     // replay icon to animated pause icon
     if (is_transformed)
         bars[0].setAttribute('d', '');
-    if (paused)
+    if (state=='paused')
     {
         var mk_path3 = mk_transform(play2, play1, steptotal);
         var mk_path4 = mk_transform(pause2, pause1, steptotal);
@@ -20156,24 +20169,23 @@ HolaSkin.prototype.set_play_button_state = function(btn_svg, paused, ended){
                 _this.intv = 0;
             }
         }, 20);
+        return;
     }
-    else
-    {
-        var mk_path1 = mk_transform(play1, play2, steptotal);
-        var mk_path2 = mk_transform(pause1, pause2, steptotal);
-        this.intv = setInterval(function(){
-            if (stepcnt < steptotal)
-                bars[0].setAttribute('d', mk_path1());
-            if (stepcnt >= stagger)
-                bars[1].setAttribute('d', mk_path2());
-            stepcnt++;
-            if (stepcnt >= steptotal+stagger)
-            {
-                clearInterval(_this.intv);
-                _this.intv = 0;
-            }
-        }, 20);
-    }
+
+    var mk_path1 = mk_transform(play1, play2, steptotal);
+    var mk_path2 = mk_transform(pause1, pause2, steptotal);
+    this.intv = setInterval(function(){
+        if (stepcnt < steptotal)
+            bars[0].setAttribute('d', mk_path1());
+        if (stepcnt >= stagger)
+            bars[1].setAttribute('d', mk_path2());
+        stepcnt++;
+        if (stepcnt >= steptotal+stagger)
+        {
+            clearInterval(_this.intv);
+            _this.intv = 0;
+        }
+    }, 20);
 };
 
 HolaSkin.prototype.init = function(){
@@ -20191,18 +20203,22 @@ HolaSkin.prototype.init = function(){
     player.bigPlayButton.el().insertAdjacentHTML('beforeend', umorph_html);
     var morph = document.getElementById('morph');
     player.on('play', function(){
-        _this.set_play_button_state(morph, false);
+        _this.set_play_button_state(morph, 'playing');
     })
     .on('pause', function(){
-        _this.set_play_button_state(morph, true);
+        _this.set_play_button_state(morph, 'paused');
     })
     .on('ended', function(){
-        _this.set_play_button_state(morph, true, true);
+        _this.set_play_button_state(morph, 'ended');
+    })
+    .on('seeked', function(){
+        _this.set_play_button_state(morph, player.paused() ? 'paused' : 'playing');
     });
-    _this.set_play_button_state(morph, player.paused());
+    _this.set_play_button_state(morph, player.paused() ? 'paused' : 'playing');
     var volume_button = player.controlBar.volumeMenuButton.el();
     var volume_icon = document.createElement('div');
     volume_icon.setAttribute('class', 'vjs-volume-icon');
+    volume_icon.innerHTML = volume_icon_svg;
     volume_button.insertBefore(volume_icon, volume_button.firstChild);
 };
 
@@ -20214,7 +20230,7 @@ HolaSkin.prototype.dispose = function(){
 var defaults = {
     className: 'vjs5-hola-skin',
     css: '/css/videojs-hola-skin.css',
-    ver: 'ver=0.0.2-14'
+    ver: 'ver=0.0.2-20'
 };
 
 // VideoJS plugin register
