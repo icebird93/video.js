@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-45 <http://videojs.com/>
+ * Video.js 5.0.2-46 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -12088,7 +12088,7 @@ var Flash = (function (_Tech) {
     // Otherwise this adds a CDN url.
     // The CDN also auto-adds a swf URL for that specific version.
     if (!options.swf) {
-      options.swf = '//cdn.rawgit.com/hola/video-js-swf-sv/v5.0.2-1/dist/video-js.swf';
+      options.swf = '//cdn.rawgit.com/hola/video-js-swf-sv/v5.0.2-2/dist/video-js.swf';
     }
 
     // Generate ID for swf object
@@ -17624,7 +17624,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-45';
+videojs.VERSION = '5.0.2-46';
 
 /**
  * The global options object. These are the settings that take effect
@@ -20230,7 +20230,7 @@ HolaSkin.prototype.dispose = function(){
 var defaults = {
     className: 'vjs5-hola-skin',
     css: '/css/videojs-hola-skin.css',
-    ver: 'ver=0.0.2-26'
+    ver: 'ver=0.0.2-30'
 };
 
 // VideoJS plugin register
@@ -20319,8 +20319,15 @@ vjs.registerComponent('PopupMenu', vjs.extend(Menu, {
 }));
 var MenuButton = vjs.getComponent('MenuButton');
 vjs.registerComponent('SettingsButton', vjs.extend(MenuButton, {
-    buttonText: 'Settings',
+    controlText_: 'Settings',
     className: 'vjs-settings-button',
+    createEl: function(){
+        var settings_button = MenuButton.prototype.createEl.call(this);
+        var icon = document.createElement('div');
+        icon.setAttribute('class', 'vjs-settings-icon');
+        settings_button.insertBefore(icon, settings_button.firstChild);
+        return settings_button;
+    },
     createItems: function(){
         this.addClass(this.className);
         var items = [];
