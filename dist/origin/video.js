@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-46 <http://videojs.com/>
+ * Video.js 5.0.2-48 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -2643,6 +2643,19 @@ var BigPlayButton = (function (_Button) {
     this.player_.play();
   };
 
+  /**
+   * Return handler for the tooltip
+   *
+   * @return {Object} Dom element to serve as a handler for the tooltip
+   * @method tooltipHandler
+   */
+
+  BigPlayButton.prototype.tooltipHandler = function tooltipHandler() {
+    if (this.options_.tooltip !== undefined) {
+      return _Button.prototype.tooltipHandler.call(this);
+    }
+  };
+
   return BigPlayButton;
 })(_buttonJs2['default']);
 
@@ -2692,6 +2705,10 @@ var _objectAssign = _dereq_('object.assign');
 
 var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
+var _tooltip = _dereq_('./tooltip');
+
+var _tooltip2 = _interopRequireDefault(_tooltip);
+
 /**
  * Base class for all buttons
  *
@@ -2708,6 +2725,8 @@ var Button = (function (_Component) {
     _classCallCheck(this, Button);
 
     _Component.call(this, player, options);
+
+    this.appendTooltip();
 
     this.emitTapEvents();
 
@@ -2770,6 +2789,12 @@ var Button = (function (_Component) {
     this.controlText_ = text;
     this.controlTextEl_.innerHTML = this.localize(this.controlText_);
 
+    if (this.tooltip) {
+      this.tooltip.text(this.controlText_);
+    } else {
+      this.appendTooltip();
+    }
+
     return this;
   };
 
@@ -2826,6 +2851,56 @@ var Button = (function (_Component) {
     Events.off(_globalDocument2['default'], 'keydown', Fn.bind(this, this.handleKeyPress));
   };
 
+  /**
+   * Append a tooltip to the component
+   *
+   * @method appendTooltip
+   */
+
+  Button.prototype.appendTooltip = function appendTooltip() {
+    if (this.tooltip || !this.controlText_ || !this.el()) {
+      return;
+    }
+
+    var tooltipHandler = this.tooltipHandler();
+
+    if (tooltipHandler) {
+      this.tooltip = new _tooltip2['default'](this.player_);
+      this.el().appendChild(this.tooltip.el());
+      this.tooltip.text(this.controlText_);
+      this.tooltip.handler(tooltipHandler);
+    }
+  };
+
+  /**
+   * Return handler for the tooltip
+   *
+   * @return {Object} Dom element to serve as a handler for the tooltip
+   * @method tooltipHandler
+   */
+
+  Button.prototype.tooltipHandler = function tooltipHandler() {
+    var handler = this.options_.tooltip;
+
+    if (handler === false) {
+      return;
+    }
+
+    if (handler === true || this.player_.options_.tooltips) {
+      return this.el();
+    }
+
+    if (typeof handler === 'string') {
+      return Dom.getEl(handler);
+    }
+
+    if (handler && typeof handler.el === 'function') {
+      return handler.el();
+    }
+
+    return handler;
+  };
+
   return Button;
 })(_component2['default']);
 
@@ -2833,7 +2908,7 @@ _component2['default'].registerComponent('Button', Button);
 exports['default'] = Button;
 module.exports = exports['default'];
 
-},{"./component":64,"./utils/dom.js":125,"./utils/events.js":126,"./utils/fn.js":127,"global/document":1,"object.assign":45}],64:[function(_dereq_,module,exports){
+},{"./component":64,"./tooltip":115,"./utils/dom.js":126,"./utils/events.js":127,"./utils/fn.js":128,"global/document":1,"object.assign":45}],64:[function(_dereq_,module,exports){
 /**
  * @file component.js
  *
@@ -4242,7 +4317,7 @@ Component.registerComponent('Component', Component);
 exports['default'] = Component;
 module.exports = exports['default'];
 
-},{"./utils/dom.js":125,"./utils/events.js":126,"./utils/fn.js":127,"./utils/guid.js":129,"./utils/log.js":130,"./utils/merge-options.js":131,"./utils/to-title-case.js":134,"global/window":2,"object.assign":45}],65:[function(_dereq_,module,exports){
+},{"./utils/dom.js":126,"./utils/events.js":127,"./utils/fn.js":128,"./utils/guid.js":130,"./utils/log.js":131,"./utils/merge-options.js":132,"./utils/to-title-case.js":135,"global/window":2,"object.assign":45}],65:[function(_dereq_,module,exports){
 /**
  * @file control-bar.js
  */
@@ -4523,7 +4598,7 @@ _component2['default'].registerComponent('LiveDisplay', LiveDisplay);
 exports['default'] = LiveDisplay;
 module.exports = exports['default'];
 
-},{"../component":64,"../utils/dom.js":125}],68:[function(_dereq_,module,exports){
+},{"../component":64,"../utils/dom.js":126}],68:[function(_dereq_,module,exports){
 /**
  * @file mute-toggle.js
  */
@@ -4650,7 +4725,7 @@ _component2['default'].registerComponent('MuteToggle', MuteToggle);
 exports['default'] = MuteToggle;
 module.exports = exports['default'];
 
-},{"../button":63,"../component":64,"../utils/dom.js":125}],69:[function(_dereq_,module,exports){
+},{"../button":63,"../component":64,"../utils/dom.js":126}],69:[function(_dereq_,module,exports){
 /**
  * @file play-toggle.js
  */
@@ -4952,7 +5027,7 @@ _componentJs2['default'].registerComponent('PlaybackRateMenuButton', PlaybackRat
 exports['default'] = PlaybackRateMenuButton;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../menu/menu-button.js":102,"../../menu/menu.js":104,"../../utils/dom.js":125,"./playback-rate-menu-item.js":71}],71:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu-button.js":102,"../../menu/menu.js":104,"../../utils/dom.js":126,"./playback-rate-menu-item.js":71}],71:[function(_dereq_,module,exports){
 /**
  * @file playback-rate-menu-item.js
  */
@@ -5139,7 +5214,7 @@ _componentJs2['default'].registerComponent('LoadProgressBar', LoadProgressBar);
 exports['default'] = LoadProgressBar;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../utils/dom.js":125}],73:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126}],73:[function(_dereq_,module,exports){
 /**
  * @file mouse-time-display.js
  */
@@ -5272,7 +5347,7 @@ _componentJs2['default'].registerComponent('MouseTimeDisplay', MouseTimeDisplay)
 exports['default'] = MouseTimeDisplay;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../utils/dom.js":125,"../../utils/fn.js":127,"../../utils/format-time.js":128,"lodash-compat/function/throttle":7}],74:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126,"../../utils/fn.js":128,"../../utils/format-time.js":129,"lodash-compat/function/throttle":7}],74:[function(_dereq_,module,exports){
 /**
  * @file play-progress-bar.js
  */
@@ -5347,7 +5422,7 @@ _componentJs2['default'].registerComponent('PlayProgressBar', PlayProgressBar);
 exports['default'] = PlayProgressBar;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../utils/fn.js":127,"../../utils/format-time.js":128}],75:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/fn.js":128,"../../utils/format-time.js":129}],75:[function(_dereq_,module,exports){
 /**
  * @file progress-control.js
  */
@@ -5602,7 +5677,7 @@ _componentJs2['default'].registerComponent('SeekBar', SeekBar);
 exports['default'] = SeekBar;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../slider/slider.js":109,"../../utils/fn.js":127,"../../utils/format-time.js":128,"./load-progress-bar.js":72,"./play-progress-bar.js":74,"object.assign":45}],77:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../slider/slider.js":109,"../../utils/fn.js":128,"../../utils/format-time.js":129,"./load-progress-bar.js":72,"./play-progress-bar.js":74,"object.assign":45}],77:[function(_dereq_,module,exports){
 /**
  * @file custom-control-spacer.js
  */
@@ -6104,7 +6179,7 @@ _componentJs2['default'].registerComponent('ChaptersButton', ChaptersButton);
 exports['default'] = ChaptersButton;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../menu/menu.js":104,"../../utils/dom.js":125,"../../utils/fn.js":127,"../../utils/to-title-case.js":134,"./chapters-track-menu-item.js":82,"./text-track-button.js":85,"./text-track-menu-item.js":86,"global/window":2}],82:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu.js":104,"../../utils/dom.js":126,"../../utils/fn.js":128,"../../utils/to-title-case.js":135,"./chapters-track-menu-item.js":82,"./text-track-button.js":85,"./text-track-menu-item.js":86,"global/window":2}],82:[function(_dereq_,module,exports){
 /**
  * @file chapters-track-menu-item.js
  */
@@ -6194,7 +6269,7 @@ _componentJs2['default'].registerComponent('ChaptersTrackMenuItem', ChaptersTrac
 exports['default'] = ChaptersTrackMenuItem;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../menu/menu-item.js":103,"../../utils/fn.js":127}],83:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu-item.js":103,"../../utils/fn.js":128}],83:[function(_dereq_,module,exports){
 /**
  * @file off-text-track-menu-item.js
  */
@@ -6445,7 +6520,7 @@ _componentJs2['default'].registerComponent('TextTrackButton', TextTrackButton);
 exports['default'] = TextTrackButton;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../menu/menu-button.js":102,"../../utils/fn.js":127,"./off-text-track-menu-item.js":83,"./text-track-menu-item.js":86}],86:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu-button.js":102,"../../utils/fn.js":128,"./off-text-track-menu-item.js":83,"./text-track-menu-item.js":86}],86:[function(_dereq_,module,exports){
 /**
  * @file text-track-menu-item.js
  */
@@ -6594,7 +6669,7 @@ _componentJs2['default'].registerComponent('TextTrackMenuItem', TextTrackMenuIte
 exports['default'] = TextTrackMenuItem;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../menu/menu-item.js":103,"../../utils/fn.js":127,"global/document":1,"global/window":2}],87:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu-item.js":103,"../../utils/fn.js":128,"global/document":1,"global/window":2}],87:[function(_dereq_,module,exports){
 /**
  * @file current-time-display.js
  */
@@ -6688,7 +6763,7 @@ _componentJs2['default'].registerComponent('CurrentTimeDisplay', CurrentTimeDisp
 exports['default'] = CurrentTimeDisplay;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../utils/dom.js":125,"../../utils/format-time.js":128}],88:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126,"../../utils/format-time.js":129}],88:[function(_dereq_,module,exports){
 /**
  * @file duration-display.js
  */
@@ -6789,7 +6864,7 @@ _componentJs2['default'].registerComponent('DurationDisplay', DurationDisplay);
 exports['default'] = DurationDisplay;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../utils/dom.js":125,"../../utils/format-time.js":128}],89:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126,"../../utils/format-time.js":129}],89:[function(_dereq_,module,exports){
 /**
  * @file remaining-time-display.js
  */
@@ -6887,7 +6962,7 @@ _componentJs2['default'].registerComponent('RemainingTimeDisplay', RemainingTime
 exports['default'] = RemainingTimeDisplay;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../utils/dom.js":125,"../../utils/format-time.js":128}],90:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126,"../../utils/format-time.js":129}],90:[function(_dereq_,module,exports){
 /**
  * @file time-divider.js
  */
@@ -7094,7 +7169,7 @@ _componentJs2['default'].registerComponent('VolumeBar', VolumeBar);
 exports['default'] = VolumeBar;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../slider/slider.js":109,"../../utils/fn.js":127,"./volume-display.js":93,"./volume-level.js":94}],92:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../slider/slider.js":109,"../../utils/fn.js":128,"./volume-display.js":93,"./volume-level.js":94}],92:[function(_dereq_,module,exports){
 /**
  * @file volume-control.js
  */
@@ -7319,7 +7394,7 @@ _componentJs2['default'].registerComponent('VolumeDisplay', VolumeDisplay);
 exports['default'] = VolumeDisplay;
 module.exports = exports['default'];
 
-},{"../../component.js":64,"../../utils/dom.js":125,"../../utils/fn.js":127,"lodash-compat/function/throttle":7}],94:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126,"../../utils/fn.js":128,"lodash-compat/function/throttle":7}],94:[function(_dereq_,module,exports){
 /**
  * @file volume-level.js
  */
@@ -7620,7 +7695,7 @@ _component2['default'].registerComponent('ErrorDisplay', ErrorDisplay);
 exports['default'] = ErrorDisplay;
 module.exports = exports['default'];
 
-},{"./component":64,"./utils/dom.js":125}],97:[function(_dereq_,module,exports){
+},{"./component":64,"./utils/dom.js":126}],97:[function(_dereq_,module,exports){
 /**
  * @file event-target.js
  */
@@ -7679,7 +7754,7 @@ EventTarget.prototype.dispatchEvent = EventTarget.prototype.trigger;
 exports['default'] = EventTarget;
 module.exports = exports['default'];
 
-},{"./utils/events.js":126}],98:[function(_dereq_,module,exports){
+},{"./utils/events.js":127}],98:[function(_dereq_,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -7770,7 +7845,7 @@ var extendFn = function extendFn(superClass) {
 exports['default'] = extendFn;
 module.exports = exports['default'];
 
-},{"./utils/log":130}],99:[function(_dereq_,module,exports){
+},{"./utils/log":131}],99:[function(_dereq_,module,exports){
 /**
  * @file fullscreen-api.js
  */
@@ -8240,6 +8315,18 @@ var MenuButton = (function (_Button) {
     this.el_.setAttribute('aria-pressed', false);
   };
 
+  /**
+   * Return handler for the tooltip
+   *
+   * @return {Object} Dom element to serve as a handler for the tooltip
+   * @method tooltipHandler
+   */
+
+  MenuButton.prototype.tooltipHandler = function tooltipHandler() {
+    // TODO: Fix menu button to have a real icon element to make it as tooltip handler
+    return;
+  };
+
   return MenuButton;
 })(_buttonJs2['default']);
 
@@ -8247,7 +8334,7 @@ _componentJs2['default'].registerComponent('MenuButton', MenuButton);
 exports['default'] = MenuButton;
 module.exports = exports['default'];
 
-},{"../button.js":63,"../component.js":64,"../utils/dom.js":125,"../utils/fn.js":127,"../utils/to-title-case.js":134,"./menu.js":104}],103:[function(_dereq_,module,exports){
+},{"../button.js":63,"../component.js":64,"../utils/dom.js":126,"../utils/fn.js":128,"../utils/to-title-case.js":135,"./menu.js":104}],103:[function(_dereq_,module,exports){
 /**
  * @file menu-item.js
  */
@@ -8332,6 +8419,19 @@ var MenuItem = (function (_Button) {
     } else {
       this.removeClass('vjs-selected');
       this.el_.setAttribute('aria-selected', false);
+    }
+  };
+
+  /**
+   * Return handler for the tooltip
+   *
+   * @return {Object} Dom element to serve as a handler for the tooltip
+   * @method tooltipHandler
+   */
+
+  MenuItem.prototype.tooltipHandler = function tooltipHandler() {
+    if (this.options_.tooltip !== undefined) {
+      return _Button.prototype.tooltipHandler.call(this);
     }
   };
 
@@ -8440,7 +8540,7 @@ _componentJs2['default'].registerComponent('Menu', Menu);
 exports['default'] = Menu;
 module.exports = exports['default'];
 
-},{"../component.js":64,"../utils/dom.js":125,"../utils/events.js":126,"../utils/fn.js":127}],105:[function(_dereq_,module,exports){
+},{"../component.js":64,"../utils/dom.js":126,"../utils/events.js":127,"../utils/fn.js":128}],105:[function(_dereq_,module,exports){
 /**
  * @file player.js
  */
@@ -11294,7 +11394,7 @@ exports['default'] = Player;
 module.exports = exports['default'];
 // If empty string, make it a parsable json object.
 
-},{"./big-play-button.js":62,"./component.js":64,"./control-bar/control-bar.js":65,"./error-display.js":96,"./fullscreen-api.js":99,"./loading-spinner.js":100,"./media-error.js":101,"./poster-image.js":107,"./tech/html5.js":112,"./tech/loader.js":113,"./tracks/text-track-display.js":116,"./tracks/text-track-list-converter.js":118,"./tracks/text-track-settings.js":120,"./utils/browser.js":122,"./utils/buffer.js":123,"./utils/dom.js":125,"./utils/events.js":126,"./utils/fn.js":127,"./utils/guid.js":129,"./utils/log.js":130,"./utils/merge-options.js":131,"./utils/stylesheet.js":132,"./utils/time-ranges.js":133,"./utils/to-title-case.js":134,"global/document":1,"global/window":2,"object.assign":45,"safe-json-parse/tuple":54}],106:[function(_dereq_,module,exports){
+},{"./big-play-button.js":62,"./component.js":64,"./control-bar/control-bar.js":65,"./error-display.js":96,"./fullscreen-api.js":99,"./loading-spinner.js":100,"./media-error.js":101,"./poster-image.js":107,"./tech/html5.js":112,"./tech/loader.js":113,"./tracks/text-track-display.js":117,"./tracks/text-track-list-converter.js":119,"./tracks/text-track-settings.js":121,"./utils/browser.js":123,"./utils/buffer.js":124,"./utils/dom.js":126,"./utils/events.js":127,"./utils/fn.js":128,"./utils/guid.js":130,"./utils/log.js":131,"./utils/merge-options.js":132,"./utils/stylesheet.js":133,"./utils/time-ranges.js":134,"./utils/to-title-case.js":135,"global/document":1,"global/window":2,"object.assign":45,"safe-json-parse/tuple":54}],106:[function(_dereq_,module,exports){
 /**
  * @file plugins.js
  */
@@ -11482,7 +11582,7 @@ _componentJs2['default'].registerComponent('PosterImage', PosterImage);
 exports['default'] = PosterImage;
 module.exports = exports['default'];
 
-},{"./button.js":63,"./component.js":64,"./utils/browser.js":122,"./utils/dom.js":125,"./utils/fn.js":127}],108:[function(_dereq_,module,exports){
+},{"./button.js":63,"./component.js":64,"./utils/browser.js":123,"./utils/dom.js":126,"./utils/fn.js":128}],108:[function(_dereq_,module,exports){
 /**
  * @file setup.js
  *
@@ -11592,7 +11692,7 @@ exports.autoSetup = autoSetup;
 exports.autoSetupTimeout = autoSetupTimeout;
 exports.hasLoaded = hasLoaded;
 
-},{"./utils/events.js":126,"global/document":1,"global/window":2}],109:[function(_dereq_,module,exports){
+},{"./utils/events.js":127,"global/document":1,"global/window":2}],109:[function(_dereq_,module,exports){
 /**
  * @file slider.js
  */
@@ -11871,7 +11971,7 @@ _componentJs2['default'].registerComponent('Slider', Slider);
 exports['default'] = Slider;
 module.exports = exports['default'];
 
-},{"../component.js":64,"../utils/dom.js":125,"global/document":1,"object.assign":45}],110:[function(_dereq_,module,exports){
+},{"../component.js":64,"../utils/dom.js":126,"global/document":1,"object.assign":45}],110:[function(_dereq_,module,exports){
 /**
  * @file flash-rtmp.js
  */
@@ -12570,7 +12670,7 @@ _component2['default'].registerComponent('Flash', Flash);
 exports['default'] = Flash;
 module.exports = exports['default'];
 
-},{"../component":64,"../utils/dom.js":125,"../utils/time-ranges.js":133,"../utils/url.js":135,"./flash-rtmp":110,"./tech":114,"global/window":2,"object.assign":45}],112:[function(_dereq_,module,exports){
+},{"../component":64,"../utils/dom.js":126,"../utils/time-ranges.js":134,"../utils/url.js":136,"./flash-rtmp":110,"./tech":114,"global/window":2,"object.assign":45}],112:[function(_dereq_,module,exports){
 /**
  * @file html5.js
  * HTML5 Media Controller - Wrapper for HTML5 Media API
@@ -13811,7 +13911,7 @@ _component2['default'].registerComponent('Html5', Html5);
 exports['default'] = Html5;
 module.exports = exports['default'];
 
-},{"../component":64,"../utils/browser.js":122,"../utils/dom.js":125,"../utils/fn.js":127,"../utils/log.js":130,"../utils/merge-options.js":131,"../utils/url.js":135,"./tech.js":114,"global/document":1,"global/window":2,"object.assign":45}],113:[function(_dereq_,module,exports){
+},{"../component":64,"../utils/browser.js":123,"../utils/dom.js":126,"../utils/fn.js":128,"../utils/log.js":131,"../utils/merge-options.js":132,"../utils/url.js":136,"./tech.js":114,"global/document":1,"global/window":2,"object.assign":45}],113:[function(_dereq_,module,exports){
 /**
  * @file loader.js
  */
@@ -13886,7 +13986,7 @@ _component2['default'].registerComponent('MediaLoader', MediaLoader);
 exports['default'] = MediaLoader;
 module.exports = exports['default'];
 
-},{"../component":64,"../utils/to-title-case.js":134,"global/window":2}],114:[function(_dereq_,module,exports){
+},{"../component":64,"../utils/to-title-case.js":135,"global/window":2}],114:[function(_dereq_,module,exports){
 /**
  * @file tech.js
  * Media Technology Controller - Base class for media playback
@@ -14565,7 +14665,166 @@ _component2['default'].registerComponent('MediaTechController', Tech);
 exports['default'] = Tech;
 module.exports = exports['default'];
 
-},{"../component":64,"../media-error.js":101,"../tracks/text-track":121,"../tracks/text-track-list":119,"../utils/buffer.js":123,"../utils/fn.js":127,"../utils/log.js":130,"../utils/time-ranges.js":133,"global/document":1,"global/window":2}],115:[function(_dereq_,module,exports){
+},{"../component":64,"../media-error.js":101,"../tracks/text-track":122,"../tracks/text-track-list":120,"../utils/buffer.js":124,"../utils/fn.js":128,"../utils/log.js":131,"../utils/time-ranges.js":134,"global/document":1,"global/window":2}],115:[function(_dereq_,module,exports){
+/**
+ * @file tooltip.js
+ */
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _component = _dereq_('./component');
+
+var _component2 = _interopRequireDefault(_component);
+
+var _utilsDomJs = _dereq_('./utils/dom.js');
+
+var Dom = _interopRequireWildcard(_utilsDomJs);
+
+var _utilsEventsJs = _dereq_('./utils/events.js');
+
+var Events = _interopRequireWildcard(_utilsEventsJs);
+
+var _utilsFnJs = _dereq_('./utils/fn.js');
+
+var Fn = _interopRequireWildcard(_utilsFnJs);
+
+var _globalDocument = _dereq_('global/document');
+
+var _globalDocument2 = _interopRequireDefault(_globalDocument);
+
+var _lodashCompatFunctionThrottle = _dereq_('lodash-compat/function/throttle');
+
+var _lodashCompatFunctionThrottle2 = _interopRequireDefault(_lodashCompatFunctionThrottle);
+
+/**
+ * Base class for all tooltips
+ *
+ * @param {Object} player  Main Player
+ * @param {Object=} options Object of option names and values
+ * @extends Component
+ * @class Tooltip
+ */
+
+var Tooltip = (function (_Component) {
+  _inherits(Tooltip, _Component);
+
+  function Tooltip(player, options) {
+    _classCallCheck(this, Tooltip);
+
+    _Component.call(this, player, options);
+
+    this.handleHover_ = _lodashCompatFunctionThrottle2['default'](Fn.bind(this, this.handleHover), 25);
+    this.handleLeave_ = _lodashCompatFunctionThrottle2['default'](Fn.bind(this, this.handleLeave), 25);
+  }
+
+  Tooltip.prototype.createEl = function createEl() {
+    return _Component.prototype.createEl.call(this, 'div', {
+      className: 'vjs-tooltip'
+    });
+  };
+
+  Tooltip.prototype.text = function text(_text) {
+    if (!_text) return this.text_ || '';
+
+    this.text_ = _text;
+    this.el_.innerHTML = this.localize(this.text_);
+
+    this.update();
+
+    return this;
+  };
+
+  Tooltip.prototype.handler = function handler(_handler) {
+    if (!_handler) return this.handler;
+
+    if (this.handler_) {
+      this.off(this.handler_, 'mouseover', this.handleHover_);
+      this.off(this.handler_, 'mouseout', this.handleLeave_);
+    }
+
+    this.handler_ = _handler;
+    this.on(this.handler_, 'mouseover', this.handleHover_);
+    this.on(this.handler_, 'mouseout', this.handleLeave_);
+
+    return this;
+  };
+
+  Tooltip.prototype.handleHover = function handleHover() {
+    var _this = this;
+
+    if (this.timeout) {
+      this.clearTimeout(this.timeout);
+      this.timeout = 0;
+    }
+    this.timeout = this.setTimeout(function () {
+      return _this.hide();
+    }, 5000);
+    this.show();
+  };
+
+  Tooltip.prototype.handleLeave = function handleLeave() {
+    if (this.timeout) {
+      this.clearTimeout(this.timeout);
+      this.timeout = 0;
+    }
+    this.hide();
+  };
+
+  Tooltip.prototype.show = function show() {
+    this.player_.trigger('tooltipShown');
+    this.player_.on('tooltipShown', Fn.bind(this, this.hide));
+
+    this.addClass('vjs-tooltip-active');
+    this.update();
+  };
+
+  Tooltip.prototype.hide = function hide() {
+    this.removeClass('vjs-tooltip-active');
+
+    this.player_.off('tooltipShown');
+  };
+
+  Tooltip.prototype.update = function update() {
+    var width = this.width();
+
+    if (!width) {
+      return this;
+    }
+
+    var parent_ = this.handler_;
+    var parentWidth = parent_ ? parent_.offsetWidth : 0;
+
+    var parentLeft = Dom.findElPosition(parent_).left - Dom.findElPosition(this.player_.el()).left;
+    var skew = parentWidth / 2 - width / 2;
+
+    var minSkew = -parentLeft;
+    // TODO: player_.width() is not working properly after switch to fullscreen
+    var maxSkew = this.player_.el().offsetWidth - parentLeft - width;
+
+    skew = Math.min(Math.max(minSkew, skew), maxSkew);
+
+    this.el_.style.left = skew + 'px';
+
+    return this;
+  };
+
+  return Tooltip;
+})(_component2['default']);
+
+_component2['default'].registerComponent('Tooltip', Tooltip);
+exports['default'] = Tooltip;
+module.exports = exports['default'];
+
+},{"./component":64,"./utils/dom.js":126,"./utils/events.js":127,"./utils/fn.js":128,"global/document":1,"lodash-compat/function/throttle":7}],116:[function(_dereq_,module,exports){
 /**
  * @file text-track-cue-list.js
  */
@@ -14662,7 +14921,7 @@ TextTrackCueList.prototype.getCueById = function (id) {
 exports['default'] = TextTrackCueList;
 module.exports = exports['default'];
 
-},{"../utils/browser.js":122,"global/document":1}],116:[function(_dereq_,module,exports){
+},{"../utils/browser.js":123,"global/document":1}],117:[function(_dereq_,module,exports){
 /**
  * @file text-track-display.js
  */
@@ -14933,7 +15192,7 @@ _component2['default'].registerComponent('TextTrackDisplay', TextTrackDisplay);
 exports['default'] = TextTrackDisplay;
 module.exports = exports['default'];
 
-},{"../component":64,"../menu/menu-button.js":102,"../menu/menu-item.js":103,"../menu/menu.js":104,"../utils/fn.js":127,"global/document":1,"global/window":2}],117:[function(_dereq_,module,exports){
+},{"../component":64,"../menu/menu-button.js":102,"../menu/menu-item.js":103,"../menu/menu.js":104,"../utils/fn.js":128,"global/document":1,"global/window":2}],118:[function(_dereq_,module,exports){
 /**
  * @file text-track-enums.js
  *
@@ -14966,7 +15225,7 @@ var TextTrackKind = {
 exports.TextTrackMode = TextTrackMode;
 exports.TextTrackKind = TextTrackKind;
 
-},{}],118:[function(_dereq_,module,exports){
+},{}],119:[function(_dereq_,module,exports){
 /**
  * Utilities for capturing text track state and re-creating tracks
  * based on a capture.
@@ -15053,7 +15312,7 @@ var jsonToTextTracks = function jsonToTextTracks(json, tech) {
 exports['default'] = { textTracksToJson: textTracksToJson, jsonToTextTracks: jsonToTextTracks, trackToJson_: trackToJson_ };
 module.exports = exports['default'];
 
-},{}],119:[function(_dereq_,module,exports){
+},{}],120:[function(_dereq_,module,exports){
 /**
  * @file text-track-list.js
  */
@@ -15198,7 +15457,7 @@ TextTrackList.prototype.getTrackById = function (id) {
 exports['default'] = TextTrackList;
 module.exports = exports['default'];
 
-},{"../event-target":97,"../utils/browser.js":122,"../utils/fn.js":127,"global/document":1}],120:[function(_dereq_,module,exports){
+},{"../event-target":97,"../utils/browser.js":123,"../utils/fn.js":128,"global/document":1}],121:[function(_dereq_,module,exports){
 /**
  * @file text-track-settings.js
  */
@@ -15490,7 +15749,7 @@ function captionOptionsMenuTemplate() {
 exports['default'] = TextTrackSettings;
 module.exports = exports['default'];
 
-},{"../component":64,"../utils/events.js":126,"../utils/fn.js":127,"../utils/log.js":130,"global/window":2,"safe-json-parse/tuple":54}],121:[function(_dereq_,module,exports){
+},{"../component":64,"../utils/events.js":127,"../utils/fn.js":128,"../utils/log.js":131,"global/window":2,"safe-json-parse/tuple":54}],122:[function(_dereq_,module,exports){
 /**
  * @file text-track.js
  */
@@ -15843,7 +16102,7 @@ var indexOf = function indexOf(searchElement, fromIndex) {
 exports['default'] = TextTrack;
 module.exports = exports['default'];
 
-},{"../event-target":97,"../utils/browser.js":122,"../utils/fn.js":127,"../utils/guid.js":129,"../utils/log.js":130,"../utils/url.js":135,"./text-track-cue-list":115,"./text-track-enums":117,"global/document":1,"global/window":2,"xhr":56}],122:[function(_dereq_,module,exports){
+},{"../event-target":97,"../utils/browser.js":123,"../utils/fn.js":128,"../utils/guid.js":130,"../utils/log.js":131,"../utils/url.js":136,"./text-track-cue-list":116,"./text-track-enums":118,"global/document":1,"global/window":2,"xhr":56}],123:[function(_dereq_,module,exports){
 /**
  * @file browser.js
  */
@@ -15932,7 +16191,7 @@ exports.TOUCH_ENABLED = TOUCH_ENABLED;
 var BACKGROUND_SIZE_SUPPORTED = ('backgroundSize' in _globalDocument2['default'].createElement('video').style);
 exports.BACKGROUND_SIZE_SUPPORTED = BACKGROUND_SIZE_SUPPORTED;
 
-},{"global/document":1,"global/window":2}],123:[function(_dereq_,module,exports){
+},{"global/document":1,"global/window":2}],124:[function(_dereq_,module,exports){
 /**
  * @file buffer.js
  */
@@ -15981,7 +16240,7 @@ function bufferedPercent(buffered, duration) {
   return bufferedDuration / duration;
 }
 
-},{"./time-ranges.js":133}],124:[function(_dereq_,module,exports){
+},{"./time-ranges.js":134}],125:[function(_dereq_,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16052,7 +16311,7 @@ exports['default'] = function (target) {
 
 module.exports = exports['default'];
 
-},{"./log.js":130}],125:[function(_dereq_,module,exports){
+},{"./log.js":131}],126:[function(_dereq_,module,exports){
 /**
  * @file dom.js
  */
@@ -16485,7 +16744,7 @@ function getPointerPosition(el, event) {
   return position;
 }
 
-},{"./guid.js":129,"./log.js":130,"global/document":1,"global/window":2,"tsml":55}],126:[function(_dereq_,module,exports){
+},{"./guid.js":130,"./log.js":131,"global/document":1,"global/window":2,"tsml":55}],127:[function(_dereq_,module,exports){
 /**
  * @file events.js
  *
@@ -16893,7 +17152,7 @@ function _handleMultipleEvents(fn, elem, types, callback) {
   });
 }
 
-},{"./dom.js":125,"./guid.js":129,"global/document":1,"global/window":2}],127:[function(_dereq_,module,exports){
+},{"./dom.js":126,"./guid.js":130,"global/document":1,"global/window":2}],128:[function(_dereq_,module,exports){
 /**
  * @file fn.js
  */
@@ -16937,7 +17196,7 @@ var bind = function bind(context, fn, uid) {
 };
 exports.bind = bind;
 
-},{"./guid.js":129}],128:[function(_dereq_,module,exports){
+},{"./guid.js":130}],129:[function(_dereq_,module,exports){
 /**
  * @file format-time.js
  *
@@ -16987,7 +17246,7 @@ function formatTime(seconds) {
 exports['default'] = formatTime;
 module.exports = exports['default'];
 
-},{}],129:[function(_dereq_,module,exports){
+},{}],130:[function(_dereq_,module,exports){
 /**
  * @file guid.js
  *
@@ -17012,7 +17271,7 @@ function newGUID() {
   return _guid++;
 }
 
-},{}],130:[function(_dereq_,module,exports){
+},{}],131:[function(_dereq_,module,exports){
 /**
  * @file log.js
  */
@@ -17102,7 +17361,7 @@ function _logType(type, args) {
 exports['default'] = log;
 module.exports = exports['default'];
 
-},{"global/window":2}],131:[function(_dereq_,module,exports){
+},{"global/window":2}],132:[function(_dereq_,module,exports){
 /**
  * @file merge-options.js
  */
@@ -17173,7 +17432,7 @@ function mergeOptions() {
 
 module.exports = exports['default'];
 
-},{"lodash-compat/object/merge":40}],132:[function(_dereq_,module,exports){
+},{"lodash-compat/object/merge":40}],133:[function(_dereq_,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17201,7 +17460,7 @@ var setTextContent = function setTextContent(el, content) {
 };
 exports.setTextContent = setTextContent;
 
-},{"global/document":1}],133:[function(_dereq_,module,exports){
+},{"global/document":1}],134:[function(_dereq_,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17272,7 +17531,7 @@ function rangeCheck(fnName, index, maxIndex) {
   }
 }
 
-},{"./log.js":130}],134:[function(_dereq_,module,exports){
+},{"./log.js":131}],135:[function(_dereq_,module,exports){
 /**
  * @file to-title-case.js
  *
@@ -17293,7 +17552,7 @@ function toTitleCase(string) {
 exports["default"] = toTitleCase;
 module.exports = exports["default"];
 
-},{}],135:[function(_dereq_,module,exports){
+},{}],136:[function(_dereq_,module,exports){
 /**
  * @file url.js
  */
@@ -17429,7 +17688,7 @@ var isCrossOrigin = function isCrossOrigin(url) {
 };
 exports.isCrossOrigin = isCrossOrigin;
 
-},{"global/document":1,"global/window":2}],136:[function(_dereq_,module,exports){
+},{"global/document":1,"global/window":2}],137:[function(_dereq_,module,exports){
 /**
  * @file video.js
  */
@@ -17624,7 +17883,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-46';
+videojs.VERSION = '5.0.2-48';
 
 /**
  * The global options object. These are the settings that take effect
@@ -18040,7 +18299,7 @@ if (typeof define === 'function' && define['amd']) {
 exports['default'] = videojs;
 module.exports = exports['default'];
 
-},{"../../src/js/utils/merge-options.js":131,"./component":64,"./event-target":97,"./extend.js":98,"./player":105,"./plugins.js":106,"./setup":108,"./tech/flash.js":111,"./tech/html5.js":112,"./tracks/text-track.js":121,"./utils/browser.js":122,"./utils/create-deprecation-proxy.js":124,"./utils/dom.js":125,"./utils/events.js":126,"./utils/fn.js":127,"./utils/format-time.js":128,"./utils/log.js":130,"./utils/stylesheet.js":132,"./utils/time-ranges.js":133,"./utils/url.js":135,"global/document":1,"lodash-compat/object/merge":40,"object.assign":45,"xhr":56}]},{},[136])(136)
+},{"../../src/js/utils/merge-options.js":132,"./component":64,"./event-target":97,"./extend.js":98,"./player":105,"./plugins.js":106,"./setup":108,"./tech/flash.js":111,"./tech/html5.js":112,"./tracks/text-track.js":122,"./utils/browser.js":123,"./utils/create-deprecation-proxy.js":125,"./utils/dom.js":126,"./utils/events.js":127,"./utils/fn.js":128,"./utils/format-time.js":129,"./utils/log.js":131,"./utils/stylesheet.js":133,"./utils/time-ranges.js":134,"./utils/url.js":136,"global/document":1,"lodash-compat/object/merge":40,"object.assign":45,"xhr":56}]},{},[137])(137)
 });
 
 

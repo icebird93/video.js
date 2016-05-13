@@ -89,7 +89,7 @@ var morph_html = [
         '</g>',
     '</svg>'].join('');
 var umorph_html = [
-    '<svg width="100%" height="100%" viewBox="5 5 40 40">',
+    '<svg width="100%" height="100%" viewBox="10 10 30 30">',
         '<use id="umorph" xlink:href="#morph" x="0" y="0"/>',
     '</svg>'].join('');
 
@@ -102,6 +102,9 @@ var volume_icon_svg = '<svg height="3em" width="3em" viewBox="-6 -6 30 30">'
         +'<path class="volume-level-3" d="M 20,1 l -1.6,1.3 c 1.6,1.8,2.5,4.1,2.5,6.7 s -1,4.9 -2.5,6.7 L 20,17 c 1.9 -2.2,3 -4.9,3 -8 C 23,5.9,21.9,3.2,20,1 z"/>'
     +'</g>'
 +'</svg>';
+
+var gap_name = 'vjs-slider-gap';
+var slider_gaps = '<div class="'+gap_name+'-left"></div><div class="'+gap_name+'-right"></div>';
 
 HolaSkin.prototype.set_play_button_state = function(btn_svg, state){
     if (this.play_state==state)
@@ -137,20 +140,23 @@ HolaSkin.prototype.set_play_button_state = function(btn_svg, state){
             });
         }());
     }
+    var umorph = document.getElementById('umorph');
     var bars = btn_svg.getElementsByTagName('path');
     var stepcnt = 0, stepcnt1 = 0;
     if (intv)
         clearInterval(intv);
     if (state=='ended')
     {
-        bars[0].setAttribute('transform', 'translate(16.3, 16.5)');
+        umorph.setAttribute('transform', 'translate(16.3, 16.5)');
+        btn_svg.parentNode.setAttribute('transform', 'translate(16.3, 16.5)');
         bars[0].setAttribute('d', replay);
         bars[1].setAttribute('display', 'none');
         return;
     }
     bars[1].removeAttribute('display');
-    var is_transformed = bars[0].getAttribute('transform');
-    bars[0].removeAttribute('transform');
+    var is_transformed = btn_svg.parentNode.getAttribute('transform');
+    btn_svg.parentNode.removeAttribute('transform');
+    umorph.removeAttribute('transform');
     // need to clear the attribute to avoid glitch with transition from
     // replay icon to animated pause icon
     if (is_transformed)
@@ -203,25 +209,44 @@ HolaSkin.prototype.init = function(){
     var play_button = player.controlBar.playToggle.el();
     play_button.insertAdjacentHTML('beforeend', morph_html);
     player.bigPlayButton.el().insertAdjacentHTML('beforeend', umorph_html);
-    var morph = document.getElementById('morph');
     player.on('play', function(){
-        _this.set_play_button_state(morph, 'playing');
+        _this.is_ended = false;
+        _this.update_state(player);
     })
-    .on('pause', function(){
-        _this.set_play_button_state(morph, 'paused');
-    })
+    .on('pause', function(){ _this.update_state(player); })
     .on('ended', function(){
-        _this.set_play_button_state(morph, 'ended');
+        _this.is_ended = true;
+        _this.update_state(player);
     })
-    .on('seeked', function(){
-        _this.set_play_button_state(morph, player.paused() ? 'paused' : 'playing');
+    .on('seeking', function(){
+        // hide replay button if it's not rewind to the start (cur time == 0)
+        if (player.currentTime())
+            _this.is_ended = false;
+        _this.update_state(player);
     });
-    _this.set_play_button_state(morph, player.paused() ? 'paused' : 'playing');
-    var volume_button = player.controlBar.volumeMenuButton.el();
-    var volume_icon = document.createElement('div');
-    volume_icon.setAttribute('class', 'vjs-volume-icon');
-    volume_icon.innerHTML = volume_icon_svg;
-    volume_button.insertBefore(volume_icon, volume_button.firstChild);
+    this.update_state(player);
+    var volume_slider = player.controlBar.volumeMenuButton.volumeBar.el();
+    volume_slider.insertAdjacentHTML('beforeend', slider_gaps);
+    var progress_holder = player.controlBar.progressControl.seekBar.el();
+    progress_holder.insertAdjacentHTML('beforeend', slider_gaps);
+};
+
+HolaSkin.prototype.update_state = function(player){
+    var play_button = player.controlBar.playToggle.el();
+    var big_play_button = player.bigPlayButton.el();
+    var replay_classname = 'vjs-play-control-replay';
+    if (this.is_ended)
+    {
+        add_class_name(play_button, replay_classname);
+        add_class_name(big_play_button, replay_classname);
+    }
+    else
+    {
+        remove_class_name(play_button, replay_classname);
+        remove_class_name(big_play_button, replay_classname);
+    }
+    this.set_play_button_state(document.getElementById('morph'),
+        this.is_ended ? 'ended' : player.paused() ? 'paused' : 'playing');
 };
 
 HolaSkin.prototype.dispose = function(){
@@ -229,10 +254,29 @@ HolaSkin.prototype.dispose = function(){
         remove_class_name(this.el, this.classes_added.pop());
 };
 
+// update some vjs controls
+
+var MenuButton = vjs.getComponent('MenuButton');
+var VolumeMenuButton = vjs.getComponent('VolumeMenuButton');
+VolumeMenuButton.prototype.createEl = function(){
+    var el = MenuButton.prototype.createEl.call(this);
+
+    var icon = this.icon_ = document.createElement('div');
+    icon.setAttribute('class', 'vjs-volume-icon');
+    icon.innerHTML = volume_icon_svg;
+    el.insertBefore(icon, el.firstChild);
+
+    return el;
+};
+
+VolumeMenuButton.prototype.tooltipHandler = function(){
+    return this.icon_;
+};
+
 var defaults = {
     className: 'vjs5-hola-skin',
     css: '/css/videojs-hola-skin.css',
-    ver: 'ver=0.0.2-30'
+    ver: 'ver=0.0.2-36'
 };
 
 // VideoJS plugin register
