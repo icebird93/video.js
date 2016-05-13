@@ -80,6 +80,18 @@ class MenuItem extends ClickableComponent {
     }
   }
 
+  /**
+   * Return handler for the tooltip
+   *
+   * @return {Object} Dom element to serve as a handler for the tooltip
+   * @method tooltipHandler
+   */
+  tooltipHandler() {
+    if (this.options_.tooltip !== undefined) {
+      return super.tooltipHandler();
+    }
+  }
+
 }
 
 Component.registerComponent('MenuItem', MenuItem);
