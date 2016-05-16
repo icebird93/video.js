@@ -33,13 +33,13 @@
     "videojs-swf": "git+https://github.com/hola/video-js-swf-sv#v5.0.2-2",
     "vtt.js": "^0.12.1",
     "xhr": "~2.2.0",
-    "videojs-hola-skin": "git+https://github.com/hola/videojs5-hola-skin.git",
-    "videojs-settings": "git+https://github.com/hola/videojs5-settings.git",
-    "videojs-thumbnails": "git+https://github.com/hola/videojs-thumbnails.git#v0.1.1-2",
-    "videojs-utils": "git+https://github.com/hola/videojs-utils.git#v0.0.1-1",
-    "videojs-contrib-hls": "git+https://github.com/hola/videojs-contrib-hls.git#hola_5.0.2-1",
-    "videojs-contrib-media-sources": "hola/videojs-contrib-media-sources#hola_5.0.2-1",
-    "videojs-osmf": "git+https://github.com/hola/videojs5-osmf"
+    "videojs-hola-skin": "hola/videojs5-hola-skin",
+    "videojs-settings": "hola/videojs5-settings",
+    "videojs-thumbnails": "hola/videojs-thumbnails#v0.1.1-2",
+    "videojs-utils": "hola/videojs-utils#v0.0.1-1",
+    "videojs-contrib-hls": "hola/videojs-contrib-hls#hola_5.10.2",
+    "videojs-contrib-media-sources": "hola/videojs-contrib-media-sources#hola_5.10.2",
+    "videojs-osmf": "hola/videojs5-osmf"
   },
   "devDependencies": {
     "babel": "^5.2.2",

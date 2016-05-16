@@ -141,15 +141,15 @@ module.exports = function(grunt) {
         }
       },
       build: {
-        files: {
-          'build/temp/alt/video.novtt.min.js': 'build/temp/alt/video.novtt.js',
-          'build/temp/alt/videojs.novtt.hls.min.js': 'build/temp/alt/videojs.novtt.hls.js',
-          'build/temp/alt/videojs.novtt.osmf.min.js': 'build/temp/alt/videojs.novtt.osmf.js',
-          'build/temp/origin/video.min.js': 'build/temp/origin/video.js',
-          'build/temp/video.min.js': 'build/temp/video.js',
-          'build/temp/videojs.hls.min.js': 'build/temp/videojs.hls.js',
-          'build/temp/videojs.osmf.min.js': 'build/temp/videojs.osmf.js',
-        }
+        files: [
+          {nonunll: true, dest: 'build/temp/alt/video.novtt.min.js',src: 'build/temp/alt/video.novtt.js'},
+          {nonunll: true, dest: 'build/temp/alt/videojs.novtt.hls.min.js', src: 'build/temp/alt/videojs.novtt.hls.js'},
+          {nonunll: true, dest: 'build/temp/alt/videojs.novtt.osmf.min.js', src: 'build/temp/alt/videojs.novtt.osmf.js'},
+          {nonunll: true, dest: 'build/temp/origin/video.min.js', src: 'build/temp/origin/video.js'},
+          {nonunll: true, dest: 'build/temp/video.min.js', src: 'build/temp/video.js'},
+          {nonunll: true, dest: 'build/temp/videojs.hls.min.js', src: 'build/temp/videojs.hls.js'},
+          {nonunll: true, dest: 'build/temp/videojs.osmf.min.js', src: 'build/temp/videojs.osmf.js'},
+        ]
       }
     },
     dist: {},
@@ -216,10 +216,10 @@ module.exports = function(grunt) {
     },
     sass: {
       build: {
-        files: {
-          'build/temp/video-js.css': 'src/css/vjs.scss',
-          'build/temp/alt/video-js-cdn.css': 'src/css/vjs-cdn.scss'
-        }
+        files: [
+          {nonull: true, dest: 'build/temp/video-js.css', src: 'src/css/vjs.scss'},
+          {nonull: true, dest: 'build/temp/alt/video-js-cdn.css', src: 'src/css/vjs-cdn.scss'}
+        ]
       }
     },
     karma: {
@@ -500,81 +500,79 @@ module.exports = function(grunt) {
         options: {
           separator: '\n',
         },
-        files: {
-          'build/temp/origin/video.js': ['build/temp/video.basic.js'],
-          'build/temp/origin/videojs-hola-skin.js': ['node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js'],
-          'build/temp/origin/videojs-settings.js': ['node_modules/videojs-settings/dist/videojs-settings.js'],
-          'build/temp/origin/videojs.thumbnails.js': ['node_modules/videojs-thumbnails/videojs.thumbnails.js'],
-          'build/temp/origin/videojs-utils.js': ['node_modules/videojs-utils/dist/videojs-utils.js'],
-          'build/temp/video.basic.js': [
+        files: [
+          {nonull: true, dest: 'build/temp/origin/video.js', src: ['build/temp/video.basic.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs-hola-skin.js', src: ['node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs-settings.js', src: ['node_modules/videojs-settings/dist/videojs-settings.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs.thumbnails.js', src: ['node_modules/videojs-thumbnails/videojs.thumbnails.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs-utils.js', src: ['node_modules/videojs-utils/dist/videojs-utils.js']},
+          {nonull: true, dest: 'build/temp/video.basic.js', src: [
             'build/temp/video.basic.js',
             'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
             'node_modules/videojs-settings/dist/videojs-settings.js',
             'node_modules/videojs-thumbnails/videojs.thumbnails.js',
             'node_modules/videojs-utils/dist/videojs-utils.js',
-          ],
-          'build/temp/alt/video.novtt.js': [
+          ]},
+          {nonull: true, dest: 'build/temp/alt/video.novtt.js', src: [
             'build/temp/alt/video.novtt.js',
             'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
             'node_modules/videojs-settings/dist/videojs-settings.js',
             'node_modules/videojs-thumbnails/videojs.thumbnails.js',
             'node_modules/videojs-utils/dist/videojs-utils.js',
-          ],
-        },
-        nonull: true,
+          ]},
+        ],
       },
       hola_plugins: {
         options: {
           separator: '\n',
         },
-        files: {
+        files: [
           // default versions
-          'build/temp/video.js': [
+          {nonull: true, dest: 'build/temp/video.js', src: [
             'build/temp/video.basic.js',
-            'node_modules/videojs-contrib-media-sources/dist/videojs-media-sources.js',
-          ],
-          'build/temp/origin/videojs.hls.js': ['node_modules/videojs-contrib-hls/dist/videojs.hls.js'],
-          'build/temp/origin/videojs-osmf.js': ['node_modules/videojs-osmf/dist/videojs-osmf.js'],
-          'build/temp/videojs.hls.js': [
+            'node_modules/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
+          ]},
+          {nonull: true, dest: 'build/temp/origin/videojs.hls.js', src: ['node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs-osmf.js', src: ['node_modules/videojs-osmf/dist/videojs-osmf.js']},
+          {nonull: true, dest: 'build/temp/videojs.hls.js', src: [
             'build/temp/video.basic.js',
-            'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
-          ],
-          'build/temp/videojs.osmf.js': [
+            'node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.js',
+          ]},
+          {nonull: true, dest: 'build/temp/videojs.osmf.js', src: [
             'build/temp/video.basic.js',
-            'node_modules/videojs-contrib-media-sources/dist/videojs-media-sources.js',
+            'node_modules/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
             'node_modules/videojs-osmf/dist/videojs-osmf.js',
-          ],
+          ]},
           // novtt versions
-          'build/temp/alt/video.novtt.js': [
+          {nonull: true, dest: 'build/temp/alt/video.novtt.js', src: [
             'build/temp/alt/video.novtt.js',
-            'node_modules/videojs-contrib-media-sources/dist/videojs-media-sources.js',
-          ],
-          'build/temp/alt/videojs.novtt.hls.js': [
+            'node_modules/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
+          ]},
+          {nonull: true, dest: 'build/temp/alt/videojs.novtt.hls.js', src: [
             'build/temp/alt/video.novtt.js',
-            'node_modules/videojs-contrib-hls/dist/videojs.hls.js',
-          ],
-          'build/temp/alt/videojs.novtt.osmf.js': [
+            'node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.js',
+          ]},
+          {nonull: true, dest: 'build/temp/alt/videojs.novtt.osmf.js', src: [
             'build/temp/alt/video.novtt.js',
-            'node_modules/videojs-contrib-media-sources/dist/videojs-media-sources.js',
+            'node_modules/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
             'node_modules/videojs-osmf/dist/videojs-osmf.js',
-          ],
-        },
-        nonull: true,
+          ]},
+        ],
       },
       css: {
         options: {
           separator: '\n',
         },
-        files: {
-          'build/temp/origin/video-js.css': ['build/temp/video-js.css'],
-          'build/temp/origin/videojs-hola-skin.css': ['node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css'],
-          'build/temp/origin/videojs.thumbnails.css': ['node_modules/videojs-thumbnails/videojs.thumbnails.css'],
-          'build/temp/video-js.css': [
+        files: [
+          {nonull: true, dest: 'build/temp/origin/video-js.css', src: ['build/temp/video-js.css']},
+          {nonull: true, dest: 'build/temp/origin/videojs-hola-skin.css', src: ['node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css']},
+          {nonull: true, dest: 'build/temp/origin/videojs.thumbnails.css', src: ['node_modules/videojs-thumbnails/videojs.thumbnails.css']},
+          {nonull: true, dest: 'build/temp/video-js.css', src: [
             'build/temp/video-js.css',
             'node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css',
             'node_modules/videojs-thumbnails/videojs.thumbnails.css',
-          ],
-        },
+          ]},
+        ],
       },
     },
     concurrent: {
