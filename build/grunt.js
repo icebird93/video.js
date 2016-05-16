@@ -155,11 +155,11 @@ module.exports = function(grunt) {
     dist: {},
     watch: {
       novtt: {
-        files: ['build/temp/video.js'],
+        files: ['build/temp/video.basic.js'],
         tasks: ['concat:novtt']
       },
       minify: {
-        files: ['build/temp/video.js'],
+        files: ['build/temp/video.basic.js'],
         tasks: ['uglify']
       },
       skin: {
@@ -428,7 +428,7 @@ module.exports = function(grunt) {
           ]
         }),
         files: {
-          'build/temp/video.js': ['src/js/video.js']
+          'build/temp/video.basic.js': ['src/js/video.js']
         }
       },
       watch: {
