@@ -86,14 +86,13 @@ test('dispose removes the object element even before ready fires', function() {
   // This test appears to test bad functionaly that was fixed
   // so it's debateable whether or not it's useful
   let dispose = Flash.prototype.dispose;
-  let mockFlash = {};
+  let mockFlash = new MockFlash();
   let noop = function(){};
 
   // Mock required functions for dispose
   mockFlash.off = noop;
   mockFlash.trigger = noop;
   mockFlash.el_ = {};
-  mockFlash.textTracks = () => ([]);
 
   dispose.call(mockFlash);
   strictEqual(mockFlash.el_, null, 'swf el is nulled');
@@ -133,6 +132,16 @@ test('ready triggering before and after disposing the tech', function() {
 
 test('should have the source handler interface', function() {
   ok(Flash.registerSourceHandler, 'has the registerSourceHandler function');
+});
+
+test('canPlayType should select the correct types to play', function () {
+  let canPlayType = Flash.nativeSourceHandler.canPlayType;
+
+  equal(canPlayType('video/flv'), 'maybe', 'should be able to play FLV files');
+  equal(canPlayType('video/x-flv'), 'maybe', 'should be able to play x-FLV files');
+  equal(canPlayType('video/mp4'), 'maybe', 'should be able to play MP4 files');
+  equal(canPlayType('video/m4v'), 'maybe', 'should be able to play M4V files');
+  equal(canPlayType('video/ogg'), '', 'should return empty string if it can not play the video');
 });
 
 test('canHandleSource should be able to work with src objects without a type', function () {

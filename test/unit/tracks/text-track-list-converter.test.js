@@ -3,7 +3,6 @@ import TextTrack from '../../../src/js/tracks/text-track.js';
 import TextTrackList from '../../../src/js/tracks/text-track-list.js';
 import Html5 from '../../../src/js/tech/html5.js';
 import document from 'global/document';
-import window from 'global/window';
 
 q.module('Text Track List Converter', {});
 
@@ -26,13 +25,13 @@ let cleanup = (item) => {
 if (Html5.supportsNativeTextTracks()) {
   q.test('trackToJson_ produces correct representation for native track object', function(a) {
     let track = document.createElement('track');
-    track.src = 'http://example.com/english.vtt';
+
+    track.src = 'example.com/english.vtt';
     track.kind = 'captions';
     track.srclang = 'en';
     track.label = 'English';
 
     a.deepEqual(cleanup(c.trackToJson_(track.track)), {
-      src: undefined,
       kind: 'captions',
       label: 'English',
       language: 'en',
@@ -45,21 +44,25 @@ if (Html5.supportsNativeTextTracks()) {
       kind: 'captions',
       label: 'English',
       language: 'en',
-      src: 'http://example.com/english.vtt',
       tech: {}
     });
 
     let nativeTrack = document.createElement('track');
-    nativeTrack.src = 'http://example.com/spanish.vtt';
+
     nativeTrack.kind = 'captions';
     nativeTrack.srclang = 'es';
     nativeTrack.label = 'Spanish';
 
     let tt = new TextTrackList();
+
     tt.addTrack_(nativeTrack.track);
     tt.addTrack_(emulatedTrack);
 
     let tech = {
+      $$() {
+        return [nativeTrack];
+      },
+
       el() {
         return {
           querySelectorAll() {
@@ -73,13 +76,11 @@ if (Html5.supportsNativeTextTracks()) {
     };
 
     a.deepEqual(cleanup(c.textTracksToJson(tech)), [{
-      src: 'http://example.com/spanish.vtt',
       kind: 'captions',
       label: 'Spanish',
       language: 'es',
       mode: 'disabled'
     }, {
-      src: 'http://example.com/english.vtt',
       kind: 'captions',
       label: 'English',
       language: 'en',
@@ -92,22 +93,28 @@ if (Html5.supportsNativeTextTracks()) {
       kind: 'captions',
       label: 'English',
       language: 'en',
-      src: 'http://example.com/english.vtt',
+      src: 'example.com/english.vtt',
       tech: {}
     });
 
     let nativeTrack = document.createElement('track');
-    nativeTrack.src = 'http://example.com/spanish.vtt';
+
+    nativeTrack.src = 'example.com/spanish.vtt';
     nativeTrack.kind = 'captions';
     nativeTrack.srclang = 'es';
     nativeTrack.label = 'Spanish';
 
     let tt = new TextTrackList();
+
     tt.addTrack_(nativeTrack.track);
     tt.addTrack_(emulatedTrack);
 
     let addRemotes = 0;
     let tech = {
+      $$() {
+        return [nativeTrack];
+      },
+
       el() {
         return {
           querySelectorAll() {
@@ -137,12 +144,12 @@ q.test('trackToJson_ produces correct representation for emulated track object',
     kind: 'captions',
     label: 'English',
     language: 'en',
-    src: 'http://example.com/english.vtt',
+    src: 'example.com/english.vtt',
     tech: {}
   });
 
   a.deepEqual(cleanup(c.trackToJson_(track)), {
-    src: 'http://example.com/english.vtt',
+    src: 'example.com/english.vtt',
     kind: 'captions',
     label: 'English',
     language: 'en',
@@ -155,12 +162,12 @@ q.test('textTracksToJson produces good json output for emulated only', function(
     kind: 'captions',
     label: 'English',
     language: 'en',
-    src: 'http://example.com/english.vtt',
+    src: 'example.com/english.vtt',
     tech: {}
   });
 
   let anotherTrack = new TextTrack({
-    src: 'http://example.com/spanish.vtt',
+    src: 'example.com/spanish.vtt',
     kind: 'captions',
     srclang: 'es',
     label: 'Spanish',
@@ -168,10 +175,15 @@ q.test('textTracksToJson produces good json output for emulated only', function(
   });
 
   let tt = new TextTrackList();
+
   tt.addTrack_(anotherTrack);
   tt.addTrack_(emulatedTrack);
 
   let tech = {
+    $$() {
+      return [];
+    },
+
     el() {
       return {
         querySelectorAll() {
@@ -185,13 +197,13 @@ q.test('textTracksToJson produces good json output for emulated only', function(
   };
 
   a.deepEqual(cleanup(c.textTracksToJson(tech)), [{
-    src: 'http://example.com/spanish.vtt',
+    src: 'example.com/spanish.vtt',
     kind: 'captions',
     label: 'Spanish',
     language: 'es',
     mode: 'disabled'
   }, {
-    src: 'http://example.com/english.vtt',
+    src: 'example.com/english.vtt',
     kind: 'captions',
     label: 'English',
     language: 'en',
@@ -204,12 +216,12 @@ q.test('jsonToTextTracks calls addRemoteTextTrack on the tech with emulated trac
     kind: 'captions',
     label: 'English',
     language: 'en',
-    src: 'http://example.com/english.vtt',
+    src: 'example.com/english.vtt',
     tech: {}
   });
 
   let anotherTrack = new TextTrack({
-    src: 'http://example.com/spanish.vtt',
+    src: 'example.com/spanish.vtt',
     kind: 'captions',
     srclang: 'es',
     label: 'Spanish',
@@ -217,11 +229,16 @@ q.test('jsonToTextTracks calls addRemoteTextTrack on the tech with emulated trac
   });
 
   let tt = new TextTrackList();
+
   tt.addTrack_(anotherTrack);
   tt.addTrack_(emulatedTrack);
 
   let addRemotes = 0;
   let tech = {
+    $$() {
+      return [];
+    },
+
     el() {
       return {
         querySelectorAll() {

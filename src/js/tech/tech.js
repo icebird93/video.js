@@ -5,8 +5,15 @@
  */
 
 import Component from '../component';
+import HTMLTrackElement from '../tracks/html-track-element';
+import HTMLTrackElementList from '../tracks/html-track-element-list';
+import mergeOptions from '../utils/merge-options.js';
 import TextTrack from '../tracks/text-track';
 import TextTrackList from '../tracks/text-track-list';
+import VideoTrack from '../tracks/video-track';
+import VideoTrackList from '../tracks/video-track-list';
+import AudioTrackList from '../tracks/audio-track-list';
+import AudioTrack from '../tracks/audio-track';
 import * as Fn from '../utils/fn.js';
 import log from '../utils/log.js';
 import { createTimeRange } from '../utils/time-ranges.js';
@@ -42,6 +49,8 @@ class Tech extends Component {
     });
 
     this.textTracks_ = options.textTracks;
+    this.videoTracks_ = options.videoTracks;
+    this.audioTracks_ = options.audioTracks;
 
     // Manually track progress in cases where the browser/flash player doesn't report it.
     if (!this.featuresProgressEvents) {
@@ -62,6 +71,7 @@ class Tech extends Component {
     }
 
     this.initTextTrackListeners();
+    this.initTrackListeners();
 
     // Turn on component tap events
     this.emitTapEvents();
@@ -215,15 +225,9 @@ class Tech extends Component {
    * @method dispose
    */
   dispose() {
-    // clear out text tracks because we can't reuse them between techs
-    let textTracks = this.textTracks();
 
-    if (textTracks) {
-      let i = textTracks.length;
-      while(i--) {
-        this.removeRemoteTextTrack(textTracks[i]);
-      }
-    }
+    // clear out all tracks because we can't reuse them between techs
+    this.clearTracks(['audio', 'video', 'text']);
 
     // Turn off any manual progress or timeupdate tracking
     if (this.manualProgress) { this.manualProgressOff(); }
@@ -232,6 +236,40 @@ class Tech extends Component {
 
     super.dispose();
   }
+
+  /**
+   * clear out a track list, or multiple track lists
+   *
+   * Note: Techs without source handlers should call this between
+   * sources for video & audio tracks, as usually you don't want
+   * to use them between tracks and we have no automatic way to do
+   * it for you
+   *
+   * @method clearTracks
+   * @param {Array|String} types type(s) of track lists to empty
+   */
+  clearTracks(types) {
+    types = [].concat(types);
+    // clear out all tracks because we can't reuse them between techs
+    types.forEach((type) => {
+      let list = this[`${type}Tracks`]() || [];
+      let i = list.length;
+      while (i--) {
+        let track = list[i];
+        if (type === 'text') {
+          this.removeRemoteTextTrack(track);
+        }
+        list.removeTrack_(track);
+      }
+    });
+  }
+
+  /**
+   * Reset the tech. Removes all sources and resets readyState.
+   *
+   * @method reset
+   */
+  reset() {}
 
   /**
    * When invoked without an argument, returns a MediaError object
@@ -303,27 +341,64 @@ class Tech extends Component {
     }));
   }
 
+
+  /**
+   * Initialize audio and video track listeners
+   *
+   * @method initTrackListeners
+   */
+  initTrackListeners() {
+    const trackTypes = ['video', 'audio'];
+
+    trackTypes.forEach((type) => {
+      let trackListChanges = () => {
+        this.trigger(`${type}trackchange`);
+      };
+
+      let tracks = this[`${type}Tracks`]();
+
+      tracks.addEventListener('removetrack', trackListChanges);
+      tracks.addEventListener('addtrack', trackListChanges);
+
+      this.on('dispose', () => {
+        tracks.removeEventListener('removetrack', trackListChanges);
+        tracks.removeEventListener('addtrack', trackListChanges);
+      });
+    });
+  }
+
   /**
    * Emulate texttracks
    *
    * @method emulateTextTracks
    */
   emulateTextTracks() {
-    if (!window['WebVTT'] && this.el().parentNode != null) {
-      let script = document.createElement('script');
-      script.src = this.options_['vtt.js'] || '../node_modules/vtt.js/dist/vtt.js';
-      this.el().parentNode.appendChild(script);
-      window['WebVTT'] = true;
-    }
-
     let tracks = this.textTracks();
     if (!tracks) {
       return;
     }
 
-    let textTracksChanges = Fn.bind(this, function() {
-      let updateDisplay = () => this.trigger('texttrackchange');
+    if (!window['WebVTT'] && this.el().parentNode != null) {
+      let script = document.createElement('script');
+      script.src = this.options_['vtt.js'] || '../node_modules/videojs-vtt.js/dist/vtt.js';
+      script.onload = () => {
+        this.trigger('vttjsloaded');
+      };
+      script.onerror = () => {
+        this.trigger('vttjserror');
+      };
+      this.on('dispose', () => {
+        script.onload = null;
+        script.onerror = null;
+      });
+      // but have not loaded yet and we set it to true before the inject so that
+      // we don't overwrite the injected window.WebVTT if it loads right away
+      window['WebVTT'] = true;
+      this.el().parentNode.appendChild(script);
+    }
 
+    let updateDisplay = () => this.trigger('texttrackchange');
+    let textTracksChanges = () => {
       updateDisplay();
 
       for (let i = 0; i < tracks.length; i++) {
@@ -333,13 +408,36 @@ class Tech extends Component {
           track.addEventListener('cuechange', updateDisplay);
         }
       }
-    });
+    };
 
+    textTracksChanges();
     tracks.addEventListener('change', textTracksChanges);
 
     this.on('dispose', function() {
       tracks.removeEventListener('change', textTracksChanges);
     });
+  }
+
+  /**
+   * Get videotracks
+   *
+   * @returns {VideoTrackList}
+   * @method videoTracks
+   */
+  videoTracks() {
+    this.videoTracks_ = this.videoTracks_ || new VideoTrackList();
+    return this.videoTracks_;
+  }
+
+  /**
+   * Get audiotracklist
+   *
+   * @returns {AudioTrackList}
+   * @method audioTracks
+   */
+  audioTracks() {
+    this.audioTracks_ = this.audioTracks_ || new AudioTrackList();
+    return this.audioTracks_;
   }
 
   /*
@@ -371,6 +469,17 @@ class Tech extends Component {
   }
 
   /**
+   * Get remote htmltrackelements
+   *
+   * @returns {HTMLTrackElementList}
+   * @method remoteTextTrackEls
+   */
+  remoteTextTrackEls() {
+    this.remoteTextTrackEls_ = this.remoteTextTrackEls_ || new HTMLTrackElementList();
+    return this.remoteTextTrackEls_;
+  }
+
+  /**
    * Creates and returns a remote text track object
    *
    * @param {String} kind Text track kind (subtitles, captions, descriptions
@@ -389,19 +498,28 @@ class Tech extends Component {
   }
 
   /**
-   * Creates and returns a remote text track object
+   * Creates a remote text track object and returns a emulated html track element
    *
    * @param {Object} options The object should contain values for
    * kind, language, label and src (location of the WebVTT file)
-   * @return {TextTrackObject}
+   * @return {HTMLTrackElement}
    * @method addRemoteTextTrack
    */
   addRemoteTextTrack(options) {
-    let track = createTrackHelper(this, options.kind, options.label, options.language, options);
-    this.remoteTextTracks().addTrack_(track);
-    return {
-      track: track
-    };
+    let track = mergeOptions(options, {
+      tech: this
+    });
+
+    let htmlTrackElement = new HTMLTrackElement(track);
+
+    // store HTMLTrackElement and TextTrack to remote list
+    this.remoteTextTrackEls().addTrackElement_(htmlTrackElement);
+    this.remoteTextTracks().addTrack_(htmlTrackElement.track);
+
+    // must come after remoteTextTracks()
+    this.textTracks().addTrack_(htmlTrackElement.track);
+
+    return htmlTrackElement;
   }
 
   /**
@@ -412,6 +530,11 @@ class Tech extends Component {
    */
   removeRemoteTextTrack(track) {
     this.textTracks().removeTrack_(track);
+
+    let trackElement = this.remoteTextTrackEls().getTrackElementByTrack_(track);
+
+    // remove HTMLTrackElement and TextTrack from remote list
+    this.remoteTextTrackEls().removeTrackElement_(trackElement);
     this.remoteTextTracks().removeTrack_(track);
   }
 
@@ -424,15 +547,97 @@ class Tech extends Component {
    */
   setPoster() {}
 
+  /*
+   * Check if the tech can support the given type
+   *
+   * The base tech does not support any type, but source handlers might
+   * overwrite this.
+   *
+   * @param  {String} type    The mimetype to check
+   * @return {String}         'probably', 'maybe', or '' (empty string)
+   */
+  canPlayType() {
+    return '';
+  }
+
+  /*
+   * Return whether the argument is a Tech or not.
+   * Can be passed either a Class like `Html5` or a instance like `player.tech_`
+   *
+   * @param {Object} component An item to check
+   * @return {Boolean}         Whether it is a tech or not
+   */
+  static isTech(component) {
+    return component.prototype instanceof Tech ||
+           component instanceof Tech ||
+           component === Tech;
+  }
+
+  /**
+   * Registers a Tech
+   *
+   * @param {String} name Name of the Tech to register
+   * @param {Object} tech The tech to register
+   * @static
+   * @method registerComponent
+   */
+  static registerTech(name, tech) {
+    if (!Tech.techs_) {
+      Tech.techs_ = {};
+    }
+
+    if (!Tech.isTech(tech)) {
+      throw new Error(`Tech ${name} must be a Tech`);
+    }
+
+    Tech.techs_[name] = tech;
+    return tech;
+  }
+
+  /**
+   * Gets a component by name
+   *
+   * @param {String} name Name of the component to get
+   * @return {Component}
+   * @static
+   * @method getComponent
+   */
+  static getTech(name) {
+    if (Tech.techs_ && Tech.techs_[name]) {
+      return Tech.techs_[name];
+    }
+
+    if (window && window.videojs && window.videojs[name]) {
+      log.warn(`The ${name} tech was added to the videojs object when it should be registered using videojs.registerTech(name, tech)`);
+      return window.videojs[name];
+    }
+  }
 }
 
-/*
+/**
  * List of associated text tracks
  *
- * @type {Array}
+ * @type {TextTrackList}
  * @private
  */
 Tech.prototype.textTracks_;
+
+/**
+ * List of associated audio tracks
+ *
+ * @type {AudioTrackList}
+ * @private
+ */
+Tech.prototype.audioTracks_;
+
+/**
+ * List of associated video tracks
+ *
+ * @type {VideoTrackList}
+ * @private
+ */
+Tech.prototype.videoTracks_;
+
 
 var createTrackHelper = function(self, kind, label, language, options={}) {
   let tracks = self.textTracks();
@@ -498,6 +703,26 @@ Tech.withSourceHandlers = function(_Tech){
     handlers.splice(index, 0, handler);
   };
 
+  /*
+   * Check if the tech can support the given type
+   * @param  {String} type    The mimetype to check
+   * @return {String}         'probably', 'maybe', or '' (empty string)
+   */
+  _Tech.canPlayType = function(type){
+    let handlers = _Tech.sourceHandlers || [];
+    let can;
+
+    for (let i = 0; i < handlers.length; i++) {
+      can = handlers[i].canPlayType(type);
+
+      if (can) {
+        return can;
+      }
+    }
+
+    return '';
+  };
+
    /*
     * Return the first source handler that supports the source
     * TODO: Answer question: should 'probably' be prioritized over 'maybe'
@@ -535,16 +760,29 @@ Tech.withSourceHandlers = function(_Tech){
     return '';
   };
 
-  let originalSeekable = _Tech.prototype.seekable;
+  /*
+   * When using a source handler, prefer its implementation of
+   * any function normally provided by the tech.
+   */
+  let deferrable = [
+      'seekable',
+      'duration'
+    ];
 
-  // when a source handler is registered, prefer its implementation of
-  // seekable when present.
-  _Tech.prototype.seekable = function() {
-    if (this.sourceHandler_ && this.sourceHandler_.seekable) {
-      return this.sourceHandler_.seekable();
+  deferrable.forEach(function (fnName) {
+    let originalFn = this[fnName];
+
+    if (typeof originalFn !== 'function') {
+      return;
     }
-    return originalSeekable.call(this);
-  };
+
+    this[fnName] = function() {
+      if (this.sourceHandler_ && this.sourceHandler_[fnName]) {
+        return this.sourceHandler_[fnName].apply(this.sourceHandler_, arguments);
+      }
+      return originalFn.apply(this, arguments);
+    };
+  }, _Tech.prototype);
 
    /*
     * Create a function for setting the source using a source object
@@ -570,18 +808,52 @@ Tech.withSourceHandlers = function(_Tech){
     this.disposeSourceHandler();
     this.off('dispose', this.disposeSourceHandler);
 
-    this.currentSource_ = source;
-    this.sourceHandler_ = sh.handleSource(source, this);
+    // if we have a source and get another one
+    // then we are loading something new
+    // than clear all of our current tracks
+    if (this.currentSource_) {
+      this.clearTracks(['audio', 'video']);
+
+      this.currentSource_ = null;
+    }
+
+    if (sh !== _Tech.nativeSourceHandler) {
+
+      this.currentSource_ = source;
+
+      // Catch if someone replaced the src without calling setSource.
+      // If they do, set currentSource_ to null and dispose our source handler.
+      this.off(this.el_, 'loadstart', _Tech.prototype.firstLoadStartListener_);
+      this.off(this.el_, 'loadstart', _Tech.prototype.successiveLoadStartListener_);
+      this.one(this.el_, 'loadstart', _Tech.prototype.firstLoadStartListener_);
+
+    }
+
+    this.sourceHandler_ = sh.handleSource(source, this, this.options_);
     this.on('dispose', this.disposeSourceHandler);
 
     return this;
   };
 
-   /*
-    * Clean up any existing source handler
-    */
-   _Tech.prototype.disposeSourceHandler = function(){
+  // On the first loadstart after setSource
+  _Tech.prototype.firstLoadStartListener_ = function() {
+    this.one(this.el_, 'loadstart', _Tech.prototype.successiveLoadStartListener_);
+  };
+
+  // On successive loadstarts when setSource has not been called again
+  _Tech.prototype.successiveLoadStartListener_ = function() {
+    this.currentSource_ = null;
+    this.disposeSourceHandler();
+    this.one(this.el_, 'loadstart', _Tech.prototype.successiveLoadStartListener_);
+  };
+
+  /*
+   * Clean up any existing source handler
+   */
+  _Tech.prototype.disposeSourceHandler = function() {
     if (this.sourceHandler_ && this.sourceHandler_.dispose) {
+      this.off(this.el_, 'loadstart', _Tech.prototype.firstLoadStartListener_);
+      this.off(this.el_, 'loadstart', _Tech.prototype.successiveLoadStartListener_);
       this.sourceHandler_.dispose();
     }
   };
@@ -591,4 +863,5 @@ Tech.withSourceHandlers = function(_Tech){
 Component.registerComponent('Tech', Tech);
 // Old name for Tech
 Component.registerComponent('MediaTechController', Tech);
+Tech.registerTech('Tech', Tech);
 export default Tech;

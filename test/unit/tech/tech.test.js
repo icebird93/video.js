@@ -1,9 +1,18 @@
 var noop = function() {}, clock, oldTextTracks;
 
 import Tech from '../../../src/js/tech/tech.js';
+import Html5 from '../../../src/js/tech/html5.js';
+import Flash from '../../../src/js/tech/flash.js';
+import Button from '../../../src/js/button.js';
 import { createTimeRange } from '../../../src/js/utils/time-ranges.js';
 import extendFn from '../../../src/js/extend.js';
 import MediaError from '../../../src/js/media-error.js';
+import AudioTrack from '../../../src/js/tracks/audio-track';
+import VideoTrack from '../../../src/js/tracks/video-track';
+import TextTrack from '../../../src/js/tracks/text-track';
+import AudioTrackList from '../../../src/js/tracks/audio-track-list';
+import VideoTrackList from '../../../src/js/tracks/video-track-list';
+import TextTrackList from '../../../src/js/tracks/text-track-list';
 
 q.module('Media Tech', {
   'setup': function() {
@@ -11,20 +20,10 @@ q.module('Media Tech', {
     this.clock = sinon.useFakeTimers();
     this.featuresProgessEvents = Tech.prototype['featuresProgessEvents'];
     Tech.prototype['featuresProgressEvents'] = false;
-    Tech.prototype['featuresNativeTextTracks'] = true;
-    oldTextTracks = Tech.prototype.textTracks;
-    Tech.prototype.textTracks = function() {
-      return {
-        addEventListener: Function.prototype,
-        removeEventListener: Function.prototype
-      };
-    };
   },
   'teardown': function() {
     this.clock.restore();
     Tech.prototype['featuresProgessEvents'] = this.featuresProgessEvents;
-    Tech.prototype['featuresNativeTextTracks'] = false;
-    Tech.prototype.textTracks = oldTextTracks;
   }
 });
 
@@ -100,6 +99,54 @@ test('dispose() should stop time tracking', function() {
   ok(true, 'no exception was thrown');
 });
 
+test('dispose() should clear all tracks that are passed when its created', function() {
+  var audioTracks = new AudioTrackList([new AudioTrack(), new AudioTrack()]);
+  var videoTracks = new VideoTrackList([new VideoTrack(), new VideoTrack()]);
+  var textTracks = new TextTrackList([new TextTrack({tech: {}}), new TextTrack({tech: {}})]);
+
+  equal(audioTracks.length, 2, 'should have two audio tracks at the start');
+  equal(videoTracks.length, 2, 'should have two video tracks at the start');
+  equal(textTracks.length, 2, 'should have two text tracks at the start');
+
+  var tech = new Tech({audioTracks, videoTracks, textTracks});
+  equal(tech.videoTracks().length, videoTracks.length, 'should hold video tracks that we passed');
+  equal(tech.audioTracks().length, audioTracks.length, 'should hold audio tracks that we passed');
+  equal(tech.textTracks().length, textTracks.length, 'should hold text tracks that we passed');
+
+  tech.dispose();
+
+  equal(audioTracks.length, 0, 'should have zero audio tracks after dispose');
+  equal(videoTracks.length, 0, 'should have zero video tracks after dispose');
+  equal(textTracks.length, 0, 'should have zero text tracks after dispose');
+});
+
+test('dispose() should clear all tracks that are added after creation', function() {
+  var tech = new Tech();
+
+  tech.addRemoteTextTrack({});
+  tech.addRemoteTextTrack({});
+
+  tech.audioTracks().addTrack_(new AudioTrack());
+  tech.audioTracks().addTrack_(new AudioTrack());
+
+  tech.videoTracks().addTrack_(new VideoTrack());
+  tech.videoTracks().addTrack_(new VideoTrack());
+
+  equal(tech.audioTracks().length, 2, 'should have two audio tracks at the start');
+  equal(tech.videoTracks().length, 2, 'should have two video tracks at the start');
+  equal(tech.textTracks().length, 2, 'should have two video tracks at the start');
+  equal(tech.remoteTextTrackEls().length, 2, 'should have two remote text tracks els');
+  equal(tech.remoteTextTracks().length, 2, 'should have two remote text tracks');
+
+  tech.dispose();
+
+  equal(tech.audioTracks().length, 0, 'should have zero audio tracks after dispose');
+  equal(tech.videoTracks().length, 0, 'should have zero video tracks after dispose');
+  equal(tech.remoteTextTrackEls().length, 0, 'should have zero remote text tracks els');
+  equal(tech.remoteTextTracks().length, 0, 'should have zero remote text tracks');
+  equal(tech.textTracks().length, 0, 'should have zero video tracks after dispose');
+});
+
 test('should add the source handler interface to a tech', function(){
   var sourceA = { src: 'foo.mp4', type: 'video/mp4' };
   var sourceB = { src: 'no-support', type: 'no-support' };
@@ -132,24 +179,34 @@ test('should add the source handler interface to a tech', function(){
 
   // Create source handlers
   var handlerOne = {
+    canPlayType: function(type){
+      if (type !=='no-support') {
+        return 'probably';
+      }
+      return '';
+    },
     canHandleSource: function(source){
       if (source.type !=='no-support') {
         return 'probably';
       }
       return '';
     },
-    handleSource: function(s, t){
+    handleSource: function(s, t, o){
       strictEqual(tech, t, 'the tech instance was passed to the source handler');
       strictEqual(sourceA, s, 'the tech instance was passed to the source handler');
+      strictEqual(tech.options_, o, 'the tech options were passed to the source handler');
       return new handlerInternalState();
     }
   };
 
   var handlerTwo = {
+    canPlayType: function(type){
+      return ''; // no support
+    },
     canHandleSource: function(source){
       return ''; // no support
     },
-    handleSource: function(source, tech){
+    handleSource: function(source, tech, options){
       ok(false, 'handlerTwo supports nothing and should never be called');
     }
   };
@@ -164,17 +221,57 @@ test('should add the source handler interface to a tech', function(){
   strictEqual(MyTech.selectSourceHandler(sourceA), handlerOne, 'handlerOne was selected to handle the valid source');
   strictEqual(MyTech.selectSourceHandler(sourceB), null, 'no handler was selected to handle the invalid source');
 
+  // Test canPlayType return values
+  strictEqual(MyTech.canPlayType(sourceA.type), 'probably', 'the Tech returned probably for the valid source');
+  strictEqual(MyTech.canPlayType(sourceB.type), '', 'the Tech returned an empty string for the invalid source');
+
   // Test canPlaySource return values
   strictEqual(MyTech.canPlaySource(sourceA), 'probably', 'the Tech returned probably for the valid source');
   strictEqual(MyTech.canPlaySource(sourceB), '', 'the Tech returned an empty string for the invalid source');
 
+  tech.addRemoteTextTrack({});
+  tech.addRemoteTextTrack({});
+
+  tech.audioTracks().addTrack_(new AudioTrack());
+  tech.audioTracks().addTrack_(new AudioTrack());
+
+  tech.videoTracks().addTrack_(new VideoTrack());
+  tech.videoTracks().addTrack_(new VideoTrack());
+
+  equal(tech.audioTracks().length, 2, 'should have two audio tracks at the start');
+  equal(tech.videoTracks().length, 2, 'should have two video tracks at the start');
+  equal(tech.textTracks().length, 2, 'should have two video tracks at the start');
+  equal(tech.remoteTextTrackEls().length, 2, 'should have two remote text tracks els');
+  equal(tech.remoteTextTracks().length, 2, 'should have two remote text tracks');
+
   // Pass a source through the source handler process of a tech instance
+  tech.setSource(sourceA);
+
+  // verify that the Tracks are still there
+  equal(tech.audioTracks().length, 2, 'should have two audio tracks at the start');
+  equal(tech.videoTracks().length, 2, 'should have two video tracks at the start');
+  equal(tech.textTracks().length, 2, 'should have two video tracks at the start');
+  equal(tech.remoteTextTrackEls().length, 2, 'should have two remote text tracks els');
+  equal(tech.remoteTextTracks().length, 2, 'should have two remote text tracks');
+
+  strictEqual(tech.currentSource_, sourceA, 'sourceA was handled and stored');
+  ok(tech.sourceHandler_.dispose, 'the handlerOne state instance was stored');
+
+  // Pass a second source
   tech.setSource(sourceA);
   strictEqual(tech.currentSource_, sourceA, 'sourceA was handled and stored');
   ok(tech.sourceHandler_.dispose, 'the handlerOne state instance was stored');
 
+  // verify that all the tracks were removed as we got a new source
+  equal(tech.audioTracks().length, 0, 'should have zero audio tracks');
+  equal(tech.videoTracks().length, 0, 'should have zero video tracks');
+  equal(tech.textTracks().length, 2, 'should have two text tracks');
+  equal(tech.remoteTextTrackEls().length, 2, 'should have two remote text tracks els');
+  equal(tech.remoteTextTracks().length, 2, 'should have two remote text tracks');
+
   // Check that the handler dipose method works
-  ok(!disposeCalled, 'dispose has not been called for the handler yet');
+  ok(disposeCalled, 'dispose has been called for the handler yet');
+  disposeCalled = false;
   tech.dispose();
   ok(disposeCalled, 'the handler dispose method was called when the tech was disposed');
 });
@@ -239,10 +336,13 @@ test('delegates seekable to the source handler', function(){
   };
 
   MyTech.registerSourceHandler({
+    canPlayType: function() {
+      return true;
+    },
     canHandleSource: function() {
       return true;
     },
-    handleSource: function(source, tech) {
+    handleSource: function(source, tech, options) {
       return handler;
     }
   });
@@ -254,4 +354,62 @@ test('delegates seekable to the source handler', function(){
   });
   tech.seekable();
   equal(seekableCount, 1, 'called the source handler');
+});
+
+test('Tech.isTech returns correct answers for techs and components', function() {
+  let isTech = Tech.isTech;
+
+  ok(isTech(Tech), 'Tech is a Tech');
+  ok(isTech(Html5), 'Html5 is a Tech');
+  ok(isTech(new Html5({}, {})), 'An html5 instance is a Tech');
+  ok(isTech(Flash), 'Flash is a Tech');
+  ok(!isTech(5), 'A number is not a Tech');
+  ok(!isTech('this is a tech'), 'A string is not a Tech');
+  ok(!isTech(Button), 'A Button is not a Tech');
+  ok(!isTech(new Button({}, {})), 'A Button instance is not a Tech');
+  ok(!isTech(isTech), 'A function is not a Tech');
+});
+
+test('Tech#setSource clears currentSource_ after repeated loadstart', function() {
+  let disposed = false;
+  let MyTech = extendFn(Tech);
+
+  Tech.withSourceHandlers(MyTech);
+  let tech = new MyTech();
+
+  var sourceHandler = {
+    canPlayType: function(type) {
+      return true;
+    },
+    canHandleSource: function(source) {
+      return true;
+    },
+    handleSource: function(source, tech, options) {
+      return {
+        dispose: function() {
+          disposed = true;
+        }
+      };
+    }
+  };
+
+  // Test registering source handlers
+  MyTech.registerSourceHandler(sourceHandler);
+
+  // First loadstart
+  tech.setSource('test');
+  tech.currentSource_ = 'test';
+  tech.trigger('loadstart');
+  equal(tech.currentSource_, 'test', 'Current source is test');
+
+  // Second loadstart
+  tech.trigger('loadstart');
+  equal(tech.currentSource_, null, 'Current source is null');
+  equal(disposed, true, 'disposed is true');
+
+  // Third loadstart
+  tech.currentSource_ = 'test';
+  tech.trigger('loadstart');
+  equal(tech.currentSource_, null, 'Current source is still null');
+
 });

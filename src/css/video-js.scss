@@ -2,12 +2,12 @@
 @import "private-variables";
 @import "utilities";
 
-@import "../../node_modules/videojs-font/scss/icons";
+@import "node_modules/videojs-font/scss/icons";
 
 @import "components/layout";
 @import "components/big-play";
 @import "components/button";
-@import "components/tooltip";
+@import "components/close-button";
 
 @import "components/menu/menu";
 @import "components/menu/menu-popup";
@@ -33,6 +33,9 @@
 @import "components/loading";
 @import "components/captions";
 @import "components/chapters";
+@import "components/descriptions";
 @import "components/subtitles";
+@import "components/audio";
 @import "components/adaptive";
 @import "components/captions-settings";
+@import "components/modal-dialog";

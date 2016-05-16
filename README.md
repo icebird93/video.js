@@ -1,6 +1,9 @@
 # hola video.js - Enhanced HTML5 Video Player
 hola video.js is a web video player based on the popular video.js open source project world. It supports HTML5 and Flash video. It supports video playback on desktops and mobile devices. hola video.js integrates advanced features from [holacdn.com](http://www.holacdn.com)
 
+# [Video.js - HTML5 Video Player](http://videojs.com)
+[![Build Status](https://travis-ci.org/videojs/video.js.svg?branch=master)](https://travis-ci.org/videojs/video.js)
+[![Coverage Status](https://coveralls.io/repos/github/videojs/video.js/badge.svg?branch=master)](https://coveralls.io/github/videojs/video.js?branch=master)
 
 ## Features
 

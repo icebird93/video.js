@@ -336,10 +336,11 @@ class Component {
    *
    * @param {String|Component} child The class name or instance of a child to add
    * @param {Object=} options Options, including options to be passed to children of the child.
+   * @param {Number} index into our children array to attempt to add the child
    * @return {Component} The child component (created by this process if a string was used)
    * @method addChild
    */
-  addChild(child, options={}) {
+  addChild(child, options={}, index=this.children_.length) {
     let component;
     let componentName;
 
@@ -369,6 +370,18 @@ class Component {
       // If there's no .player_, this is a player
       let ComponentClass = Component.getComponent(componentClassName);
 
+      if (!ComponentClass) {
+        throw new Error(`Component ${componentClassName} does not exist`);
+      }
+
+      // data stored directly on the videojs object may be
+      // misidentified as a component to retain
+      // backwards-compatibility with 4.x. check to make sure the
+      // component class can be instantiated.
+      if (typeof ComponentClass !== 'function') {
+        return null;
+      }
+
       component = new ComponentClass(this.player_ || this, options);
 
     // child is a component instance
@@ -376,7 +389,7 @@ class Component {
       component = child;
     }
 
-    this.children_.push(component);
+    this.children_.splice(index, 0, component);
 
     if (typeof component.id === 'function') {
       this.childIndex_[component.id()] = component;
@@ -393,7 +406,9 @@ class Component {
     // Add the UI object's element to the container div (box)
     // Having an element is not required
     if (typeof component.el === 'function' && component.el()) {
-      this.contentEl().appendChild(component.el());
+      let childNodes = this.contentEl().children;
+      let refNode = childNodes[index] || null;
+      this.contentEl().insertBefore(component.el(), refNode);
     }
 
     // Return so it can stored on parent object if desired.
@@ -493,7 +508,10 @@ class Component {
       // `this` is `parent`
       let parentOptions = this.options_;
 
-      let handleAdd = (name, opts) => {
+      let handleAdd = (child) => {
+        let name = child.name;
+        let opts = child.opts;
+
         // Allow options for children to be set at the parent options
         // e.g. videojs(id, { controlBar: false });
         // instead of videojs(id, { children: { controlBar: false });
@@ -521,33 +539,57 @@ class Component {
         // Add a direct reference to the child by name on the parent instance.
         // If two of the same component are used, different names should be supplied
         // for each
-        this[name] = this.addChild(name, opts);
+        let newChild = this.addChild(name, opts);
+        if (newChild) {
+          this[name] = newChild;
+        }
       };
 
       // Allow for an array of children details to passed in the options
+      let workingChildren;
+      let Tech = Component.getComponent('Tech');
+
       if (Array.isArray(children)) {
-        for (let i = 0; i < children.length; i++) {
-          let child = children[i];
-          let name;
-          let opts;
-
-          if (typeof child === 'string') {
-            // ['myComponent']
-            name = child;
-            opts = {};
-          } else {
-            // [{ name: 'myComponent', otherOption: true }]
-            name = child.name;
-            opts = child;
-          }
-
-          handleAdd(name, opts);
-        }
+        workingChildren = children;
       } else {
-        Object.getOwnPropertyNames(children).forEach(function(name){
-          handleAdd(name, children[name]);
-        });
+        workingChildren = Object.keys(children);
       }
+
+      workingChildren
+      // children that are in this.options_ but also in workingChildren  would
+      // give us extra children we do not want. So, we want to filter them out.
+      .concat(Object.keys(this.options_)
+              .filter(function(child) {
+                return !workingChildren.some(function(wchild) {
+                  if (typeof wchild === 'string') {
+                    return child === wchild;
+                  } else {
+                    return child === wchild.name;
+                  }
+                });
+              }))
+      .map((child) => {
+        let name, opts;
+
+        if (typeof child === 'string') {
+          name = child;
+          opts = children[name] || this.options_[name] || {};
+        } else {
+          name = child.name;
+          opts = child;
+        }
+
+        return {name, opts};
+      })
+      .filter((child) => {
+        // we have to make sure that child.name isn't in the techOrder since
+        // techs are registerd as Components but can't aren't compatible
+        // See https://github.com/videojs/video.js/issues/2772
+        let c = Component.getComponent(child.opts.componentClass ||
+                                       toTitleCase(child.name));
+        return c && !Tech.isTech(c);
+      })
+      .forEach(handleAdd);
     }
   }
 
@@ -800,6 +842,46 @@ class Component {
   }
 
   /**
+   * Finds a single DOM element matching `selector` within the component's
+   * `contentEl` or another custom context.
+   *
+   * @method $
+   * @param  {String} selector
+   *         A valid CSS selector, which will be passed to `querySelector`.
+   *
+   * @param  {Element|String} [context=document]
+   *         A DOM element within which to query. Can also be a selector
+   *         string in which case the first matching element will be used
+   *         as context. If missing (or no element matches selector), falls
+   *         back to `document`.
+   *
+   * @return {Element|null}
+   */
+  $(selector, context) {
+    return Dom.$(selector, context || this.contentEl());
+  }
+
+  /**
+   * Finds a all DOM elements matching `selector` within the component's
+   * `contentEl` or another custom context.
+   *
+   * @method $$
+   * @param  {String} selector
+   *         A valid CSS selector, which will be passed to `querySelectorAll`.
+   *
+   * @param  {Element|String} [context=document]
+   *         A DOM element within which to query. Can also be a selector
+   *         string in which case the first matching element will be used
+   *         as context. If missing (or no element matches selector), falls
+   *         back to `document`.
+   *
+   * @return {NodeList}
+   */
+  $$(selector, context) {
+    return Dom.$$(selector, context || this.contentEl());
+  }
+
+  /**
    * Check if a component's element has a CSS class name
    *
    * @param {String} classToCheck Classname to check
@@ -823,7 +905,7 @@ class Component {
   }
 
   /**
-   * Remove and return a CSS class name from the component's element
+   * Remove a CSS class name from the component's element
    *
    * @param {String} classToRemove Classname to remove
    * @return {Component}
@@ -831,6 +913,23 @@ class Component {
    */
   removeClass(classToRemove) {
     Dom.removeElClass(this.el_, classToRemove);
+    return this;
+  }
+
+  /**
+   * Add or remove a CSS class name from the component's element
+   *
+   * @param  {String} classToToggle
+   * @param  {Boolean|Function} [predicate]
+   *         Can be a function that returns a Boolean. If `true`, the class
+   *         will be added; if `false`, the class will be removed. If not
+   *         given, the class will be added if not present and vice versa.
+   *
+   * @return {Component}
+   * @method toggleClass
+   */
+  toggleClass(classToToggle, predicate) {
+    Dom.toggleElClass(this.el_, classToToggle, predicate);
     return this;
   }
 
@@ -990,6 +1089,64 @@ class Component {
     // If component has display:none, offset will return 0
     // TODO: handle display:none and no dimension style using px
     return parseInt(this.el_['offset' + toTitleCase(widthOrHeight)], 10);
+  }
+
+  /**
+   * Get width or height of computed style
+   * @param  {String} widthOrHeight  'width' or 'height'
+   * @return {Number|Boolean} The bolean false if nothing was set
+   * @method currentDimension
+   */
+  currentDimension(widthOrHeight) {
+    let computedWidthOrHeight = 0;
+
+    if (widthOrHeight !== 'width' && widthOrHeight !== 'height') {
+      throw new Error('currentDimension only accepts width or height value');
+    }
+
+    if (typeof window.getComputedStyle === 'function') {
+      const computedStyle = window.getComputedStyle(this.el_);
+      computedWidthOrHeight = computedStyle.getPropertyValue(widthOrHeight) || computedStyle[widthOrHeight];
+    } else if (this.el_.currentStyle) {
+      // ie 8 doesn't support computed style, shim it
+      // return clientWidth or clientHeight instead for better accuracy
+      const rule = `offset${toTitleCase(widthOrHeight)}`;
+      computedWidthOrHeight = this.el_[rule];
+    }
+
+    // remove 'px' from variable and parse as integer
+    computedWidthOrHeight = parseFloat(computedWidthOrHeight);
+    return computedWidthOrHeight;
+  }
+
+  /**
+   * Get an object which contains width and height values of computed style
+   * @return {Object} The dimensions of element
+   * @method currentDimensions
+   */
+  currentDimensions() {
+    return {
+      width: this.currentDimension('width'),
+      height: this.currentDimension('height')
+    };
+  }
+
+  /**
+   * Get width of computed style
+   * @return {Integer}
+   * @method currentWidth
+   */
+  currentWidth() {
+    return this.currentDimension('width');
+  }
+
+  /**
+   * Get height of computed style
+   * @return {Integer}
+   * @method currentHeight
+   */
+  currentHeight() {
+    return this.currentDimension('height');
   }
 
   /**

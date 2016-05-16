@@ -9,11 +9,14 @@ import * as Dom from '../utils/dom.js';
 import * as Url from '../utils/url.js';
 import * as Fn from '../utils/fn.js';
 import log from '../utils/log.js';
+import tsml from 'tsml';
+import TextTrack from '../../../src/js/tracks/text-track.js';
 import * as browser from '../utils/browser.js';
 import document from 'global/document';
 import window from 'global/window';
 import assign from 'object.assign';
 import mergeOptions from '../utils/merge-options.js';
+import toTitleCase from '../utils/to-title-case.js';
 
 /**
  * HTML5 Media Controller - Wrapper for HTML5 Media API
@@ -29,6 +32,7 @@ class Html5 extends Tech {
     super(options, ready);
 
     const source = options.source;
+    let crossoriginTracks = false;
 
     // Set the source if one is provided
     // 1) Check if the source is new (if not, we want to keep the original so playback isn't interrupted)
@@ -49,6 +53,7 @@ class Html5 extends Tech {
       while (nodesLength--) {
         let node = nodes[nodesLength];
         let nodeName = node.nodeName.toLowerCase();
+
         if (nodeName === 'track') {
           if (!this.featuresNativeTextTracks) {
             // Empty video tag tracks so the built-in player doesn't use them also.
@@ -57,7 +62,14 @@ class Html5 extends Tech {
             // captions and subtitles. videoElement.textTracks
             removeNodes.push(node);
           } else {
+            // store HTMLTrackElement and TextTrack to remote list
+            this.remoteTextTrackEls().addTrackElement_(node);
             this.remoteTextTracks().addTrack_(node.track);
+            if (!crossoriginTracks &&
+                !this.el_.hasAttribute('crossorigin') &&
+                Url.isCrossOrigin(node.src)) {
+              crossoriginTracks = true;
+            }
           }
         }
       }
@@ -67,7 +79,30 @@ class Html5 extends Tech {
       }
     }
 
+    let trackTypes = ['audio', 'video'];
+
+    // ProxyNativeTextTracks
+    trackTypes.forEach((type) => {
+      let capitalType = toTitleCase(type);
+
+      if (!this[`featuresNative${capitalType}Tracks`]) {
+        return;
+      }
+      let tl = this.el()[`${type}Tracks`];
+
+      if (tl && tl.addEventListener) {
+        tl.addEventListener('change', Fn.bind(this, this[`handle${capitalType}TrackChange_`]));
+        tl.addEventListener('addtrack', Fn.bind(this, this[`handle${capitalType}TrackAdd_`]));
+        tl.addEventListener('removetrack', Fn.bind(this, this[`handle${capitalType}TrackRemove_`]));
+      }
+    });
+
     if (this.featuresNativeTextTracks) {
+      if (crossoriginTracks) {
+        log.warn(tsml`Text Tracks are being loaded from another origin but the crossorigin attribute isn't used. 
+            This may prevent text tracks from loading.`);
+      }
+
       this.handleTextTrackChange_ = Fn.bind(this, this.handleTextTrackChange);
       this.handleTextTrackAdd_ = Fn.bind(this, this.handleTextTrackAdd);
       this.handleTextTrackRemove_ = Fn.bind(this, this.handleTextTrackRemove);
@@ -93,25 +128,20 @@ class Html5 extends Tech {
    * @method dispose
    */
   dispose() {
-    let tt = this.el().textTracks;
-    let emulatedTt = this.textTracks();
+    // Un-ProxyNativeTracks
+    ['audio', 'video', 'text'].forEach((type) => {
+      let capitalType = toTitleCase(type);
+      let tl = this.el_[`${type}Tracks`];
 
-    // remove native event listeners
-    if (tt && tt.removeEventListener) {
-      tt.removeEventListener('change', this.handleTextTrackChange_);
-      tt.removeEventListener('addtrack', this.handleTextTrackAdd_);
-      tt.removeEventListener('removetrack', this.handleTextTrackRemove_);
-    }
-
-    // clearout the emulated text track list.
-    let i = emulatedTt.length;
-
-    while (i--) {
-      emulatedTt.removeTrack_(emulatedTt[i]);
-    }
-
+      if (tl && tl.removeEventListener) {
+        tl.removeEventListener('change', this[`handle${capitalType}TrackChange_`]);
+        tl.removeEventListener('addtrack', this[`handle${capitalType}TrackAdd_`]);
+        tl.removeEventListener('removetrack', this[`handle${capitalType}TrackRemove_`]);
+      }
+    });
 
     Html5.disposeMediaElement(this.el_);
+    // tech will handle clearing of the emulated track list
     super.dispose();
   }
 
@@ -254,10 +284,18 @@ class Html5 extends Tech {
   proxyNativeTextTracks_() {
     let tt = this.el().textTracks;
 
-    if (tt && tt.addEventListener) {
-      tt.addEventListener('change', this.handleTextTrackChange_);
-      tt.addEventListener('addtrack', this.handleTextTrackAdd_);
-      tt.addEventListener('removetrack', this.handleTextTrackRemove_);
+    if (tt) {
+      // Add tracks - if player is initialised after DOM loaded, textTracks
+      // will not trigger addtrack
+      for (let i = 0; i < tt.length; i++) {
+        this.textTracks().addTrack_(tt[i]);
+      }
+
+      if (tt.addEventListener) {
+        tt.addEventListener('change', this.handleTextTrackChange_);
+        tt.addEventListener('addtrack', this.handleTextTrackAdd_);
+        tt.addEventListener('removetrack', this.handleTextTrackRemove_);
+      }
     }
   }
 
@@ -278,6 +316,43 @@ class Html5 extends Tech {
   handleTextTrackRemove(e) {
     this.textTracks().removeTrack_(e.track);
   }
+
+  handleVideoTrackChange_(e) {
+    let vt = this.videoTracks();
+    this.videoTracks().trigger({
+      type: 'change',
+      target: vt,
+      currentTarget: vt,
+      srcElement: vt
+    });
+  }
+
+  handleVideoTrackAdd_(e) {
+    this.videoTracks().addTrack_(e.track);
+  }
+
+  handleVideoTrackRemove_(e) {
+    this.videoTracks().removeTrack_(e.track);
+  }
+
+  handleAudioTrackChange_(e) {
+    let audioTrackList = this.audioTracks();
+    this.audioTracks().trigger({
+      type: 'change',
+      target: audioTrackList,
+      currentTarget: audioTrackList,
+      srcElement: audioTrackList
+    });
+  }
+
+  handleAudioTrackAdd_(e) {
+    this.audioTracks().addTrack_(e.track);
+  }
+
+  handleAudioTrackRemove_(e) {
+    this.audioTracks().removeTrack_(e.track);
+  }
+
 
   /**
    * Play for html5 tech
@@ -491,12 +566,27 @@ class Html5 extends Tech {
   }
 
   /**
+   * Reset the tech. Removes all sources and calls `load`.
+   *
+   * @method reset
+   */
+  reset() {
+    Html5.resetMediaElement(this.el_);
+  }
+
+  /**
    * Get current source
    *
    * @return {Object}
    * @method currentSrc
    */
-  currentSrc() { return this.el_.currentSrc; }
+  currentSrc() {
+    if (this.currentSource_) {
+      return this.currentSource_.src;
+    } else {
+      return this.el_.currentSrc;
+    }
+  }
 
   /**
    * Get poster
@@ -720,11 +810,11 @@ class Html5 extends Tech {
   }
 
   /**
-   * Creates and returns a remote text track object
+   * Creates a remote text track object and returns a html track element
    *
    * @param {Object} options The object should contain values for
    * kind, language, label and src (location of the WebVTT file)
-   * @return {TextTrackObject}
+   * @return {HTMLTrackElement}
    * @method addRemoteTextTrack
    */
   addRemoteTextTrack(options={}) {
@@ -732,32 +822,34 @@ class Html5 extends Tech {
       return super.addRemoteTextTrack(options);
     }
 
-    var track = document.createElement('track');
+    let htmlTrackElement = document.createElement('track');
 
-    if (options['kind']) {
-      track['kind'] = options['kind'];
+    if (options.kind) {
+      htmlTrackElement.kind = options.kind;
     }
-    if (options['label']) {
-      track['label'] = options['label'];
+    if (options.label) {
+      htmlTrackElement.label = options.label;
     }
-    if (options['language'] || options['srclang']) {
-      track['srclang'] = options['language'] || options['srclang'];
+    if (options.language || options.srclang) {
+      htmlTrackElement.srclang = options.language || options.srclang;
     }
-    if (options['default']) {
-      track['default'] = options['default'];
+    if (options.default) {
+      htmlTrackElement.default = options.default;
     }
-    if (options['id']) {
-      track['id'] = options['id'];
+    if (options.id) {
+      htmlTrackElement.id = options.id;
     }
-    if (options['src']) {
-      track['src'] = options['src'];
+    if (options.src) {
+      htmlTrackElement.src = options.src;
     }
 
-    this.el().appendChild(track);
+    this.el().appendChild(htmlTrackElement);
 
-    this.remoteTextTracks().addTrack_(track.track);
+    // store HTMLTrackElement and TextTrack to remote list
+    this.remoteTextTrackEls().addTrackElement_(htmlTrackElement);
+    this.remoteTextTracks().addTrack_(htmlTrackElement.track);
 
-    return track;
+    return htmlTrackElement;
   }
 
   /**
@@ -771,11 +863,15 @@ class Html5 extends Tech {
       return super.removeRemoteTextTrack(track);
     }
 
-    var tracks, i;
+    let tracks, i;
 
+    let trackElement = this.remoteTextTrackEls().getTrackElementByTrack_(track);
+
+    // remove HTMLTrackElement and TextTrack from remote list
+    this.remoteTextTrackEls().removeTrackElement_(trackElement);
     this.remoteTextTracks().removeTrack_(track);
 
-    tracks = this.el().querySelectorAll('track');
+    tracks = this.$$('track');
 
     i = tracks.length;
     while (i--) {
@@ -833,6 +929,22 @@ Tech.withSourceHandlers(Html5);
 Html5.nativeSourceHandler = {};
 
 /*
+ * Check if the video element can play the given videotype
+ *
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Html5.nativeSourceHandler.canPlayType = function(type){
+  // IE9 on Windows 7 without MediaPlayer throws an error here
+  // https://github.com/videojs/video.js/issues/519
+  try {
+    return Html5.TEST_VID.canPlayType(type);
+  } catch(e) {
+    return '';
+  }
+};
+
+/*
  * Check if the video element can handle the source natively
  *
  * @param  {Object} source  The source object
@@ -841,24 +953,14 @@ Html5.nativeSourceHandler = {};
 Html5.nativeSourceHandler.canHandleSource = function(source){
   var match, ext;
 
-  function canPlayType(type){
-    // IE9 on Windows 7 without MediaPlayer throws an error here
-    // https://github.com/videojs/video.js/issues/519
-    try {
-      return Html5.TEST_VID.canPlayType(type);
-    } catch(e) {
-      return '';
-    }
-  }
-
   // If a type was provided we should rely on that
   if (source.type) {
-    return canPlayType(source.type);
+    return Html5.nativeSourceHandler.canPlayType(source.type);
   } else if (source.src) {
     // If no type, fall back to checking 'video/[EXTENSION]'
     ext = Url.getFileExtension(source.src);
 
-    return canPlayType(`video/${ext}`);
+    return Html5.nativeSourceHandler.canPlayType(`video/${ext}`);
   }
 
   return '';
@@ -869,10 +971,11 @@ Html5.nativeSourceHandler.canHandleSource = function(source){
  * Adaptive source handlers will have more complicated workflows before passing
  * video data to the video element
  *
- * @param  {Object} source    The source object
- * @param  {Html5} tech   The instance of the Html5 tech
+ * @param  {Object} source   The source object
+ * @param  {Html5}  tech     The instance of the Html5 tech
+ * @param  {Object} options  The options to pass to the source
  */
-Html5.nativeSourceHandler.handleSource = function(source, tech){
+Html5.nativeSourceHandler.handleSource = function(source, tech, options){
   tech.setSrc(source.src);
 };
 
@@ -901,9 +1004,14 @@ Html5.canControlVolume = function(){
 /*
  * Check if playbackRate is supported in this browser/device.
  *
- * @return {Number} [description]
+ * @return {Boolean}
  */
 Html5.canControlPlaybackRate = function(){
+  // Playback rate API is implemented in Android Chrome, but doesn't do anything
+  // https://github.com/videojs/video.js/issues/3180
+  if (browser.IS_ANDROID && browser.IS_CHROME) {
+    return false;
+  }
   var playbackRate = Html5.TEST_VID.playbackRate;
   Html5.TEST_VID.playbackRate = (playbackRate / 2) + 0.1;
   return playbackRate !== Html5.TEST_VID.playbackRate;
@@ -935,6 +1043,27 @@ Html5.supportsNativeTextTracks = function() {
 
   return supportsTextTracks;
 };
+
+/*
+ * Check to see if native video tracks are supported by this browser/device
+ *
+ * @return {Boolean}
+ */
+Html5.supportsNativeVideoTracks = function() {
+  let supportsVideoTracks = !!Html5.TEST_VID.videoTracks;
+  return supportsVideoTracks;
+};
+
+/*
+ * Check to see if native audio tracks are supported by this browser/device
+ *
+ * @return {Boolean}
+ */
+Html5.supportsNativeAudioTracks = function() {
+  let supportsAudioTracks = !!Html5.TEST_VID.audioTracks;
+  return supportsAudioTracks;
+};
+
 
 /**
  * An array of events available on the Html5 tech.
@@ -1008,6 +1137,20 @@ Html5.prototype['featuresProgressEvents'] = true;
  * @type {Boolean}
  */
 Html5.prototype['featuresNativeTextTracks'] = Html5.supportsNativeTextTracks();
+
+/**
+ * Sets the tech's status on native text track support
+ *
+ * @type {Boolean}
+ */
+Html5.prototype['featuresNativeVideoTracks'] = Html5.supportsNativeVideoTracks();
+
+/**
+ * Sets the tech's status on native audio track support
+ *
+ * @type {Boolean}
+ */
+Html5.prototype['featuresNativeAudioTracks'] = Html5.supportsNativeAudioTracks();
 
 // HTML5 Feature detection and Device Fixes --------------------------------- //
 let canPlayType;
@@ -1084,5 +1227,29 @@ Html5.disposeMediaElement = function(el){
   }
 };
 
+Html5.resetMediaElement = function(el){
+  if (!el) { return; }
+
+  let sources = el.querySelectorAll('source');
+  let i = sources.length;
+  while (i--) {
+    el.removeChild(sources[i]);
+  }
+
+  // remove any src reference.
+  // not setting `src=''` because that throws an error
+  el.removeAttribute('src');
+
+  if (typeof el.load === 'function') {
+    // wrapping in an iife so it's not deoptimized (#1060#discussion_r10324473)
+    (function() {
+      try {
+        el.load();
+      } catch (e) {}
+    })();
+  }
+};
+
 Component.registerComponent('Html5', Html5);
+Tech.registerTech('Html5', Html5);
 export default Html5;

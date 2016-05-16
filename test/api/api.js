@@ -59,8 +59,11 @@ test('should be able to access expected player API methods', function() {
   ok(player.usingNativeControls, 'usingNativeControls exists');
   ok(player.isFullscreen, 'isFullscreen exists');
 
-  // TextTrack methods
+  // Track methods
+  ok(player.audioTracks, 'audioTracks exists');
+  ok(player.videoTracks, 'videoTracks exists');
   ok(player.textTracks, 'textTracks exists');
+  ok(player.remoteTextTrackEls, 'remoteTextTrackEls exists');
   ok(player.remoteTextTracks, 'remoteTextTracks exists');
   ok(player.addTextTrack, 'addTextTrack exists');
   ok(player.addRemoteTextTrack, 'addRemoteTextTrack exists');
@@ -187,6 +190,7 @@ test('should export useful components to the public', function () {
   ok(videojs.getComponent('TextTrackButton'), 'TextTrackButton should be public');
   ok(videojs.getComponent('CaptionsButton'), 'CaptionsButton should be public');
   ok(videojs.getComponent('SubtitlesButton'), 'SubtitlesButton should be public');
+  ok(videojs.getComponent('DescriptionsButton'), 'DescriptionsButton should be public');
   ok(videojs.getComponent('ChaptersButton'), 'ChaptersButton should be public');
   ok(videojs.getComponent('ChaptersTrackMenuItem'), 'ChaptersTrackMenuItem should be public');
 

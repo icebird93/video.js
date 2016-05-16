@@ -309,7 +309,7 @@ class Flash extends Tech {
 // Create setters and getters for attributes
 const _api = Flash.prototype;
 const _readWrite = 'rtmpConnection,rtmpStream,preload,defaultPlaybackRate,playbackRate,autoplay,loop,mediaGroup,controller,controls,volume,muted,defaultMuted,poster'.split(',');
-const _readOnly = 'networkState,readyState,initialTime,duration,startOffsetTime,paused,ended,videoTracks,audioTracks,videoWidth,videoHeight'.split(',');
+const _readOnly = 'networkState,readyState,initialTime,duration,startOffsetTime,paused,ended,videoWidth,videoHeight,videoTracks,audioTracks'.split(',');
 
 function _createSetter(attr){
   var attrUpper = attr.charAt(0).toUpperCase() + attr.slice(1);
@@ -349,6 +349,19 @@ Tech.withSourceHandlers(Flash);
  */
 Flash.nativeSourceHandler = {};
 
+/**
+ * Check if Flash can play the given videotype
+ * @param  {String} type    The mimetype to check
+ * @return {String}         'probably', 'maybe', or '' (empty string)
+ */
+Flash.nativeSourceHandler.canPlayType = function(type){
+  if (type in Flash.formats) {
+    return 'maybe';
+  }
+
+  return '';
+};
+
 /*
  * Check Flash can handle the source natively
  *
@@ -373,11 +386,7 @@ Flash.nativeSourceHandler.canHandleSource = function(source){
     type = source.type.replace(/;.*/, '').toLowerCase();
   }
 
-  if (type in Flash.formats) {
-    return 'maybe';
-  }
-
-  return '';
+  return Flash.nativeSourceHandler.canPlayType(type);
 };
 
 /*
@@ -385,10 +394,11 @@ Flash.nativeSourceHandler.canHandleSource = function(source){
  * Adaptive source handlers will have more complicated workflows before passing
  * video data to the video element
  *
- * @param  {Object} source    The source object
- * @param  {Flash} tech   The instance of the Flash tech
+ * @param  {Object} source   The source object
+ * @param  {Flash}  tech     The instance of the Flash tech
+ * @param  {Object} options  The options to pass to the source
  */
-Flash.nativeSourceHandler.handleSource = function(source, tech){
+Flash.nativeSourceHandler.handleSource = function(source, tech, options){
   tech.setSrc(source.src);
 };
 
@@ -536,4 +546,5 @@ Flash.getEmbedCode = function(swf, flashVars, params, attributes){
 FlashRtmpDecorator(Flash);
 
 Component.registerComponent('Flash', Flash);
+Tech.registerTech('Flash', Flash);
 export default Flash;

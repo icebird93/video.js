@@ -1,22 +1,22 @@
 /**
  * @file volume-menu-button.js
  */
-import Button from '../button.js';
+import * as Fn from '../utils/fn.js';
 import Component from '../component.js';
-import Menu from '../menu/menu.js';
-import MenuButton from '../menu/menu-button.js';
+import Popup from '../popup/popup.js';
+import PopupButton from '../popup/popup-button.js';
 import MuteToggle from './mute-toggle.js';
 import VolumeBar from './volume-control/volume-bar.js';
 
 /**
- * Button for volume menu
+ * Button for volume popup
  *
  * @param {Player|Object} player
  * @param {Object=} options
- * @extends MenuButton
+ * @extends PopupButton
  * @class VolumeMenuButton
  */
-class VolumeMenuButton extends MenuButton {
+class VolumeMenuButton extends PopupButton {
 
   constructor(player, options={}){
     // Default to inline
@@ -65,6 +65,14 @@ class VolumeMenuButton extends MenuButton {
     this.on(this.volumeBar, ['sliderinactive', 'blur'], function(){
       this.removeClass('vjs-slider-active');
     });
+
+    this.on(this.volumeBar, ['focus'], function(){
+      this.addClass('vjs-lock-showing');
+    });
+
+    this.on(this.volumeBar, ['blur'], function(){
+      this.removeClass('vjs-lock-showing');
+    });
   }
 
   /**
@@ -87,24 +95,28 @@ class VolumeMenuButton extends MenuButton {
   /**
    * Allow sub components to stack CSS class names
    *
-   * @return {Menu} The volume menu button
-   * @method createMenu
+   * @return {Popup} The volume popup button
+   * @method createPopup
    */
-  createMenu() {
-    let menu = new Menu(this.player_, {
+  createPopup() {
+    let popup = new Popup(this.player_, {
       contentElType: 'div'
     });
 
     let vb = new VolumeBar(this.player_, this.options_.volumeBar);
 
-    menu.addChild(vb);
+    popup.addChild(vb);
 
+    this.menuContent = popup;
     this.volumeBar = vb;
-    return menu;
+
+    this.attachVolumeBarEvents();
+
+    return popup;
   }
 
   /**
-   * Handle click on volume menu and calls super
+   * Handle click on volume popup and calls super
    *
    * @method handleClick
    */
@@ -113,6 +125,18 @@ class VolumeMenuButton extends MenuButton {
     super.handleClick();
   }
 
+  attachVolumeBarEvents() {
+    this.menuContent.on(['mousedown', 'touchdown'], Fn.bind(this, this.handleMouseDown));
+  }
+
+  handleMouseDown(event) {
+    this.on(['mousemove', 'touchmove'], Fn.bind(this.volumeBar, this.volumeBar.handleMouseMove));
+    this.on(this.el_.ownerDocument, ['mouseup', 'touchend'], this.handleMouseUp);
+  }
+
+  handleMouseUp(event) {
+    this.off(['mousemove', 'touchmove'], Fn.bind(this.volumeBar, this.volumeBar.handleMouseMove));
+  }
 }
 
 VolumeMenuButton.prototype.volumeUpdate = MuteToggle.prototype.update;
