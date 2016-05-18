@@ -30,7 +30,7 @@
     "tsml": "1.0.1",
     "videojs-font": "^2.0.0",
     "videojs-ie8": "1.1.2",
-    "videojs-swf": "git+https://github.com/hola/video-js-swf-sv#v5.0.2-2",
+    "videojs-swf": "git+https://github.com/hola/video-js-swf-sv#v5.0.2-3",
     "vtt.js": "^0.12.1",
     "xhr": "~2.2.0",
     "videojs-hola-skin": "hola/videojs5-hola-skin",
