@@ -500,6 +500,7 @@ module.exports = function(grunt) {
       hola: {
         options: {
           separator: '\n',
+          nonull: true,
         },
         files: [
           {nonull: true, dest: 'build/temp/origin/video.js', src: ['build/temp/video.basic.js']},
@@ -526,6 +527,7 @@ module.exports = function(grunt) {
       hola_plugins: {
         options: {
           separator: '\n',
+          nonull: true,
         },
         files: [
           // default versions
@@ -563,6 +565,7 @@ module.exports = function(grunt) {
       css: {
         options: {
           separator: '\n',
+          nonull: true,
         },
         files: [
           {nonull: true, dest: 'build/temp/origin/video-js.css', src: ['build/temp/video-js.css']},
