@@ -96,7 +96,7 @@ class MouseTimeDisplay extends Component {
     let time = isPercent ? Math.round(newTime) + '%' : formatTime(newTime, this.player_.duration());
 
     this.el().style.left = position + 'px';
-    this.el().setAttribute('data-current-time', time);
+    this.tooltip.innerHTML = time;
 
     if (this.keepTooltipsInside) {
       let clampedPosition = this.clampPosition_(position);
