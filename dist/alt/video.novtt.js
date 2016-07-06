@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-54 <http://videojs.com/>
+ * Video.js 5.0.2-55 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -13272,7 +13272,11 @@ var Html5 = (function (_Tech) {
    */
 
   Html5.prototype.currentSrc = function currentSrc() {
-    return this.el_.currentSrc;
+    if (this.currentSource_) {
+      return this.currentSource_.src;
+    } else {
+      return this.el_.currentSrc;
+    }
   };
 
   /**
@@ -17879,7 +17883,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-54';
+videojs.VERSION = '5.0.2-55';
 
 /**
  * The global options object. These are the settings that take effect
