@@ -143,13 +143,13 @@ module.exports = function(grunt) {
       },
       build: {
         files: [
-          {nonunll: true, dest: 'build/temp/alt/video.novtt.min.js',src: 'build/temp/alt/video.novtt.js'},
-          {nonunll: true, dest: 'build/temp/alt/videojs.novtt.hls.min.js', src: 'build/temp/alt/videojs.novtt.hls.js'},
-          {nonunll: true, dest: 'build/temp/alt/videojs.novtt.osmf.min.js', src: 'build/temp/alt/videojs.novtt.osmf.js'},
-          {nonunll: true, dest: 'build/temp/origin/video.min.js', src: 'build/temp/origin/video.js'},
-          {nonunll: true, dest: 'build/temp/video.min.js', src: 'build/temp/video.js'},
-          {nonunll: true, dest: 'build/temp/videojs.hls.min.js', src: 'build/temp/videojs.hls.js'},
-          {nonunll: true, dest: 'build/temp/videojs.osmf.min.js', src: 'build/temp/videojs.osmf.js'},
+          {nonull: true, dest: 'build/temp/alt/video.novtt.min.js',src: 'build/temp/alt/video.novtt.js'},
+          {nonull: true, dest: 'build/temp/alt/videojs.novtt.hls.min.js', src: 'build/temp/alt/videojs.novtt.hls.js'},
+          {nonull: true, dest: 'build/temp/alt/videojs.novtt.osmf.min.js', src: 'build/temp/alt/videojs.novtt.osmf.js'},
+          {nonull: true, dest: 'build/temp/origin/video.min.js', src: 'build/temp/origin/video.js'},
+          {nonull: true, dest: 'build/temp/video.min.js', src: 'build/temp/video.js'},
+          {nonull: true, dest: 'build/temp/videojs.hls.min.js', src: 'build/temp/videojs.hls.js'},
+          {nonull: true, dest: 'build/temp/videojs.osmf.min.js', src: 'build/temp/videojs.osmf.js'},
         ]
       }
     },
