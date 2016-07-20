@@ -614,6 +614,20 @@ module.exports = function(grunt) {
         }
       }
     },
+    shell: {
+      github: {
+        command: [
+          'git checkout -b tag-v'+version.full,
+          'npm run build',
+          'git add -f dist',
+          'git commit -m "add dist v'+version.full+'"',
+          'git tag -a v'+version.full+' -m "v'+version.full+'"',
+          'git checkout master',
+          'git branch -D tag-v'+version.full,
+          'git push --tags origin'
+        ].join('&&')
+      }
+    }
   });
 
   // load all the npm grunt tasks
@@ -659,11 +673,16 @@ module.exports = function(grunt) {
     'build:dist',
     'copy:dist',
     'copy:examples',
+  ]);
+
+  grunt.registerTask('zip', [
     'zip:dist',
     'zip:basic',
     'zip:hls',
     'zip:osmf',
   ]);
+
+  grunt.registerTask('release', ['shell:github']);
 
   grunt.registerTask('skin', ['sass']);
 
