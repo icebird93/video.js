@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 5.0.2-60 <http://videojs.com/>
+ * Video.js 5.0.2-61 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -2598,21 +2598,7 @@ function createXHR(options, callback) {
 
 function noop() {}
 
-},{"global/window":62,"once":56,"parse-headers":57}],62:[function(_dereq_,module,exports){
-(function (global){
-if (typeof window !== "undefined") {
-    module.exports = window;
-} else if (typeof global !== "undefined") {
-    module.exports = global;
-} else if (typeof self !== "undefined"){
-    module.exports = self;
-} else {
-    module.exports = {};
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-//# sourceMappingURL=data:application/json;charset:utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy94aHIvbm9kZV9tb2R1bGVzL2dsb2JhbC93aW5kb3cuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwiZmlsZSI6ImdlbmVyYXRlZC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzQ29udGVudCI6WyJpZiAodHlwZW9mIHdpbmRvdyAhPT0gXCJ1bmRlZmluZWRcIikge1xuICAgIG1vZHVsZS5leHBvcnRzID0gd2luZG93O1xufSBlbHNlIGlmICh0eXBlb2YgZ2xvYmFsICE9PSBcInVuZGVmaW5lZFwiKSB7XG4gICAgbW9kdWxlLmV4cG9ydHMgPSBnbG9iYWw7XG59IGVsc2UgaWYgKHR5cGVvZiBzZWxmICE9PSBcInVuZGVmaW5lZFwiKXtcbiAgICBtb2R1bGUuZXhwb3J0cyA9IHNlbGY7XG59IGVsc2Uge1xuICAgIG1vZHVsZS5leHBvcnRzID0ge307XG59XG4iXX0=
-},{}],63:[function(_dereq_,module,exports){
+},{"global/window":8,"once":56,"parse-headers":57}],62:[function(_dereq_,module,exports){
 /**
  * @file big-play-button.js
  */
@@ -2696,7 +2682,7 @@ _componentJs2['default'].registerComponent('BigPlayButton', BigPlayButton);
 exports['default'] = BigPlayButton;
 module.exports = exports['default'];
 
-},{"./button.js":64,"./component.js":65}],64:[function(_dereq_,module,exports){
+},{"./button.js":63,"./component.js":64}],63:[function(_dereq_,module,exports){
 /**
  * @file button.js
  */
@@ -2939,7 +2925,7 @@ _component2['default'].registerComponent('Button', Button);
 exports['default'] = Button;
 module.exports = exports['default'];
 
-},{"./component":65,"./tooltip":116,"./utils/dom.js":127,"./utils/events.js":128,"./utils/fn.js":129,"global/document":7,"object.assign":53}],65:[function(_dereq_,module,exports){
+},{"./component":64,"./tooltip":115,"./utils/dom.js":126,"./utils/events.js":127,"./utils/fn.js":128,"global/document":7,"object.assign":53}],64:[function(_dereq_,module,exports){
 /**
  * @file component.js
  *
@@ -4348,7 +4334,7 @@ Component.registerComponent('Component', Component);
 exports['default'] = Component;
 module.exports = exports['default'];
 
-},{"./utils/dom.js":127,"./utils/events.js":128,"./utils/fn.js":129,"./utils/guid.js":131,"./utils/log.js":132,"./utils/merge-options.js":133,"./utils/to-title-case.js":136,"global/window":8,"object.assign":53}],66:[function(_dereq_,module,exports){
+},{"./utils/dom.js":126,"./utils/events.js":127,"./utils/fn.js":128,"./utils/guid.js":130,"./utils/log.js":131,"./utils/merge-options.js":132,"./utils/to-title-case.js":135,"global/window":8,"object.assign":53}],65:[function(_dereq_,module,exports){
 /**
  * @file control-bar.js
  */
@@ -4473,7 +4459,7 @@ _componentJs2['default'].registerComponent('ControlBar', ControlBar);
 exports['default'] = ControlBar;
 module.exports = exports['default'];
 
-},{"../component.js":65,"./fullscreen-toggle.js":67,"./live-display.js":68,"./mute-toggle.js":69,"./play-toggle.js":70,"./playback-rate-menu/playback-rate-menu-button.js":71,"./progress-control/progress-control.js":76,"./spacer-controls/custom-control-spacer.js":78,"./text-track-controls/captions-button.js":81,"./text-track-controls/chapters-button.js":82,"./text-track-controls/subtitles-button.js":85,"./time-controls/current-time-display.js":88,"./time-controls/duration-display.js":89,"./time-controls/remaining-time-display.js":90,"./time-controls/time-divider.js":91,"./volume-control/volume-control.js":93,"./volume-menu-button.js":96}],67:[function(_dereq_,module,exports){
+},{"../component.js":64,"./fullscreen-toggle.js":66,"./live-display.js":67,"./mute-toggle.js":68,"./play-toggle.js":69,"./playback-rate-menu/playback-rate-menu-button.js":70,"./progress-control/progress-control.js":75,"./spacer-controls/custom-control-spacer.js":77,"./text-track-controls/captions-button.js":80,"./text-track-controls/chapters-button.js":81,"./text-track-controls/subtitles-button.js":84,"./time-controls/current-time-display.js":87,"./time-controls/duration-display.js":88,"./time-controls/remaining-time-display.js":89,"./time-controls/time-divider.js":90,"./volume-control/volume-control.js":92,"./volume-menu-button.js":95}],66:[function(_dereq_,module,exports){
 /**
  * @file fullscreen-toggle.js
  */
@@ -4547,7 +4533,7 @@ _componentJs2['default'].registerComponent('FullscreenToggle', FullscreenToggle)
 exports['default'] = FullscreenToggle;
 module.exports = exports['default'];
 
-},{"../button.js":64,"../component.js":65}],68:[function(_dereq_,module,exports){
+},{"../button.js":63,"../component.js":64}],67:[function(_dereq_,module,exports){
 /**
  * @file live-display.js
  */
@@ -4629,7 +4615,7 @@ _component2['default'].registerComponent('LiveDisplay', LiveDisplay);
 exports['default'] = LiveDisplay;
 module.exports = exports['default'];
 
-},{"../component":65,"../utils/dom.js":127}],69:[function(_dereq_,module,exports){
+},{"../component":64,"../utils/dom.js":126}],68:[function(_dereq_,module,exports){
 /**
  * @file mute-toggle.js
  */
@@ -4756,7 +4742,7 @@ _component2['default'].registerComponent('MuteToggle', MuteToggle);
 exports['default'] = MuteToggle;
 module.exports = exports['default'];
 
-},{"../button":64,"../component":65,"../utils/dom.js":127}],70:[function(_dereq_,module,exports){
+},{"../button":63,"../component":64,"../utils/dom.js":126}],69:[function(_dereq_,module,exports){
 /**
  * @file play-toggle.js
  */
@@ -4857,7 +4843,7 @@ _componentJs2['default'].registerComponent('PlayToggle', PlayToggle);
 exports['default'] = PlayToggle;
 module.exports = exports['default'];
 
-},{"../button.js":64,"../component.js":65}],71:[function(_dereq_,module,exports){
+},{"../button.js":63,"../component.js":64}],70:[function(_dereq_,module,exports){
 /**
  * @file playback-rate-menu-button.js
  */
@@ -5058,7 +5044,7 @@ _componentJs2['default'].registerComponent('PlaybackRateMenuButton', PlaybackRat
 exports['default'] = PlaybackRateMenuButton;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../menu/menu-button.js":103,"../../menu/menu.js":105,"../../utils/dom.js":127,"./playback-rate-menu-item.js":72}],72:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu-button.js":102,"../../menu/menu.js":104,"../../utils/dom.js":126,"./playback-rate-menu-item.js":71}],71:[function(_dereq_,module,exports){
 /**
  * @file playback-rate-menu-item.js
  */
@@ -5139,7 +5125,7 @@ _componentJs2['default'].registerComponent('PlaybackRateMenuItem', PlaybackRateM
 exports['default'] = PlaybackRateMenuItem;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../menu/menu-item.js":104}],73:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu-item.js":103}],72:[function(_dereq_,module,exports){
 /**
  * @file load-progress-bar.js
  */
@@ -5245,7 +5231,7 @@ _componentJs2['default'].registerComponent('LoadProgressBar', LoadProgressBar);
 exports['default'] = LoadProgressBar;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../utils/dom.js":127}],74:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126}],73:[function(_dereq_,module,exports){
 /**
  * @file mouse-time-display.js
  */
@@ -5378,7 +5364,7 @@ _componentJs2['default'].registerComponent('MouseTimeDisplay', MouseTimeDisplay)
 exports['default'] = MouseTimeDisplay;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../utils/dom.js":127,"../../utils/fn.js":129,"../../utils/format-time.js":130,"lodash-compat/function/throttle":13}],75:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126,"../../utils/fn.js":128,"../../utils/format-time.js":129,"lodash-compat/function/throttle":13}],74:[function(_dereq_,module,exports){
 /**
  * @file play-progress-bar.js
  */
@@ -5453,7 +5439,7 @@ _componentJs2['default'].registerComponent('PlayProgressBar', PlayProgressBar);
 exports['default'] = PlayProgressBar;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../utils/fn.js":129,"../../utils/format-time.js":130}],76:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/fn.js":128,"../../utils/format-time.js":129}],75:[function(_dereq_,module,exports){
 /**
  * @file progress-control.js
  */
@@ -5522,7 +5508,7 @@ _componentJs2['default'].registerComponent('ProgressControl', ProgressControl);
 exports['default'] = ProgressControl;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"./mouse-time-display.js":74,"./seek-bar.js":77}],77:[function(_dereq_,module,exports){
+},{"../../component.js":64,"./mouse-time-display.js":73,"./seek-bar.js":76}],76:[function(_dereq_,module,exports){
 /**
  * @file seek-bar.js
  */
@@ -5708,7 +5694,7 @@ _componentJs2['default'].registerComponent('SeekBar', SeekBar);
 exports['default'] = SeekBar;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../slider/slider.js":110,"../../utils/fn.js":129,"../../utils/format-time.js":130,"./load-progress-bar.js":73,"./play-progress-bar.js":75,"object.assign":53}],78:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../slider/slider.js":109,"../../utils/fn.js":128,"../../utils/format-time.js":129,"./load-progress-bar.js":72,"./play-progress-bar.js":74,"object.assign":53}],77:[function(_dereq_,module,exports){
 /**
  * @file custom-control-spacer.js
  */
@@ -5782,7 +5768,7 @@ _componentJs2['default'].registerComponent('CustomControlSpacer', CustomControlS
 exports['default'] = CustomControlSpacer;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"./spacer.js":79}],79:[function(_dereq_,module,exports){
+},{"../../component.js":64,"./spacer.js":78}],78:[function(_dereq_,module,exports){
 /**
  * @file spacer.js
  */
@@ -5849,7 +5835,7 @@ _componentJs2['default'].registerComponent('Spacer', Spacer);
 exports['default'] = Spacer;
 module.exports = exports['default'];
 
-},{"../../component.js":65}],80:[function(_dereq_,module,exports){
+},{"../../component.js":64}],79:[function(_dereq_,module,exports){
 /**
  * @file caption-settings-menu-item.js
  */
@@ -5915,7 +5901,7 @@ _componentJs2['default'].registerComponent('CaptionSettingsMenuItem', CaptionSet
 exports['default'] = CaptionSettingsMenuItem;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"./text-track-menu-item.js":87}],81:[function(_dereq_,module,exports){
+},{"../../component.js":64,"./text-track-menu-item.js":86}],80:[function(_dereq_,module,exports){
 /**
  * @file captions-button.js
  */
@@ -6021,7 +6007,7 @@ _componentJs2['default'].registerComponent('CaptionsButton', CaptionsButton);
 exports['default'] = CaptionsButton;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"./caption-settings-menu-item.js":80,"./text-track-button.js":86}],82:[function(_dereq_,module,exports){
+},{"../../component.js":64,"./caption-settings-menu-item.js":79,"./text-track-button.js":85}],81:[function(_dereq_,module,exports){
 /**
  * @file chapters-button.js
  */
@@ -6210,7 +6196,7 @@ _componentJs2['default'].registerComponent('ChaptersButton', ChaptersButton);
 exports['default'] = ChaptersButton;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../menu/menu.js":105,"../../utils/dom.js":127,"../../utils/fn.js":129,"../../utils/to-title-case.js":136,"./chapters-track-menu-item.js":83,"./text-track-button.js":86,"./text-track-menu-item.js":87,"global/window":8}],83:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu.js":104,"../../utils/dom.js":126,"../../utils/fn.js":128,"../../utils/to-title-case.js":135,"./chapters-track-menu-item.js":82,"./text-track-button.js":85,"./text-track-menu-item.js":86,"global/window":8}],82:[function(_dereq_,module,exports){
 /**
  * @file chapters-track-menu-item.js
  */
@@ -6300,7 +6286,7 @@ _componentJs2['default'].registerComponent('ChaptersTrackMenuItem', ChaptersTrac
 exports['default'] = ChaptersTrackMenuItem;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../menu/menu-item.js":104,"../../utils/fn.js":129}],84:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu-item.js":103,"../../utils/fn.js":128}],83:[function(_dereq_,module,exports){
 /**
  * @file off-text-track-menu-item.js
  */
@@ -6380,7 +6366,7 @@ _componentJs2['default'].registerComponent('OffTextTrackMenuItem', OffTextTrackM
 exports['default'] = OffTextTrackMenuItem;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"./text-track-menu-item.js":87}],85:[function(_dereq_,module,exports){
+},{"../../component.js":64,"./text-track-menu-item.js":86}],84:[function(_dereq_,module,exports){
 /**
  * @file subtitles-button.js
  */
@@ -6443,7 +6429,7 @@ _componentJs2['default'].registerComponent('SubtitlesButton', SubtitlesButton);
 exports['default'] = SubtitlesButton;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"./text-track-button.js":86}],86:[function(_dereq_,module,exports){
+},{"../../component.js":64,"./text-track-button.js":85}],85:[function(_dereq_,module,exports){
 /**
  * @file text-track-button.js
  */
@@ -6551,7 +6537,7 @@ _componentJs2['default'].registerComponent('TextTrackButton', TextTrackButton);
 exports['default'] = TextTrackButton;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../menu/menu-button.js":103,"../../utils/fn.js":129,"./off-text-track-menu-item.js":84,"./text-track-menu-item.js":87}],87:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu-button.js":102,"../../utils/fn.js":128,"./off-text-track-menu-item.js":83,"./text-track-menu-item.js":86}],86:[function(_dereq_,module,exports){
 /**
  * @file text-track-menu-item.js
  */
@@ -6700,7 +6686,7 @@ _componentJs2['default'].registerComponent('TextTrackMenuItem', TextTrackMenuIte
 exports['default'] = TextTrackMenuItem;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../menu/menu-item.js":104,"../../utils/fn.js":129,"global/document":7,"global/window":8}],88:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../menu/menu-item.js":103,"../../utils/fn.js":128,"global/document":7,"global/window":8}],87:[function(_dereq_,module,exports){
 /**
  * @file current-time-display.js
  */
@@ -6794,7 +6780,7 @@ _componentJs2['default'].registerComponent('CurrentTimeDisplay', CurrentTimeDisp
 exports['default'] = CurrentTimeDisplay;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../utils/dom.js":127,"../../utils/format-time.js":130}],89:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126,"../../utils/format-time.js":129}],88:[function(_dereq_,module,exports){
 /**
  * @file duration-display.js
  */
@@ -6895,7 +6881,7 @@ _componentJs2['default'].registerComponent('DurationDisplay', DurationDisplay);
 exports['default'] = DurationDisplay;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../utils/dom.js":127,"../../utils/format-time.js":130}],90:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126,"../../utils/format-time.js":129}],89:[function(_dereq_,module,exports){
 /**
  * @file remaining-time-display.js
  */
@@ -6993,7 +6979,7 @@ _componentJs2['default'].registerComponent('RemainingTimeDisplay', RemainingTime
 exports['default'] = RemainingTimeDisplay;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../utils/dom.js":127,"../../utils/format-time.js":130}],91:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126,"../../utils/format-time.js":129}],90:[function(_dereq_,module,exports){
 /**
  * @file time-divider.js
  */
@@ -7051,7 +7037,7 @@ _componentJs2['default'].registerComponent('TimeDivider', TimeDivider);
 exports['default'] = TimeDivider;
 module.exports = exports['default'];
 
-},{"../../component.js":65}],92:[function(_dereq_,module,exports){
+},{"../../component.js":64}],91:[function(_dereq_,module,exports){
 /**
  * @file volume-bar.js
  */
@@ -7200,7 +7186,7 @@ _componentJs2['default'].registerComponent('VolumeBar', VolumeBar);
 exports['default'] = VolumeBar;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../slider/slider.js":110,"../../utils/fn.js":129,"./volume-display.js":94,"./volume-level.js":95}],93:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../slider/slider.js":109,"../../utils/fn.js":128,"./volume-display.js":93,"./volume-level.js":94}],92:[function(_dereq_,module,exports){
 /**
  * @file volume-control.js
  */
@@ -7278,7 +7264,7 @@ _componentJs2['default'].registerComponent('VolumeControl', VolumeControl);
 exports['default'] = VolumeControl;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"./volume-bar.js":92}],94:[function(_dereq_,module,exports){
+},{"../../component.js":64,"./volume-bar.js":91}],93:[function(_dereq_,module,exports){
 /**
  * @file mouse-time-display.js
  */
@@ -7425,7 +7411,7 @@ _componentJs2['default'].registerComponent('VolumeDisplay', VolumeDisplay);
 exports['default'] = VolumeDisplay;
 module.exports = exports['default'];
 
-},{"../../component.js":65,"../../utils/dom.js":127,"../../utils/fn.js":129,"lodash-compat/function/throttle":13}],95:[function(_dereq_,module,exports){
+},{"../../component.js":64,"../../utils/dom.js":126,"../../utils/fn.js":128,"lodash-compat/function/throttle":13}],94:[function(_dereq_,module,exports){
 /**
  * @file volume-level.js
  */
@@ -7482,7 +7468,7 @@ _componentJs2['default'].registerComponent('VolumeLevel', VolumeLevel);
 exports['default'] = VolumeLevel;
 module.exports = exports['default'];
 
-},{"../../component.js":65}],96:[function(_dereq_,module,exports){
+},{"../../component.js":64}],95:[function(_dereq_,module,exports){
 /**
  * @file volume-menu-button.js
  */
@@ -7644,7 +7630,7 @@ _componentJs2['default'].registerComponent('VolumeMenuButton', VolumeMenuButton)
 exports['default'] = VolumeMenuButton;
 module.exports = exports['default'];
 
-},{"../button.js":64,"../component.js":65,"../menu/menu-button.js":103,"../menu/menu.js":105,"./mute-toggle.js":69,"./volume-control/volume-bar.js":92}],97:[function(_dereq_,module,exports){
+},{"../button.js":63,"../component.js":64,"../menu/menu-button.js":102,"../menu/menu.js":104,"./mute-toggle.js":68,"./volume-control/volume-bar.js":91}],96:[function(_dereq_,module,exports){
 /**
  * @file error-display.js
  */
@@ -7726,7 +7712,7 @@ _component2['default'].registerComponent('ErrorDisplay', ErrorDisplay);
 exports['default'] = ErrorDisplay;
 module.exports = exports['default'];
 
-},{"./component":65,"./utils/dom.js":127}],98:[function(_dereq_,module,exports){
+},{"./component":64,"./utils/dom.js":126}],97:[function(_dereq_,module,exports){
 /**
  * @file event-target.js
  */
@@ -7785,7 +7771,7 @@ EventTarget.prototype.dispatchEvent = EventTarget.prototype.trigger;
 exports['default'] = EventTarget;
 module.exports = exports['default'];
 
-},{"./utils/events.js":128}],99:[function(_dereq_,module,exports){
+},{"./utils/events.js":127}],98:[function(_dereq_,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -7876,7 +7862,7 @@ var extendFn = function extendFn(superClass) {
 exports['default'] = extendFn;
 module.exports = exports['default'];
 
-},{"./utils/log":132}],100:[function(_dereq_,module,exports){
+},{"./utils/log":131}],99:[function(_dereq_,module,exports){
 /**
  * @file fullscreen-api.js
  */
@@ -7933,7 +7919,7 @@ if (browserApi) {
 exports['default'] = FullscreenApi;
 module.exports = exports['default'];
 
-},{"global/document":7}],101:[function(_dereq_,module,exports){
+},{"global/document":7}],100:[function(_dereq_,module,exports){
 /**
  * @file loading-spinner.js
  */
@@ -7988,7 +7974,7 @@ _component2['default'].registerComponent('LoadingSpinner', LoadingSpinner);
 exports['default'] = LoadingSpinner;
 module.exports = exports['default'];
 
-},{"./component":65}],102:[function(_dereq_,module,exports){
+},{"./component":64}],101:[function(_dereq_,module,exports){
 /**
  * @file media-error.js
  */
@@ -8079,7 +8065,7 @@ for (var errNum = 0; errNum < MediaError.errorTypes.length; errNum++) {
 exports['default'] = MediaError;
 module.exports = exports['default'];
 
-},{"object.assign":53}],103:[function(_dereq_,module,exports){
+},{"object.assign":53}],102:[function(_dereq_,module,exports){
 /**
  * @file menu-button.js
  */
@@ -8365,7 +8351,7 @@ _componentJs2['default'].registerComponent('MenuButton', MenuButton);
 exports['default'] = MenuButton;
 module.exports = exports['default'];
 
-},{"../button.js":64,"../component.js":65,"../utils/dom.js":127,"../utils/fn.js":129,"../utils/to-title-case.js":136,"./menu.js":105}],104:[function(_dereq_,module,exports){
+},{"../button.js":63,"../component.js":64,"../utils/dom.js":126,"../utils/fn.js":128,"../utils/to-title-case.js":135,"./menu.js":104}],103:[function(_dereq_,module,exports){
 /**
  * @file menu-item.js
  */
@@ -8473,7 +8459,7 @@ _componentJs2['default'].registerComponent('MenuItem', MenuItem);
 exports['default'] = MenuItem;
 module.exports = exports['default'];
 
-},{"../button.js":64,"../component.js":65,"object.assign":53}],105:[function(_dereq_,module,exports){
+},{"../button.js":63,"../component.js":64,"object.assign":53}],104:[function(_dereq_,module,exports){
 /**
  * @file menu.js
  */
@@ -8571,7 +8557,7 @@ _componentJs2['default'].registerComponent('Menu', Menu);
 exports['default'] = Menu;
 module.exports = exports['default'];
 
-},{"../component.js":65,"../utils/dom.js":127,"../utils/events.js":128,"../utils/fn.js":129}],106:[function(_dereq_,module,exports){
+},{"../component.js":64,"../utils/dom.js":126,"../utils/events.js":127,"../utils/fn.js":128}],105:[function(_dereq_,module,exports){
 /**
  * @file player.js
  */
@@ -11425,7 +11411,7 @@ exports['default'] = Player;
 module.exports = exports['default'];
 // If empty string, make it a parsable json object.
 
-},{"./big-play-button.js":63,"./component.js":65,"./control-bar/control-bar.js":66,"./error-display.js":97,"./fullscreen-api.js":100,"./loading-spinner.js":101,"./media-error.js":102,"./poster-image.js":108,"./tech/html5.js":113,"./tech/loader.js":114,"./tracks/text-track-display.js":118,"./tracks/text-track-list-converter.js":120,"./tracks/text-track-settings.js":122,"./utils/browser.js":124,"./utils/buffer.js":125,"./utils/dom.js":127,"./utils/events.js":128,"./utils/fn.js":129,"./utils/guid.js":131,"./utils/log.js":132,"./utils/merge-options.js":133,"./utils/stylesheet.js":134,"./utils/time-ranges.js":135,"./utils/to-title-case.js":136,"global/document":7,"global/window":8,"object.assign":53,"safe-json-parse/tuple":58}],107:[function(_dereq_,module,exports){
+},{"./big-play-button.js":62,"./component.js":64,"./control-bar/control-bar.js":65,"./error-display.js":96,"./fullscreen-api.js":99,"./loading-spinner.js":100,"./media-error.js":101,"./poster-image.js":107,"./tech/html5.js":112,"./tech/loader.js":113,"./tracks/text-track-display.js":117,"./tracks/text-track-list-converter.js":119,"./tracks/text-track-settings.js":121,"./utils/browser.js":123,"./utils/buffer.js":124,"./utils/dom.js":126,"./utils/events.js":127,"./utils/fn.js":128,"./utils/guid.js":130,"./utils/log.js":131,"./utils/merge-options.js":132,"./utils/stylesheet.js":133,"./utils/time-ranges.js":134,"./utils/to-title-case.js":135,"global/document":7,"global/window":8,"object.assign":53,"safe-json-parse/tuple":58}],106:[function(_dereq_,module,exports){
 /**
  * @file plugins.js
  */
@@ -11453,7 +11439,7 @@ var plugin = function plugin(name, init) {
 exports['default'] = plugin;
 module.exports = exports['default'];
 
-},{"./player.js":106}],108:[function(_dereq_,module,exports){
+},{"./player.js":105}],107:[function(_dereq_,module,exports){
 /**
  * @file poster-image.js
  */
@@ -11613,7 +11599,7 @@ _componentJs2['default'].registerComponent('PosterImage', PosterImage);
 exports['default'] = PosterImage;
 module.exports = exports['default'];
 
-},{"./button.js":64,"./component.js":65,"./utils/browser.js":124,"./utils/dom.js":127,"./utils/fn.js":129}],109:[function(_dereq_,module,exports){
+},{"./button.js":63,"./component.js":64,"./utils/browser.js":123,"./utils/dom.js":126,"./utils/fn.js":128}],108:[function(_dereq_,module,exports){
 /**
  * @file setup.js
  *
@@ -11723,7 +11709,7 @@ exports.autoSetup = autoSetup;
 exports.autoSetupTimeout = autoSetupTimeout;
 exports.hasLoaded = hasLoaded;
 
-},{"./utils/events.js":128,"global/document":7,"global/window":8}],110:[function(_dereq_,module,exports){
+},{"./utils/events.js":127,"global/document":7,"global/window":8}],109:[function(_dereq_,module,exports){
 /**
  * @file slider.js
  */
@@ -12002,7 +11988,7 @@ _componentJs2['default'].registerComponent('Slider', Slider);
 exports['default'] = Slider;
 module.exports = exports['default'];
 
-},{"../component.js":65,"../utils/dom.js":127,"global/document":7,"object.assign":53}],111:[function(_dereq_,module,exports){
+},{"../component.js":64,"../utils/dom.js":126,"global/document":7,"object.assign":53}],110:[function(_dereq_,module,exports){
 /**
  * @file flash-rtmp.js
  */
@@ -12102,7 +12088,7 @@ function FlashRtmpDecorator(Flash) {
 exports['default'] = FlashRtmpDecorator;
 module.exports = exports['default'];
 
-},{}],112:[function(_dereq_,module,exports){
+},{}],111:[function(_dereq_,module,exports){
 /**
  * @file flash.js
  * VideoJS-SWF - Custom Flash Player with HTML5-ish API
@@ -12219,7 +12205,7 @@ var Flash = (function (_Tech) {
     // Otherwise this adds a CDN url.
     // The CDN also auto-adds a swf URL for that specific version.
     if (!options.swf) {
-      options.swf = '//cdn.rawgit.com/hola/video-js-swf-sv/v5.0.2-3/dist/video-js.swf';
+      options.swf = '//cdn.rawgit.com/hola/video-js-swf-sv/v5.1.0-3/dist/video-js.swf';
     }
 
     // Generate ID for swf object
@@ -12701,7 +12687,7 @@ _component2['default'].registerComponent('Flash', Flash);
 exports['default'] = Flash;
 module.exports = exports['default'];
 
-},{"../component":65,"../utils/dom.js":127,"../utils/time-ranges.js":135,"../utils/url.js":137,"./flash-rtmp":111,"./tech":115,"global/window":8,"object.assign":53}],113:[function(_dereq_,module,exports){
+},{"../component":64,"../utils/dom.js":126,"../utils/time-ranges.js":134,"../utils/url.js":136,"./flash-rtmp":110,"./tech":114,"global/window":8,"object.assign":53}],112:[function(_dereq_,module,exports){
 /**
  * @file html5.js
  * HTML5 Media Controller - Wrapper for HTML5 Media API
@@ -13946,7 +13932,7 @@ _component2['default'].registerComponent('Html5', Html5);
 exports['default'] = Html5;
 module.exports = exports['default'];
 
-},{"../component":65,"../utils/browser.js":124,"../utils/dom.js":127,"../utils/fn.js":129,"../utils/log.js":132,"../utils/merge-options.js":133,"../utils/url.js":137,"./tech.js":115,"global/document":7,"global/window":8,"object.assign":53}],114:[function(_dereq_,module,exports){
+},{"../component":64,"../utils/browser.js":123,"../utils/dom.js":126,"../utils/fn.js":128,"../utils/log.js":131,"../utils/merge-options.js":132,"../utils/url.js":136,"./tech.js":114,"global/document":7,"global/window":8,"object.assign":53}],113:[function(_dereq_,module,exports){
 /**
  * @file loader.js
  */
@@ -14021,7 +14007,7 @@ _component2['default'].registerComponent('MediaLoader', MediaLoader);
 exports['default'] = MediaLoader;
 module.exports = exports['default'];
 
-},{"../component":65,"../utils/to-title-case.js":136,"global/window":8}],115:[function(_dereq_,module,exports){
+},{"../component":64,"../utils/to-title-case.js":135,"global/window":8}],114:[function(_dereq_,module,exports){
 /**
  * @file tech.js
  * Media Technology Controller - Base class for media playback
@@ -14700,7 +14686,7 @@ _component2['default'].registerComponent('MediaTechController', Tech);
 exports['default'] = Tech;
 module.exports = exports['default'];
 
-},{"../component":65,"../media-error.js":102,"../tracks/text-track":123,"../tracks/text-track-list":121,"../utils/buffer.js":125,"../utils/fn.js":129,"../utils/log.js":132,"../utils/time-ranges.js":135,"global/document":7,"global/window":8}],116:[function(_dereq_,module,exports){
+},{"../component":64,"../media-error.js":101,"../tracks/text-track":122,"../tracks/text-track-list":120,"../utils/buffer.js":124,"../utils/fn.js":128,"../utils/log.js":131,"../utils/time-ranges.js":134,"global/document":7,"global/window":8}],115:[function(_dereq_,module,exports){
 /**
  * @file tooltip.js
  */
@@ -14859,7 +14845,7 @@ _component2['default'].registerComponent('Tooltip', Tooltip);
 exports['default'] = Tooltip;
 module.exports = exports['default'];
 
-},{"./component":65,"./utils/dom.js":127,"./utils/events.js":128,"./utils/fn.js":129,"global/document":7,"lodash-compat/function/throttle":13}],117:[function(_dereq_,module,exports){
+},{"./component":64,"./utils/dom.js":126,"./utils/events.js":127,"./utils/fn.js":128,"global/document":7,"lodash-compat/function/throttle":13}],116:[function(_dereq_,module,exports){
 /**
  * @file text-track-cue-list.js
  */
@@ -14956,7 +14942,7 @@ TextTrackCueList.prototype.getCueById = function (id) {
 exports['default'] = TextTrackCueList;
 module.exports = exports['default'];
 
-},{"../utils/browser.js":124,"global/document":7}],118:[function(_dereq_,module,exports){
+},{"../utils/browser.js":123,"global/document":7}],117:[function(_dereq_,module,exports){
 /**
  * @file text-track-display.js
  */
@@ -15227,7 +15213,7 @@ _component2['default'].registerComponent('TextTrackDisplay', TextTrackDisplay);
 exports['default'] = TextTrackDisplay;
 module.exports = exports['default'];
 
-},{"../component":65,"../menu/menu-button.js":103,"../menu/menu-item.js":104,"../menu/menu.js":105,"../utils/fn.js":129,"global/document":7,"global/window":8}],119:[function(_dereq_,module,exports){
+},{"../component":64,"../menu/menu-button.js":102,"../menu/menu-item.js":103,"../menu/menu.js":104,"../utils/fn.js":128,"global/document":7,"global/window":8}],118:[function(_dereq_,module,exports){
 /**
  * @file text-track-enums.js
  *
@@ -15260,7 +15246,7 @@ var TextTrackKind = {
 exports.TextTrackMode = TextTrackMode;
 exports.TextTrackKind = TextTrackKind;
 
-},{}],120:[function(_dereq_,module,exports){
+},{}],119:[function(_dereq_,module,exports){
 /**
  * Utilities for capturing text track state and re-creating tracks
  * based on a capture.
@@ -15347,7 +15333,7 @@ var jsonToTextTracks = function jsonToTextTracks(json, tech) {
 exports['default'] = { textTracksToJson: textTracksToJson, jsonToTextTracks: jsonToTextTracks, trackToJson_: trackToJson_ };
 module.exports = exports['default'];
 
-},{}],121:[function(_dereq_,module,exports){
+},{}],120:[function(_dereq_,module,exports){
 /**
  * @file text-track-list.js
  */
@@ -15492,7 +15478,7 @@ TextTrackList.prototype.getTrackById = function (id) {
 exports['default'] = TextTrackList;
 module.exports = exports['default'];
 
-},{"../event-target":98,"../utils/browser.js":124,"../utils/fn.js":129,"global/document":7}],122:[function(_dereq_,module,exports){
+},{"../event-target":97,"../utils/browser.js":123,"../utils/fn.js":128,"global/document":7}],121:[function(_dereq_,module,exports){
 /**
  * @file text-track-settings.js
  */
@@ -15784,7 +15770,7 @@ function captionOptionsMenuTemplate() {
 exports['default'] = TextTrackSettings;
 module.exports = exports['default'];
 
-},{"../component":65,"../utils/events.js":128,"../utils/fn.js":129,"../utils/log.js":132,"global/window":8,"safe-json-parse/tuple":58}],123:[function(_dereq_,module,exports){
+},{"../component":64,"../utils/events.js":127,"../utils/fn.js":128,"../utils/log.js":131,"global/window":8,"safe-json-parse/tuple":58}],122:[function(_dereq_,module,exports){
 /**
  * @file text-track.js
  */
@@ -16137,7 +16123,7 @@ var indexOf = function indexOf(searchElement, fromIndex) {
 exports['default'] = TextTrack;
 module.exports = exports['default'];
 
-},{"../event-target":98,"../utils/browser.js":124,"../utils/fn.js":129,"../utils/guid.js":131,"../utils/log.js":132,"../utils/url.js":137,"./text-track-cue-list":117,"./text-track-enums":119,"global/document":7,"global/window":8,"xhr":61}],124:[function(_dereq_,module,exports){
+},{"../event-target":97,"../utils/browser.js":123,"../utils/fn.js":128,"../utils/guid.js":130,"../utils/log.js":131,"../utils/url.js":136,"./text-track-cue-list":116,"./text-track-enums":118,"global/document":7,"global/window":8,"xhr":61}],123:[function(_dereq_,module,exports){
 /**
  * @file browser.js
  */
@@ -16226,7 +16212,7 @@ exports.TOUCH_ENABLED = TOUCH_ENABLED;
 var BACKGROUND_SIZE_SUPPORTED = ('backgroundSize' in _globalDocument2['default'].createElement('video').style);
 exports.BACKGROUND_SIZE_SUPPORTED = BACKGROUND_SIZE_SUPPORTED;
 
-},{"global/document":7,"global/window":8}],125:[function(_dereq_,module,exports){
+},{"global/document":7,"global/window":8}],124:[function(_dereq_,module,exports){
 /**
  * @file buffer.js
  */
@@ -16275,7 +16261,7 @@ function bufferedPercent(buffered, duration) {
   return bufferedDuration / duration;
 }
 
-},{"./time-ranges.js":135}],126:[function(_dereq_,module,exports){
+},{"./time-ranges.js":134}],125:[function(_dereq_,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16346,7 +16332,7 @@ exports['default'] = function (target) {
 
 module.exports = exports['default'];
 
-},{"./log.js":132}],127:[function(_dereq_,module,exports){
+},{"./log.js":131}],126:[function(_dereq_,module,exports){
 /**
  * @file dom.js
  */
@@ -16779,7 +16765,7 @@ function getPointerPosition(el, event) {
   return position;
 }
 
-},{"./guid.js":131,"./log.js":132,"global/document":7,"global/window":8,"tsml":60}],128:[function(_dereq_,module,exports){
+},{"./guid.js":130,"./log.js":131,"global/document":7,"global/window":8,"tsml":60}],127:[function(_dereq_,module,exports){
 /**
  * @file events.js
  *
@@ -17187,7 +17173,7 @@ function _handleMultipleEvents(fn, elem, types, callback) {
   });
 }
 
-},{"./dom.js":127,"./guid.js":131,"global/document":7,"global/window":8}],129:[function(_dereq_,module,exports){
+},{"./dom.js":126,"./guid.js":130,"global/document":7,"global/window":8}],128:[function(_dereq_,module,exports){
 /**
  * @file fn.js
  */
@@ -17231,7 +17217,7 @@ var bind = function bind(context, fn, uid) {
 };
 exports.bind = bind;
 
-},{"./guid.js":131}],130:[function(_dereq_,module,exports){
+},{"./guid.js":130}],129:[function(_dereq_,module,exports){
 /**
  * @file format-time.js
  *
@@ -17281,7 +17267,7 @@ function formatTime(seconds) {
 exports['default'] = formatTime;
 module.exports = exports['default'];
 
-},{}],131:[function(_dereq_,module,exports){
+},{}],130:[function(_dereq_,module,exports){
 /**
  * @file guid.js
  *
@@ -17306,7 +17292,7 @@ function newGUID() {
   return _guid++;
 }
 
-},{}],132:[function(_dereq_,module,exports){
+},{}],131:[function(_dereq_,module,exports){
 /**
  * @file log.js
  */
@@ -17396,7 +17382,7 @@ function _logType(type, args) {
 exports['default'] = log;
 module.exports = exports['default'];
 
-},{"global/window":8}],133:[function(_dereq_,module,exports){
+},{"global/window":8}],132:[function(_dereq_,module,exports){
 /**
  * @file merge-options.js
  */
@@ -17467,7 +17453,7 @@ function mergeOptions() {
 
 module.exports = exports['default'];
 
-},{"lodash-compat/object/merge":46}],134:[function(_dereq_,module,exports){
+},{"lodash-compat/object/merge":46}],133:[function(_dereq_,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17495,7 +17481,7 @@ var setTextContent = function setTextContent(el, content) {
 };
 exports.setTextContent = setTextContent;
 
-},{"global/document":7}],135:[function(_dereq_,module,exports){
+},{"global/document":7}],134:[function(_dereq_,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17566,7 +17552,7 @@ function rangeCheck(fnName, index, maxIndex) {
   }
 }
 
-},{"./log.js":132}],136:[function(_dereq_,module,exports){
+},{"./log.js":131}],135:[function(_dereq_,module,exports){
 /**
  * @file to-title-case.js
  *
@@ -17587,7 +17573,7 @@ function toTitleCase(string) {
 exports["default"] = toTitleCase;
 module.exports = exports["default"];
 
-},{}],137:[function(_dereq_,module,exports){
+},{}],136:[function(_dereq_,module,exports){
 /**
  * @file url.js
  */
@@ -17723,7 +17709,7 @@ var isCrossOrigin = function isCrossOrigin(url) {
 };
 exports.isCrossOrigin = isCrossOrigin;
 
-},{"global/document":7,"global/window":8}],138:[function(_dereq_,module,exports){
+},{"global/document":7,"global/window":8}],137:[function(_dereq_,module,exports){
 /**
  * @file video.js
  */
@@ -17918,7 +17904,7 @@ setup.autoSetupTimeout(1, videojs);
  *
  * @type {String}
  */
-videojs.VERSION = '5.0.2-60';
+videojs.VERSION = '5.0.2-61';
 
 /**
  * The global options object. These are the settings that take effect
@@ -18334,7 +18320,7 @@ if (typeof define === 'function' && define['amd']) {
 exports['default'] = videojs;
 module.exports = exports['default'];
 
-},{"../../src/js/utils/merge-options.js":133,"./component":65,"./event-target":98,"./extend.js":99,"./player":106,"./plugins.js":107,"./setup":109,"./tech/flash.js":112,"./tech/html5.js":113,"./tracks/text-track.js":123,"./utils/browser.js":124,"./utils/create-deprecation-proxy.js":126,"./utils/dom.js":127,"./utils/events.js":128,"./utils/fn.js":129,"./utils/format-time.js":130,"./utils/log.js":132,"./utils/stylesheet.js":134,"./utils/time-ranges.js":135,"./utils/url.js":137,"global/document":7,"lodash-compat/object/merge":46,"object.assign":53,"xhr":61}]},{},[138])(138)
+},{"../../src/js/utils/merge-options.js":132,"./component":64,"./event-target":97,"./extend.js":98,"./player":105,"./plugins.js":106,"./setup":108,"./tech/flash.js":111,"./tech/html5.js":112,"./tracks/text-track.js":122,"./utils/browser.js":123,"./utils/create-deprecation-proxy.js":125,"./utils/dom.js":126,"./utils/events.js":127,"./utils/fn.js":128,"./utils/format-time.js":129,"./utils/log.js":131,"./utils/stylesheet.js":133,"./utils/time-ranges.js":134,"./utils/url.js":136,"global/document":7,"lodash-compat/object/merge":46,"object.assign":53,"xhr":61}]},{},[137])(137)
 });
 
 
