@@ -37,7 +37,7 @@
     "videojs-settings": "hola/videojs5-settings#v0.0.1-20",
     "videojs-thumbnails": "hola/videojs-thumbnails#v0.1.1-2",
     "videojs-utils": "hola/videojs-utils#v0.0.1-1",
-    "videojs-contrib-hls": "hola/videojs-contrib-hls#hola_5.0.2-1",
+    "videojs-contrib-hls": "hola/videojs-contrib-hls#v1.0.0-29",
     "videojs-contrib-media-sources": "hola/videojs-contrib-media-sources#hola_5.0.2-1",
     "videojs-osmf": "hola/videojs5-osmf"
   },
