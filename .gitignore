@@ -27,7 +27,4 @@ test/coverage/*
 .coveralls.yml
 .sass-cache
 
-dist/
-dist/*.zip
-
 .idea/
