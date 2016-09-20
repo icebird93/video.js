@@ -1,0 +1,3 @@
+[submodule "plugins/watermark"]
+	path = plugins/watermark
+	url = https://icebird93@github.com/xbgmsharp/videojs-watermark.git
