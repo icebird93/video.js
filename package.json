@@ -35,7 +35,7 @@
     "vtt.js": "^0.12.1",
     "xhr": "~2.2.0",
     "videojs-hola-skin": "hola/videojs5-hola-skin#v0.0.5-25",
-    "videojs-settings": "hola/videojs5-settings#v0.0.3-15",
+    "videojs-settings": "hola/videojs5-settings#v0.0.3-23",
     "videojs-thumbnails": "hola/videojs-thumbnails#v0.1.1-2",
     "videojs-utils": "hola/videojs-utils#v0.0.1-1",
     "videojs-contrib-hls": "hola/videojs-contrib-hls#v2.2.0-12",
