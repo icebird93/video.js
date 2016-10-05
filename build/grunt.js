@@ -535,11 +535,11 @@ module.exports = function(grunt) {
             'build/temp/video.basic.js',
             'node_modules/@hola.org/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
           ]},
-          {nonull: true, dest: 'build/temp/origin/videojs.hls.js', src: ['node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.js']}, // XXX odin: fix
+          {nonull: true, dest: 'build/temp/origin/videojs.hls.js', src: ['node_modules/@hola.org/videojs-contrib-hls/dist/videojs-contrib-hls.js']},
           {nonull: true, dest: 'build/temp/origin/videojs-osmf.js', src: ['node_modules/@hola.org/videojs-osmf/dist/videojs-osmf.js']},
           {nonull: true, dest: 'build/temp/videojs.hls.js', src: [
             'build/temp/video.basic.js',
-            'node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.js', // XXX odin: fix
+            'node_modules/@hola.org/videojs-contrib-hls/dist/videojs-contrib-hls.js',
           ]},
           {nonull: true, dest: 'build/temp/videojs.osmf.js', src: [
             'build/temp/video.basic.js',
@@ -553,7 +553,7 @@ module.exports = function(grunt) {
           ]},
           {nonull: true, dest: 'build/temp/alt/videojs.novtt.hls.js', src: [
             'build/temp/alt/video.novtt.js',
-            'node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.js', // XXX odin: fix
+            'node_modules/@hola.org/videojs-contrib-hls/dist/videojs-contrib-hls.js',
           ]},
           {nonull: true, dest: 'build/temp/alt/videojs.novtt.osmf.js', src: [
             'build/temp/alt/video.novtt.js',
