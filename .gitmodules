@@ -1,3 +1,6 @@
 [submodule "plugins/watermark"]
 	path = plugins/watermark
 	url = https://icebird93@github.com/icebird93/videojs-watermark.git
+[submodule "plugins/persistvolume"]
+	path = plugins/persistvolume
+	url = https://icebird93@github.com/mkody/videojs-persistvolume.git
