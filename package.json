@@ -15,6 +15,11 @@
   "author": "Steve Heffernan",
   "scripts": {
     "build": "grunt",
+    "login": "c=`npm c ls`; test \"${c#*@hola}\" != \"$c\" || npm login --scope @hola.org",
+    "release": "run-s login release:*",
+    "release:tag": "git tag v$npm_package_version",
+    "release:publish": "npm publish",
+    "release:pushtags": "git push --tags origin",
     "test": "grunt test && if [ '$TRAVIS' ]; then grunt coveralls; fi;"
   },
   "repository": {
@@ -90,6 +95,7 @@
     "karma-safari-launcher": "^0.1.1",
     "karma-sinon": "^1.0.3",
     "load-grunt-tasks": "^3.1.0",
+    "npm-run-all": "^3.1.0",
     "proxyquireify": "^3.0.0",
     "qunitjs": "^1.18.0",
     "sinon": "^1.16.1",
