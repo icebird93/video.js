@@ -689,7 +689,7 @@ module.exports = function(grunt) {
   // Default task - build and test
   grunt.registerTask('default', ['dist']);
 
-  grunt.registerTask('test', ['build', 'karma:defaults']);
+  grunt.registerTask('test', ['dist', 'karma:defaults']);
 
   // Run while developing
   grunt.registerTask('dev', ['build', 'connect:dev', 'concurrent:watchSandbox']);
