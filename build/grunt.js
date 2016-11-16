@@ -37,8 +37,8 @@ module.exports = function(grunt) {
       }],
       ['browserify-versionify', {
         placeholder: '__SWF_VERSION__',
-        version: pkg.dependencies['videojs-swf'].match(
-          /hola\/video-js-swf-sv#(.+)$/)[1]
+        version: pkg.dependencies['@hola.org/videojs-swf'].match(
+          />=([^ ]+)/)[1]
       }]
     ]
   };
@@ -193,8 +193,8 @@ module.exports = function(grunt) {
         ]
       },
       fonts: { cwd: 'node_modules/videojs-font/fonts/', src: ['*'], dest: 'build/temp/font/', expand: true, filter: 'isFile' },
-      swf:   { cwd: 'node_modules/videojs-swf/dist/', src: 'video-js.swf', dest: 'build/temp/', expand: true, filter: 'isFile' },
-      osmf:   { cwd: 'node_modules/videojs-osmf/dist/', src: 'videojs-osmf.swf', dest: 'build/temp/', expand: true, filter: 'isFile' },
+      swf:   { cwd: 'node_modules/@hola.org/videojs-swf/dist/', src: 'video-js.swf', dest: 'build/temp/', expand: true, filter: 'isFile' },
+      osmf:   { cwd: 'node_modules/@hola.org/videojs-osmf/dist/', src: 'videojs-osmf.swf', dest: 'build/temp/', expand: true, filter: 'isFile' },
       ie8:   { cwd: 'node_modules/videojs-ie8/dist/', src: ['**/**'], dest: 'build/temp/ie8/', expand: true, filter: 'isFile' },
       dist:  { cwd: 'build/temp/', src: ['**/**', '!test*', '!video.basic.js'], dest: 'dist/', expand: true, filter: 'isFile' },
       examples: { cwd: 'docs/examples/', src: ['**/**'], dest: 'dist/examples/', expand: true, filter: 'isFile' }
@@ -409,8 +409,8 @@ module.exports = function(grunt) {
           }],
           ['browserify-versionify', {
             placeholder: '__SWF_VERSION__',
-            version: pkg.dependencies['videojs-swf'].match(
-                /hola\/video-js-swf-sv#(.+)$/)[1]
+            version: pkg.dependencies['@hola.org/videojs-swf'].match(
+              />=([^ ]+)/)[1]
           }]
         ]
       },
@@ -504,23 +504,23 @@ module.exports = function(grunt) {
         },
         files: [
           {nonull: true, dest: 'build/temp/origin/video.js', src: ['build/temp/video.basic.js']},
-          {nonull: true, dest: 'build/temp/origin/videojs-hola-skin.js', src: ['node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js']},
-          {nonull: true, dest: 'build/temp/origin/videojs-settings.js', src: ['node_modules/videojs-settings/dist/videojs-settings.js']},
-          {nonull: true, dest: 'build/temp/origin/videojs.thumbnails.js', src: ['node_modules/videojs-thumbnails/videojs.thumbnails.js']},
-          {nonull: true, dest: 'build/temp/origin/videojs-utils.js', src: ['node_modules/videojs-utils/dist/videojs-utils.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs-hola-skin.js', src: ['node_modules/@hola.org/videojs-hola-skin/dist/js/videojs-hola-skin.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs-settings.js', src: ['node_modules/@hola.org/videojs-settings/dist/videojs-settings.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs.thumbnails.js', src: ['node_modules/@hola.org/videojs-thumbnails/videojs.thumbnails.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs-utils.js', src: ['node_modules/@hola.org/videojs-utils/dist/videojs-utils.js']},
           {nonull: true, dest: 'build/temp/video.basic.js', src: [
             'build/temp/video.basic.js',
-            'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
-            'node_modules/videojs-settings/dist/videojs-settings.js',
-            'node_modules/videojs-thumbnails/videojs.thumbnails.js',
-            'node_modules/videojs-utils/dist/videojs-utils.js',
+            'node_modules/@hola.org/videojs-hola-skin/dist/js/videojs-hola-skin.js',
+            'node_modules/@hola.org/videojs-settings/dist/videojs-settings.js',
+            'node_modules/@hola.org/videojs-thumbnails/videojs.thumbnails.js',
+            'node_modules/@hola.org/videojs-utils/dist/videojs-utils.js',
           ]},
           {nonull: true, dest: 'build/temp/alt/video.novtt.js', src: [
             'build/temp/alt/video.novtt.js',
-            'node_modules/videojs-hola-skin/dist/js/videojs-hola-skin.js',
-            'node_modules/videojs-settings/dist/videojs-settings.js',
-            'node_modules/videojs-thumbnails/videojs.thumbnails.js',
-            'node_modules/videojs-utils/dist/videojs-utils.js',
+            'node_modules/@hola.org/videojs-hola-skin/dist/js/videojs-hola-skin.js',
+            'node_modules/@hola.org/videojs-settings/dist/videojs-settings.js',
+            'node_modules/@hola.org/videojs-thumbnails/videojs.thumbnails.js',
+            'node_modules/@hola.org/videojs-utils/dist/videojs-utils.js',
           ]},
         ],
       },
@@ -533,32 +533,32 @@ module.exports = function(grunt) {
           // default versions
           {nonull: true, dest: 'build/temp/video.js', src: [
             'build/temp/video.basic.js',
-            'node_modules/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
+            'node_modules/@hola.org/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
           ]},
-          {nonull: true, dest: 'build/temp/origin/videojs.hls.js', src: ['node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.js']},
-          {nonull: true, dest: 'build/temp/origin/videojs-osmf.js', src: ['node_modules/videojs-osmf/dist/videojs-osmf.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs.hls.js', src: ['node_modules/@hola.org/videojs-contrib-hls/dist/videojs-contrib-hls.js']},
+          {nonull: true, dest: 'build/temp/origin/videojs-osmf.js', src: ['node_modules/@hola.org/videojs-osmf/dist/videojs-osmf.js']},
           {nonull: true, dest: 'build/temp/videojs.hls.js', src: [
             'build/temp/video.basic.js',
-            'node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.js',
+            'node_modules/@hola.org/videojs-contrib-hls/dist/videojs-contrib-hls.js',
           ]},
           {nonull: true, dest: 'build/temp/videojs.osmf.js', src: [
             'build/temp/video.basic.js',
-            'node_modules/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
-            'node_modules/videojs-osmf/dist/videojs-osmf.js',
+            'node_modules/@hola.org/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
+            'node_modules/@hola.org/videojs-osmf/dist/videojs-osmf.js',
           ]},
           // novtt versions
           {nonull: true, dest: 'build/temp/alt/video.novtt.js', src: [
             'build/temp/alt/video.novtt.js',
-            'node_modules/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
+            'node_modules/@hola.org/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
           ]},
           {nonull: true, dest: 'build/temp/alt/videojs.novtt.hls.js', src: [
             'build/temp/alt/video.novtt.js',
-            'node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.js',
+            'node_modules/@hola.org/videojs-contrib-hls/dist/videojs-contrib-hls.js',
           ]},
           {nonull: true, dest: 'build/temp/alt/videojs.novtt.osmf.js', src: [
             'build/temp/alt/video.novtt.js',
-            'node_modules/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
-            'node_modules/videojs-osmf/dist/videojs-osmf.js',
+            'node_modules/@hola.org/videojs-contrib-media-sources/dist/videojs-contrib-media-sources.js',
+            'node_modules/@hola.org/videojs-osmf/dist/videojs-osmf.js',
           ]},
         ],
       },
@@ -569,12 +569,12 @@ module.exports = function(grunt) {
         },
         files: [
           {nonull: true, dest: 'build/temp/origin/video-js.css', src: ['build/temp/video-js.css']},
-          {nonull: true, dest: 'build/temp/origin/videojs-hola-skin.css', src: ['node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css']},
-          {nonull: true, dest: 'build/temp/origin/videojs.thumbnails.css', src: ['node_modules/videojs-thumbnails/videojs.thumbnails.css']},
+          {nonull: true, dest: 'build/temp/origin/videojs-hola-skin.css', src: ['node_modules/@hola.org/videojs-hola-skin/dist/css/videojs-hola-skin.css']},
+          {nonull: true, dest: 'build/temp/origin/videojs.thumbnails.css', src: ['node_modules/@hola.org/videojs-thumbnails/videojs.thumbnails.css']},
           {nonull: true, dest: 'build/temp/video-js.css', src: [
             'build/temp/video-js.css',
-            'node_modules/videojs-hola-skin/dist/css/videojs-hola-skin.css',
-            'node_modules/videojs-thumbnails/videojs.thumbnails.css',
+            'node_modules/@hola.org/videojs-hola-skin/dist/css/videojs-hola-skin.css',
+            'node_modules/@hola.org/videojs-thumbnails/videojs.thumbnails.css',
           ]},
         ],
       },
@@ -689,7 +689,7 @@ module.exports = function(grunt) {
   // Default task - build and test
   grunt.registerTask('default', ['dist']);
 
-  grunt.registerTask('test', ['build', 'karma:defaults']);
+  grunt.registerTask('test', ['dist', 'karma:defaults']);
 
   // Run while developing
   grunt.registerTask('dev', ['build', 'connect:dev', 'concurrent:watchSandbox']);
