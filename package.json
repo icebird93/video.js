@@ -37,7 +37,7 @@
     "xhr": "~2.2.0",
     "@hola.org/videojs-contrib-hls": ">=2.2.0-14 <2.2.0",
     "@hola.org/videojs-contrib-media-sources": ">=3.1.0-8 <3.1.0",
-    "@hola.org/videojs-hola-skin": ">=0.0.5-31 <0.0.5",
+    "@hola.org/videojs-hola-skin": ">=0.0.5-39 <0.0.5",
     "@hola.org/videojs-osmf": ">=0.0.0-33 <0.0.0",
     "@hola.org/videojs-settings": ">=0.0.3-26 <0.0.3",
     "@hola.org/videojs-swf": ">=5.1.0-4 <5.1.0",
