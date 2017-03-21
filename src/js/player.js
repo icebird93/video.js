@@ -789,6 +789,7 @@ class Player extends Component {
     // TODO: Update to use `emptied` event instead. See #1277.
 
     this.removeClass('vjs-ended');
+    this.removeClass('vjs-seeking');
 
     // reset the error state
     this.error(null);
@@ -1234,7 +1235,9 @@ class Player extends Component {
     // Otherwise call method now
     } else {
       try {
-        this.tech_[method](arg);
+        if (this.tech_) {
+          this.tech_[method](arg);
+        }
       } catch(e) {
         log(e);
         throw e;
